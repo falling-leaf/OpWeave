@@ -18,11 +18,7 @@ from general_tests.benchmark_reasoning import (
     load_step2_vectors,
     call_reader_decoder,
 )
-sys.path.insert(0, os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    "recycle", "scheduling_tests_table3",
-))
-from test_morphingdb_reasoning_under_load import (
+from throughput_tests.test_morphingdb_reasoning_under_load import (
     load_step2_vecs as morph_load_step2_vecs,
     build_step2_tensors,
     run_morphingdb_query,
