@@ -39,8 +39,9 @@ venv/
 # Created by evadb LOAD IMAGE, accumulate thousands of files
 **/results/cache/
 
-# === NOTEBOOK / EXPERIMENT LOGS ===
+# === LOCAL NOTES (never published) ===
 notebook.txt
+project_overview.md
 
 # === OS / EDITOR FILES ===
 .DS_Store
