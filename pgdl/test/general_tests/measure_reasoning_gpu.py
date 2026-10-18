@@ -21,13 +21,15 @@ import psutil
 import psycopg2
 from morphingdb_test.config import db_config
 
+from support.test_result_paths import GENERAL_RESULTS_DIR
+
 ISOLATED_CPUS = list(range(21, 40))
 GPU_POLL_INTERVAL = 0.1
 COLD_RUNS = 1
 CACHED_RUNS = 3
 N_VALUES = [1, 5, 10, 20]
 
-LOG_DIR = Path(__file__).parent.parent / "results"
+LOG_DIR = Path(GENERAL_RESULTS_DIR)
 LOG_DIR.mkdir(exist_ok=True)
 
 
