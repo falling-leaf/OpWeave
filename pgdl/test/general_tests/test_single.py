@@ -24,6 +24,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 from morphingdb_test.config import db_config
 from init_tests.json_to_csv import json_to_csv
+from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 REASONING_ROW_COUNTS = [1, 5, 10, 20]
 DEFAULT_ROW_COUNTS = [1000, 2000, 5000, 10000]
@@ -337,8 +338,7 @@ def run_single_slice_test(use_new_queries=False):
                 print(f"    rows={r['row_count']}, qt={r['query_times']}, FAILED: {r.get('error', '')}")
 
     # Save results to results/ directory, overwriting previous run
-    results_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
-    os.makedirs(results_dir, exist_ok=True)
+    results_dir = ensure_dir(GENERAL_RESULTS_DIR)
     suffix = "new" if use_new_queries else "original"
     filename = f"single_test_results_{suffix}.json"
     filepath = os.path.join(results_dir, filename)

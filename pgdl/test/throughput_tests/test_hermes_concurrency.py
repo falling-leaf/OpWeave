@@ -34,6 +34,8 @@ import numpy as np
 import torch
 import psycopg2
 
+from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+
 # =============================================================================
 # Configuration
 # =============================================================================
@@ -274,7 +276,7 @@ def main():
         "max_concurrency": max_conc,
     }
 
-    filepath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", f"hermes_concurrency_results_{timestamp}.json")
+    filepath = os.path.join(ensure_dir(THROUGHPUT_RESULTS_DIR), f"hermes_concurrency_results_{timestamp}.json")
     with open(filepath, 'w', encoding='utf-8') as f:
         json.dump(result_data, f, indent=2, ensure_ascii=False)
     print(f"Results saved to: {filepath}")
