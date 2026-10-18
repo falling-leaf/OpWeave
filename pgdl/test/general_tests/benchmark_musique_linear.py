@@ -22,6 +22,8 @@ import numpy as np
 import torch
 import psycopg2
 
+from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+
 DEFAULT_MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
 MODEL_DIR = os.environ.get("MUSIQUE_MODEL_DIR", DEFAULT_MODEL_DIR)
 TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools")
@@ -354,7 +356,7 @@ if __name__ == "__main__":
     results = run_benchmark()
     print_report(results)
     
-    output_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "musique_benchmark_results.json")
+    output_path = os.path.join(ensure_dir(GENERAL_RESULTS_DIR), "musique_benchmark_results.json")
     serializable = {}
     for method, sizes in results.items():
         serializable[method] = {}

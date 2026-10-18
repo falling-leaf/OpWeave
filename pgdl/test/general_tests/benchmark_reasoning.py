@@ -23,6 +23,8 @@ import numpy as np
 import torch
 import psycopg2
 
+from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+
 # Configuration
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
 PSQL = "/home/why/dbagent/pg_base/bin/psql"
@@ -441,7 +443,7 @@ if __name__ == "__main__":
     print_report(results)
     
     # Save results to JSON
-    output_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "benchmark_reasoning_results.json")
+    output_path = os.path.join(ensure_dir(GENERAL_RESULTS_DIR), "benchmark_reasoning_results.json")
     serializable = {}
     for method, sizes in results.items():
         serializable[method] = {}
