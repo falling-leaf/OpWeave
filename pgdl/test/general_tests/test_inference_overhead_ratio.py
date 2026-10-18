@@ -40,6 +40,8 @@ import psycopg2
 from pathlib import Path
 from datetime import datetime
 
+from support.test_result_paths import GENERAL_RESULTS_DIR
+
 # ============================================================
 # Configuration
 # ============================================================
@@ -73,7 +75,7 @@ N_VALUES = [1000, 2000, 5000, 10000]
 WARMUP_RUNS = 1
 MEASURED_RUNS = 3
 
-LOG_DIR = Path(__file__).parent.parent / "results"
+LOG_DIR = Path(GENERAL_RESULTS_DIR)
 LOG_DIR.mkdir(exist_ok=True)
 
 

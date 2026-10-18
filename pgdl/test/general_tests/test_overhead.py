@@ -34,6 +34,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 import psutil
 
+from support.test_result_paths import GENERAL_RESULTS_DIR
+
 # ============================================================
 # Configuration
 # ============================================================
@@ -50,7 +52,7 @@ GPU_POLL_INTERVAL = 0.05
 
 PG_CTL = "/home/why/dbagent/pg_base/bin/pg_ctl"
 PG_DATA = "/home/why/dbagent/pg_base/data"
-LOG_DIR = Path(__file__).parent.parent / "results"
+LOG_DIR = Path(GENERAL_RESULTS_DIR)
 LOG_DIR.mkdir(exist_ok=True)
 
 # ============================================================

@@ -10,7 +10,7 @@ Runs single-thread latency tests for all 6 baselines:
   - hermes    (Hermes-style Python pipeline / predict_batch_float8)
   - gendb     (GenDB-style Python pipeline / predict_batch_float8)
 
-Output: JSON + CSV in test/results/
+Output: JSON + CSV in support/results/general/
 """
 import sys
 import os
