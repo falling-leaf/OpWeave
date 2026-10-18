@@ -1,1 +1,0 @@
-../docs/skills/throughput-test.md
