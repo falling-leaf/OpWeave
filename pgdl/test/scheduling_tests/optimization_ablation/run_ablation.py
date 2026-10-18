@@ -16,7 +16,7 @@ Usage (after the matching binary is installed):
     python run_ablation.py --optimization on  --workload hotpotqa --phases low,high
 
 Results:
-    pgdl/test/support/results/scheduling/optimization_ablation/
+    pgdl/test/results/scheduling/optimization_ablation/
         <workload>_opt_<on|off>_<timestamp>.json
 """
 
