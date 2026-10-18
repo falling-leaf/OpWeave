@@ -1,0 +1,202 @@
+{
+  "timestamp": "2026-10-14T13:17:28.135479",
+  "experiment": "optimization_ablation_table3",
+  "optimization": "on",
+  "workload": "year_predict",
+  "paper_column": "CPU: year_predict (n=10000)",
+  "default_device_when_off": "cpu",
+  "config": {
+    "row_count": 10000,
+    "task": "series",
+    "kind": "cpu",
+    "query": "SELECT unnest(db_agent_single('series', sub_table.data)) AS score FROM (SELECT * FROM year_predict_test LIMIT 10000) AS sub_table;",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 15,
+    "allowed_cpus": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 86.4,
+  "phases": [
+    {
+      "phase": "low",
+      "phase_config": {
+        "n_workers": 20
+      },
+      "load_before_queries": {
+        "cpu_pct": 98.5
+      },
+      "load_samples": [
+        {
+          "before": {
+            "cpu_pct": 98.0
+          },
+          "after": {
+            "cpu_pct": 97.9
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 66.7
+          },
+          "after": {
+            "cpu_pct": 98.1
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 0.0
+          },
+          "after": {
+            "cpu_pct": 97.4
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 1065.7,
+        "status": "success",
+        "rows_returned": 10000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 949.0,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 940.8,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 968.9,
+          "status": "success",
+          "rows_returned": 10000
+        }
+      ],
+      "min_latency_ms": 940.8,
+      "avg_latency_ms": 952.9,
+      "min_latency_s": 0.941
+    },
+    {
+      "phase": "medium",
+      "phase_config": {
+        "n_workers": 60
+      },
+      "load_before_queries": {
+        "cpu_pct": 98.1
+      },
+      "load_samples": [
+        {
+          "before": {
+            "cpu_pct": 99.9
+          },
+          "after": {
+            "cpu_pct": 100.0
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 0.0
+          },
+          "after": {
+            "cpu_pct": 100.0
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 0.0
+          },
+          "after": {
+            "cpu_pct": 99.9
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 1440.3,
+        "status": "success",
+        "rows_returned": 10000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 1488.1,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 1562.3,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 1297.7,
+          "status": "success",
+          "rows_returned": 10000
+        }
+      ],
+      "min_latency_ms": 1297.7,
+      "avg_latency_ms": 1449.4,
+      "min_latency_s": 1.298
+    },
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 120
+      },
+      "load_before_queries": {
+        "cpu_pct": 100.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "cpu_pct": 99.8
+          },
+          "after": {
+            "cpu_pct": 100.0
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 0.0
+          },
+          "after": {
+            "cpu_pct": 99.7
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 100.0
+          },
+          "after": {
+            "cpu_pct": 100.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 6401.7,
+        "status": "success",
+        "rows_returned": 10000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 3932.0,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 3302.8,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 4014.9,
+          "status": "success",
+          "rows_returned": 10000
+        }
+      ],
+      "min_latency_ms": 3302.8,
+      "avg_latency_ms": 3749.9,
+      "min_latency_s": 3.303
+    }
+  ]
+}

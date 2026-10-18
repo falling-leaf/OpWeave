@@ -1,0 +1,42 @@
+{
+  "baseline": "dbagent",
+  "scale": [
+    1000,
+    2000,
+    5000,
+    10000
+  ],
+  "timestamp": "2026-10-16T21:26:22.572203",
+  "reuse_connection": false,
+  "tests": [
+    {
+      "dataset": "imagenet",
+      "results": [
+        {
+          "row_count": 1000,
+          "status": "success",
+          "latency": 5.461850166320801,
+          "rows_returned": 1000
+        },
+        {
+          "row_count": 2000,
+          "status": "success",
+          "latency": 7.684672832489014,
+          "rows_returned": 2000
+        },
+        {
+          "row_count": 5000,
+          "status": "success",
+          "latency": 17.10917901992798,
+          "rows_returned": 5000
+        },
+        {
+          "row_count": 10000,
+          "status": "success",
+          "latency": 30.690736532211304,
+          "rows_returned": 10000
+        }
+      ]
+    }
+  ]
+}

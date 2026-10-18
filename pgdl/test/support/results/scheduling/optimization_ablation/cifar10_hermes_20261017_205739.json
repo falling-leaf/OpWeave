@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-10-17T20:57:39.946083",
+  "experiment": "optimization_ablation_baselines",
+  "system": "hermes",
+  "workload": "cifar10",
+  "config": {
+    "row_count": 2000,
+    "device": "gpu",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 10,
+    "load": "matmul on GPU 0, low=2x2GB medium=3x2GB high=8x1.5GB",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 200.7,
+  "phases": [
+    {
+      "phase": "low",
+      "phase_config": {
+        "n_workers": 2,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "warmup": {
+        "latency_ms": 3414.1,
+        "inference_ms": 3414.1,
+        "data_load_ms": 0.0,
+        "status": "success"
+      },
+      "timed_results": [
+        {
+          "latency_ms": 3260.8,
+          "inference_ms": 3260.8,
+          "data_load_ms": 0.0,
+          "status": "success"
+        },
+        {
+          "latency_ms": 88145.9,
+          "inference_ms": 88145.9,
+          "data_load_ms": 0.0,
+          "status": "success"
+        },
+        {
+          "latency_ms": 63930.8,
+          "inference_ms": 63930.8,
+          "data_load_ms": 0.0,
+          "status": "success"
+        }
+      ],
+      "min_latency_ms": 3260.8,
+      "avg_latency_ms": 51779.2,
+      "min_latency_s": 3.261
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-10-14T11:41:59.610146",
+  "config": {
+    "n": 20,
+    "load": "scheduling low GPU: 2 workers x 2GB, new-style, GPU 0",
+    "cpus": "0-19",
+    "warmup_runs": 1,
+    "timed_runs": 1,
+    "timing_enabled": true,
+    "add_optimization_logic": false
+  },
+  "warmup_wall_ms": 86917.5,
+  "timed_wall_ms": 87252.0,
+  "agents": {
+    "EvaluationAgent": {
+      "total_ms": 84776.531,
+      "calls": 1,
+      "avg_ms": 84776.531
+    },
+    "OrchestrationAgent": {
+      "total_ms": 1.061,
+      "calls": 1,
+      "avg_ms": 1.061
+    },
+    "ExecutionAgent": {
+      "total_ms": 2031.139,
+      "calls": 1,
+      "avg_ms": 2031.139
+    },
+    "PerceptionAgent": {
+      "total_ms": 2.026,
+      "calls": 20,
+      "avg_ms": 0.1013
+    },
+    "ScheduleAgent": {
+      "total_ms": 0.016,
+      "calls": 44,
+      "avg_ms": 0.000364
+    }
+  },
+  "overall_ms": 86810.773,
+  "categories_ms": {
+    "Inference": 84776.531,
+    "Execution": 2031.139,
+    "Orchestration": 3.103,
+    "Total": 86810.773
+  },
+  "paper_breakdown_ms": {
+    "Inference": 52594,
+    "Execution": 11695,
+    "Orchestration": 1201,
+    "Total": 65490
+  },
+  "scheduling_low_wall_ms": 92047.6,
+  "wall_vs_scheduling_ratio": 0.948,
+  "agent_total_vs_scheduling_ratio": 0.943
+}

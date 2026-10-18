@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-10-16T23:13:28.313324",
+  "config": {
+    "n": 20,
+    "load": "idle, no GPU contention, GPU 0",
+    "warmup_runs": 1,
+    "timed_runs": 1,
+    "add_optimization_logic": false,
+    "always_training": false
+  },
+  "warmup_wall_ms": 80055.0,
+  "warmup_rows": 20,
+  "timed_wall_ms": 79433.8,
+  "timed_rows": 20,
+  "agents": {
+    "EvaluationAgent": {
+      "total_ms": 77346.001,
+      "calls": 1,
+      "avg_ms": 77346.001
+    },
+    "OrchestrationAgent": {
+      "total_ms": 1.055,
+      "calls": 1,
+      "avg_ms": 1.055
+    },
+    "ExecutionAgent": {
+      "total_ms": 1639.629,
+      "calls": 1,
+      "avg_ms": 1639.629
+    },
+    "PerceptionAgent": {
+      "total_ms": 2.085,
+      "calls": 20,
+      "avg_ms": 0.10425
+    },
+    "ScheduleAgent": {
+      "total_ms": 0.018,
+      "calls": 44,
+      "avg_ms": 0.000409
+    }
+  },
+  "overall_ms": 78988.788,
+  "categories_ms": {
+    "Inference": 77346.001,
+    "Execution": 1639.629,
+    "Orchestration": 3.158,
+    "Total": 78988.788
+  }
+}

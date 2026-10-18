@@ -1,0 +1,3 @@
+{"cell": "hermes_hotpotqa", "n": 20, "phase": "low", "min_latency_ms": 204893.2, "load_pct": 100.0}
+{"cell": "hermes_hotpotqa", "n": 20, "phase": "medium", "min_latency_ms": 240751.8, "load_pct": 100.0}
+{"cell": "hermes_hotpotqa", "n": 20, "phase": "high", "min_latency_ms": 278632.8, "load_pct": 100.0}

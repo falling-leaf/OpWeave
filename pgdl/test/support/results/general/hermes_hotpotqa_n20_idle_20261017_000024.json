@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-10-17T00:00:24.787669",
+  "config": {
+    "n": 20,
+    "load": "idle, no GPU contention, GPU 0",
+    "cpus": "0-19",
+    "device": "cross_encoder=cuda:0, deberta_reader=cpu",
+    "python": "/home/why/miniconda3/bin/python3",
+    "model_load_excluded_ms": 2003.4,
+    "warmup_runs": 1,
+    "timed_runs": 1
+  },
+  "warmup": {
+    "data_ms": 2.604,
+    "cross_ms": 328.349,
+    "deberta_ms": 15419.67,
+    "decoder_ms": 138345.948,
+    "wall_ms": 154096.588,
+    "scores": 20,
+    "decoder_failures": 0
+  },
+  "timed": {
+    "data_ms": 23.348,
+    "cross_ms": 55.137,
+    "deberta_ms": 11564.48,
+    "decoder_ms": 139530.715,
+    "wall_ms": 151173.693,
+    "scores": 20,
+    "decoder_failures": 0
+  },
+  "categories_ms": {
+    "Inference": 139530.715,
+    "Execution": 11619.617,
+    "Orchestration": 23.348,
+    "Total": 151173.68
+  }
+}

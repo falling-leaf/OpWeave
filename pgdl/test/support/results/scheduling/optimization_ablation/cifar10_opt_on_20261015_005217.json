@@ -1,0 +1,229 @@
+{
+  "timestamp": "2026-10-15T00:52:17.462164",
+  "experiment": "optimization_ablation_table3",
+  "optimization": "on",
+  "workload": "cifar10",
+  "paper_column": "GPU: cifar10 (n=1000)",
+  "default_device_when_off": "gpu",
+  "config": {
+    "row_count": 1000,
+    "task": "image_classification",
+    "kind": "gpu",
+    "query": "SELECT unnest(db_agent_single('image_classification', sub_table.image_vector)) AS score FROM (SELECT * FROM cifar_image_vector_table LIMIT 1000) AS sub_table;",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 60,
+    "allowed_cpus": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 776.4,
+  "phases": [
+    {
+      "phase": "low",
+      "phase_config": {
+        "n_workers": 2,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 2719.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 3408.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 11729.1,
+        "status": "success",
+        "rows_returned": 1000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 8342.7,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 8335.6,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 8372.5,
+          "status": "success",
+          "rows_returned": 1000
+        }
+      ],
+      "min_latency_ms": 8335.6,
+      "avg_latency_ms": 8350.3,
+      "min_latency_s": 8.336
+    },
+    {
+      "phase": "medium",
+      "phase_config": {
+        "n_workers": 3,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 4076.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 4766.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 15253.6,
+        "status": "success",
+        "rows_returned": 1000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 10962.8,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 10974.6,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 10980.0,
+          "status": "success",
+          "rows_returned": 1000
+        }
+      ],
+      "min_latency_ms": 10962.8,
+      "avg_latency_ms": 10972.5,
+      "min_latency_s": 10.963
+    },
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 8,
+        "mem_gb": 1.5,
+        "oom_style": true
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 10543.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 10543.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 129296.6,
+        "status": "success",
+        "rows_returned": 1000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 116617.9,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 116415.1,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 116130.4,
+          "status": "success",
+          "rows_returned": 1000
+        }
+      ],
+      "min_latency_ms": 116130.4,
+      "avg_latency_ms": 116387.8,
+      "min_latency_s": 116.13
+    }
+  ]
+}

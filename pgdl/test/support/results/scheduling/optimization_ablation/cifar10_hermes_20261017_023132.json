@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-10-17T02:31:32.428374",
+  "experiment": "optimization_ablation_baselines",
+  "system": "hermes",
+  "workload": "cifar10",
+  "config": {
+    "row_count": 1000,
+    "device": "gpu",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 60,
+    "load": "matmul on GPU 0, low=2x2GB medium=3x2GB high=8x1.5GB",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 1049.3,
+  "phases": [
+    {
+      "phase": "low",
+      "phase_config": {
+        "n_workers": 2,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "warmup": {
+        "latency_ms": 58965.9,
+        "inference_ms": 1540.5,
+        "data_load_ms": 57425.4,
+        "status": "success"
+      },
+      "timed_results": [
+        {
+          "latency_ms": 59081.2,
+          "inference_ms": 1547.6,
+          "data_load_ms": 57533.6,
+          "status": "success"
+        },
+        {
+          "latency_ms": 59123.1,
+          "inference_ms": 1540.3,
+          "data_load_ms": 57582.8,
+          "status": "success"
+        },
+        {
+          "latency_ms": 59128.0,
+          "inference_ms": 1545.6,
+          "data_load_ms": 57582.4,
+          "status": "success"
+        }
+      ],
+      "min_latency_ms": 59081.2,
+      "avg_latency_ms": 59110.8,
+      "min_latency_s": 59.081
+    },
+    {
+      "phase": "medium",
+      "phase_config": {
+        "n_workers": 3,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "warmup": {
+        "latency_ms": 61087.8,
+        "inference_ms": 1909.7,
+        "data_load_ms": 59178.1,
+        "status": "success"
+      },
+      "timed_results": [
+        {
+          "latency_ms": 60896.1,
+          "inference_ms": 1909.3,
+          "data_load_ms": 58986.8,
+          "status": "success"
+        },
+        {
+          "latency_ms": 59593.2,
+          "inference_ms": 1911.6,
+          "data_load_ms": 57681.6,
+          "status": "success"
+        },
+        {
+          "latency_ms": 58952.6,
+          "inference_ms": 1909.7,
+          "data_load_ms": 57042.9,
+          "status": "success"
+        }
+      ],
+      "min_latency_ms": 58952.6,
+      "avg_latency_ms": 59814.0,
+      "min_latency_s": 58.953
+    },
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 8,
+        "mem_gb": 1.5,
+        "oom_style": true
+      },
+      "warmup": {
+        "latency_ms": 61215.3,
+        "inference_ms": 3742.3,
+        "data_load_ms": 57473.0,
+        "status": "success"
+      },
+      "timed_results": [
+        {
+          "latency_ms": 61429.8,
+          "inference_ms": 3760.6,
+          "data_load_ms": 57669.2,
+          "status": "success"
+        },
+        {
+          "latency_ms": 61697.6,
+          "inference_ms": 3769.2,
+          "data_load_ms": 57928.4,
+          "status": "success"
+        },
+        {
+          "latency_ms": 62260.4,
+          "inference_ms": 3774.7,
+          "data_load_ms": 58485.7,
+          "status": "success"
+        }
+      ],
+      "min_latency_ms": 61429.8,
+      "avg_latency_ms": 61795.9,
+      "min_latency_s": 61.43
+    }
+  ]
+}

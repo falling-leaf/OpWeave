@@ -1,0 +1,12 @@
+{
+ "timestamp": "2026-10-17T14:30",
+ "dataset": "slice",
+ "rows_per_query": 2000,
+ "interpreter": "uv run --project /home/why/dbagent/pgdl/test python",
+ "model": "qwen3.6-plus",
+ "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+ "note": "Each run is one fresh hermes -z --yolo invocation. A run counts only if the agent reports torch.Size([2000, 1]). The 26.2s run read 1999 rows and is excluded. The 34.8s probe used a looser prompt and is not part of the minimum.",
+ "valid_runs_s": [23.6, 26.5, 34.2],
+ "min_s": 23.6,
+ "excluded": [{"s": 26.2, "reason": "agent treated the header as data and read 1999 rows"}]
+}

@@ -1,0 +1,87 @@
+{
+  "timestamp": "2026-10-15T16:05:46.146473",
+  "experiment": "optimization_ablation_table3",
+  "optimization": "on",
+  "workload": "year_predict",
+  "paper_column": "CPU: year_predict (n=10000)",
+  "default_device_when_off": "cpu",
+  "config": {
+    "row_count": 10000,
+    "task": "series",
+    "kind": "cpu",
+    "query": "SELECT unnest(db_agent_single('series', sub_table.data)) AS score FROM (SELECT * FROM year_predict_test LIMIT 10000) AS sub_table;",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 0,
+    "allowed_cpus": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 12.8,
+  "phases": [
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 3,
+        "burn_rounds": 1,
+        "pin_cpu": 0,
+        "extra_workers": 1,
+        "extra_pin_cpu": 20,
+        "wake_gap": 0
+      },
+      "load_before_queries": {
+        "cpu_pct": 7.1
+      },
+      "load_samples": [
+        {
+          "before": {
+            "cpu_pct": 12.3
+          },
+          "after": {
+            "cpu_pct": 11.6
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 50.0
+          },
+          "after": {
+            "cpu_pct": 6.2
+          }
+        },
+        {
+          "before": {
+            "cpu_pct": 0.0
+          },
+          "after": {
+            "cpu_pct": 6.6
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 3416.0,
+        "status": "success",
+        "rows_returned": 10000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 1190.7,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 1221.3,
+          "status": "success",
+          "rows_returned": 10000
+        },
+        {
+          "latency_ms": 1194.5,
+          "status": "success",
+          "rows_returned": 10000
+        }
+      ],
+      "min_latency_ms": 1190.7,
+      "avg_latency_ms": 1202.2,
+      "min_latency_s": 1.191
+    }
+  ]
+}
