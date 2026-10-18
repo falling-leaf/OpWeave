@@ -38,7 +38,7 @@ bash run_experiment.sh --dry-run  # print the steps, change nothing
 ```
 
 The full run takes roughly an hour. Results are written as JSON under
-`pgdl/test/support/results/scheduling/optimization_ablation/`.
+`pgdl/test/results/scheduling/optimization_ablation/`.
 
 The steps separately:
 

@@ -61,7 +61,7 @@ python3 scheduling_tests/load_test/run_table3.py --dry-run
 `--generation-ms` overrides all of them with one number. Without either flag
 the runner calls `hermes -z` three times per workload, under no load, and
 keeps the minimum. Results go to
-`pgdl/test/support/results/scheduling/load_test/table3_<timestamp>.json`, and
+`pgdl/test/results/scheduling/load_test/table3_<timestamp>.json`, and
 the run ends with each phase against the published number.
 
 Published execution times, in seconds, low / med / high:

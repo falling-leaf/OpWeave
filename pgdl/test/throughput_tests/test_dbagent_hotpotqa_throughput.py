@@ -7,7 +7,7 @@ Record actual execution time for each level (no pass/fail judgment).
 Report predict_error and other failures as-is.
 
 Dataset: HotpotQA (reasoning) — n=20 samples, db_agent_single('reasoning', ...).
-Results saved to support/results/throughput/.
+Results saved to results/throughput/.
 """
 
 import sys, os, time, json, multiprocessing, argparse

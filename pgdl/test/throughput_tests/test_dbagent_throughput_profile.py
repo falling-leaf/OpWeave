@@ -8,7 +8,7 @@ Report predict_error and other failures as-is.
 
 Datasets: slice, swarm, year_predict (CPU) + sst-2, imdb, financial (GPU NLP)
           + imagenet, cifar-10, stanford_dogs (GPU Image)
-n=1000 per worker. Results saved to support/results/throughput/.
+n=1000 per worker. Results saved to results/throughput/.
 """
 
 import sys, os, time, json, multiprocessing

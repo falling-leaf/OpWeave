@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Turn ablation JSON into the extra Table 3 row. Does not edit the paper.
 
-Reads pgdl/test/support/results/scheduling/optimization_ablation/*.json
+Reads pgdl/test/results/scheduling/optimization_ablation/*.json
 written by run_ablation.py. Emits:
 
   optimization_ablation/table3_opt_off_row.tex
@@ -30,7 +30,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_RESULTS = (
-    HERE.parents[1] / "support" / "results" / "scheduling" / "optimization_ablation"
+    HERE.parents[1] / "results" / "scheduling" / "optimization_ablation"
 )
 
 COLUMNS = ("year_predict", "cifar10", "hotpotqa")
