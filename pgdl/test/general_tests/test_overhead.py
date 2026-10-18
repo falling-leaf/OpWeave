@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 import psutil
 
-from support.test_result_paths import GENERAL_RESULTS_DIR
+from tools.test_result_paths import GENERAL_RESULTS_DIR
 
 # ============================================================
 # Configuration

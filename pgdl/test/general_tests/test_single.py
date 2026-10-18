@@ -24,7 +24,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 from morphingdb_test.config import db_config
 from init_tests.json_to_csv import json_to_csv
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 REASONING_ROW_COUNTS = [1, 5, 10, 20]
 DEFAULT_ROW_COUNTS = [1000, 2000, 5000, 10000]

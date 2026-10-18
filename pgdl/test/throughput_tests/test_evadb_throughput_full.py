@@ -33,7 +33,7 @@ import evadb
 import warnings
 warnings.filterwarnings("ignore")
 
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 # =============================================================================
 # Configuration

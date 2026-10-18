@@ -5,8 +5,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-SUPPORT_ROOT = Path(__file__).resolve().parent
-TEST_ROOT = SUPPORT_ROOT.parent
+TOOLS_ROOT = Path(__file__).resolve().parent
+TEST_ROOT = TOOLS_ROOT.parent
 RESULTS_ROOT = TEST_ROOT / "results"
 GENERAL_RESULTS_DIR = RESULTS_ROOT / "general"
 THROUGHPUT_RESULTS_DIR = RESULTS_ROOT / "throughput"

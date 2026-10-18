@@ -18,7 +18,7 @@ sys.path.insert(0, ROOT)
 from general_tests.benchmark_musique_fair import call_reader_decoder
 
 MODEL_DIR = os.path.join(ROOT, "morphingdb_test", "models")
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(THROUGHPUT_RESULTS_DIR)
 CONCURRENCY_LEVELS = [1, 5, 10]

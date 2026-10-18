@@ -14,7 +14,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 from morphingdb_test.config import db_config
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 import psycopg2
 import time
 

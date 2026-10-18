@@ -19,7 +19,7 @@ from general_tests.benchmark_musique_fair import call_reader_decoder
 CPU_SET = list(range(20))
 CPU_MASK = ",".join(str(c) for c in CPU_SET)
 MODEL_DIR = os.path.join(ROOT, "morphingdb_test", "models")
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(THROUGHPUT_RESULTS_DIR)
 CONCURRENCY_LEVELS = [1, 5, 10]

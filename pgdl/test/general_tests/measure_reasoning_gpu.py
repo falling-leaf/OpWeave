@@ -21,7 +21,7 @@ import psutil
 import psycopg2
 from morphingdb_test.config import db_config
 
-from support.test_result_paths import GENERAL_RESULTS_DIR
+from tools.test_result_paths import GENERAL_RESULTS_DIR
 
 ISOLATED_CPUS = list(range(21, 40))
 GPU_POLL_INTERVAL = 0.1

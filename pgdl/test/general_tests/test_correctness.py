@@ -13,7 +13,7 @@ import numpy as np
 import torch
 import psycopg2
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 

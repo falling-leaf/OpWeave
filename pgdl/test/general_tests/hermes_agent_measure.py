@@ -23,7 +23,7 @@ from datetime import datetime
 
 HERMES_CLI = "/home/why/.local/bin/hermes"
 BASELINE_DIR = "/home/why/baseline"
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 OUTPUT_DIR = ensure_dir(GENERAL_RESULTS_DIR)
 

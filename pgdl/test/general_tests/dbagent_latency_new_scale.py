@@ -9,8 +9,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 import argparse
 import json, time, psycopg2
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
-from support.general_extension import ensure_opt_off
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.general_extension import ensure_opt_off
 from morphingdb_test.config import db_config
 
 ROW_COUNTS = [2000, 4000, 6000, 8000, 10000]

@@ -42,7 +42,7 @@ DB_CONFIG = {
 }
 
 TEST_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 RESULT_DIR = ensure_dir(THROUGHPUT_RESULTS_DIR)
 os.makedirs(RESULT_DIR, exist_ok=True)

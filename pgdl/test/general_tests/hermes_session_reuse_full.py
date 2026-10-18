@@ -28,7 +28,7 @@ import subprocess
 from datetime import datetime
 
 # ─── Configuration ──────────────────────────────────────────────────────
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 OUTPUT_DIR = ensure_dir(GENERAL_RESULTS_DIR)
 PURE_RESULTS_FILE = os.path.join(OUTPUT_DIR, "hermes_session_reuse_20260614_093541.json")
