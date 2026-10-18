@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 import time
 from datetime import datetime
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 import json
 import csv
 from concurrent.futures import ProcessPoolExecutor

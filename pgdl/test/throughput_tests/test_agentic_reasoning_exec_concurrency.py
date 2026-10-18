@@ -19,7 +19,7 @@ from general_tests.benchmark_reasoning import load_mvec_vectors, load_step2_vect
 CPU_SET = list(range(20))
 CPU_MASK = ",".join(str(c) for c in CPU_SET)
 MODEL_DIR = os.path.join(ROOT, "morphingdb_test", "models")
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(THROUGHPUT_RESULTS_DIR)
 HERMES_EXEC_SCRIPT = os.path.join(ROOT, "scheduling_tests", "baseline_code", "hermes_reasoning_exec.py")

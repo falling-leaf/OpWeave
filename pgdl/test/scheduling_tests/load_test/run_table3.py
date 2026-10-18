@@ -56,7 +56,7 @@ from scheduling_tests.load_test.harness import (
     pin_this_process,
     query_status,
 )
-from support.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXEC_DIR = os.path.join(HERE, "baseline_exec")

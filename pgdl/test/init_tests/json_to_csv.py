@@ -10,7 +10,7 @@ import csv
 import os
 import sys
 from collections import defaultdict
-from support.test_result_paths import GENERAL_RESULTS_DIR
+from tools.test_result_paths import GENERAL_RESULTS_DIR
 
 
 def json_to_csv(json_file_path, csv_file_path):

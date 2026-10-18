@@ -29,7 +29,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from support.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir  # noqa: E402
+from tools.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir  # noqa: E402
 
 from load_harness import CpuLoadManager, CpuMonitor, GpuLoadManager  # noqa: E402
 from workloads import get_workload  # noqa: E402

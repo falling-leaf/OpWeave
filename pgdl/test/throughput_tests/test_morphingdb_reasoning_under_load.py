@@ -37,7 +37,7 @@ import subprocess
 import subprocess as sp
 import argparse
 from datetime import datetime
-from support.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir
 
 import numpy as np
 import torch

@@ -40,7 +40,7 @@ import psycopg2
 from pathlib import Path
 from datetime import datetime
 
-from support.test_result_paths import GENERAL_RESULTS_DIR
+from tools.test_result_paths import GENERAL_RESULTS_DIR
 
 # ============================================================
 # Configuration

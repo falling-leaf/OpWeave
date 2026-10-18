@@ -10,7 +10,7 @@ import psycopg2
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 from morphingdb_test.config import db_config
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 
 ROW_COUNTS = [2000, 4000, 6000, 8000, 10000]

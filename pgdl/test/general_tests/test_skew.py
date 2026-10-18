@@ -18,7 +18,7 @@ from morphingdb_test.config import db_config
 import json
 import csv
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 
 def create_skew_dataset(table_name, source_table, skew_column, skew_ratios, total_rows=None):

@@ -16,7 +16,7 @@ import os
 import time
 import psycopg2
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 from morphingdb_test.config import db_config
 
 SAMPLE_SIZES = [1, 5, 10, 20]

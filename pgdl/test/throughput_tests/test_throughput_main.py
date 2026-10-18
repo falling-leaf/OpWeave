@@ -15,7 +15,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 import psycopg2
 from morphingdb_test.config import db_config
-from support.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import THROUGHPUT_RESULTS_DIR, ensure_dir
 
 # ─── Hardware ───────────────────────────────────────────────────────
 CPU_COUNT = 20

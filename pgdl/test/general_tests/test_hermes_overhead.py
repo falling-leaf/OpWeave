@@ -14,7 +14,7 @@ import json
 import subprocess
 import psutil
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 

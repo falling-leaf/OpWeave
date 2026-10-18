@@ -29,7 +29,7 @@ import time
 import json
 import threading
 from datetime import datetime
-from support.test_result_paths import INIT_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import INIT_RESULTS_DIR, ensure_dir
 
 TEST_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

@@ -19,9 +19,9 @@ pgdl/test/morphingdb_test/models/
 !pgdl/test/morphingdb_test/models/load_predictors/
 
 # === TEST OUTPUT / RUNTIME CACHE ===
-# Consolidated results live in pgdl/test/results/ (tracked).
-# The pre-2026-07 archive under legacy/ stays out of git.
-pgdl/test/results/legacy/
+# Everything under pgdl/test/results/ is run output (json/csv/tex/jsonl).
+# No source lives there, so the whole tree stays out of git.
+pgdl/test/results/
 pgdl/test/evadb_data/
 
 # === PYTHON VIRTUAL ENVIRONMENTS ===

@@ -28,7 +28,7 @@ BASELINE_DIR = "/home/why/baseline"
 DATA_DIR = os.path.join(BASELINE_DIR, "data")
 MODELS_DIR = os.path.join(BASELINE_DIR, "models")
 TOOLS_DIR = "/home/why/dbagent/pgdl/test/tools"
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(GENERAL_RESULTS_DIR)
 TIMEOUT_S = 600   # 10 minutes per run max

@@ -21,7 +21,7 @@ import time
 import csv
 import psycopg2
 from datetime import datetime
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 

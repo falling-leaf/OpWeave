@@ -44,7 +44,7 @@ from load_harness import (  # noqa: E402
     pin_backend,
     pin_current_process,
 )
-from support.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir  # noqa: E402
+from tools.test_result_paths import SCHEDULING_RESULTS_DIR, ensure_dir  # noqa: E402
 from workloads import WORKLOADS, get_workload  # noqa: E402
 
 DB_CONFIG = {

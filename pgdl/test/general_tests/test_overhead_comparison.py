@@ -27,7 +27,7 @@ DB_CONFIG = {
 }
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
 TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools")
-from support.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
+from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(GENERAL_RESULTS_DIR)
 os.makedirs(RESULTS_DIR, exist_ok=True)
