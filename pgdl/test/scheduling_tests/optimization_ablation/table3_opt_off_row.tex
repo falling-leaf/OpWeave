@@ -1,0 +1,16 @@
+% Extra row for tables/scheduling_load.tex (Table 3).
+% optimization off: device fixed at the orchestration default
+%   year_predict -> cpu, cifar10 -> gpu, HotpotQA -> gpu.
+% Paste under the \\modelname{} row. Do not replace that row;
+% the published numbers are the optimization-on condition.
+  \modelname{} (w/o opt.)
+    & 0.414 & 1.274 & 3.784
+    & --- & --- & ---
+    & --- & --- & --- \\
+% Optional check row from a fresh optimization-on rerun.
+% The published \\modelname{} row stays the paper number;
+% this one only confirms the rerun.
+%   \modelname{} (opt. on, rerun)
+    & 0.414 & 1.270 & 0.399
+    & --- & --- & ---
+    & --- & --- & --- \\

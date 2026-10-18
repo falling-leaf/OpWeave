@@ -1,0 +1,229 @@
+{
+  "timestamp": "2026-10-17T04:22:52.248080",
+  "experiment": "optimization_ablation_table3",
+  "optimization": "on",
+  "workload": "hotpotqa",
+  "paper_column": "GPU: HotpotQA (n=20)",
+  "default_device_when_off": "gpu",
+  "config": {
+    "row_count": 20,
+    "task": "reasoning",
+    "kind": "gpu",
+    "query": "SELECT count(*) FROM (SELECT unnest(db_agent_single('reasoning', sub_table.reasoning_vec)) AS score FROM (SELECT * FROM reasoning_vector_test LIMIT 20) AS sub_table) t;",
+    "warmup_runs": 3,
+    "timed_runs": 3,
+    "cooldown_seconds": 10,
+    "allowed_cpus": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 1203.9,
+  "phases": [
+    {
+      "phase": "low",
+      "phase_config": {
+        "n_workers": 2,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 2719.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 5176.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 56602.3,
+        "status": "success",
+        "rows_returned": 1
+      },
+      "timed_results": [
+        {
+          "latency_ms": 56605.9,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 56609.1,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 56447.2,
+          "status": "success",
+          "rows_returned": 1
+        }
+      ],
+      "min_latency_ms": 56447.2,
+      "avg_latency_ms": 56554.1,
+      "min_latency_s": 56.447
+    },
+    {
+      "phase": "medium",
+      "phase_config": {
+        "n_workers": 3,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 4076.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 6534.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 57104.3,
+        "status": "success",
+        "rows_returned": 1
+      },
+      "timed_results": [
+        {
+          "latency_ms": 57106.3,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 57043.8,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 57073.5,
+          "status": "success",
+          "rows_returned": 1
+        }
+      ],
+      "min_latency_ms": 57043.8,
+      "avg_latency_ms": 57074.5,
+      "min_latency_s": 57.044
+    },
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 8,
+        "mem_gb": 1.5,
+        "oom_style": true
+      },
+      "load_before_queries": {
+        "gpu_util_pct": 100.0,
+        "gpu_mem_mb": 10543.0
+      },
+      "load_samples": [
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          }
+        },
+        {
+          "before": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          },
+          "after": {
+            "gpu_util_pct": 100.0,
+            "gpu_mem_mb": 13000.0
+          }
+        }
+      ],
+      "warmup": {
+        "latency_ms": 63223.3,
+        "status": "success",
+        "rows_returned": 1
+      },
+      "timed_results": [
+        {
+          "latency_ms": 63128.1,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 63174.7,
+          "status": "success",
+          "rows_returned": 1
+        },
+        {
+          "latency_ms": 63056.4,
+          "status": "success",
+          "rows_returned": 1
+        }
+      ],
+      "min_latency_ms": 63056.4,
+      "avg_latency_ms": 63119.7,
+      "min_latency_s": 63.056
+    }
+  ]
+}

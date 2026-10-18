@@ -1,0 +1,49 @@
+{
+  "baseline": "dbagent",
+  "scale": [
+    2000,
+    4000,
+    6000,
+    8000,
+    10000
+  ],
+  "timestamp": "2026-06-26T10:30:38.215931",
+  "reuse_connection": false,
+  "tests": [
+    {
+      "dataset": "sst-2",
+      "results": [
+        {
+          "row_count": 2000,
+          "status": "success",
+          "latency": 5.073724746704102,
+          "rows_returned": 2000
+        },
+        {
+          "row_count": 4000,
+          "status": "success",
+          "latency": 8.176291465759277,
+          "rows_returned": 4000
+        },
+        {
+          "row_count": 6000,
+          "status": "success",
+          "latency": 11.257656335830688,
+          "rows_returned": 6000
+        },
+        {
+          "row_count": 8000,
+          "status": "success",
+          "latency": 12.71967363357544,
+          "rows_returned": 6868
+        },
+        {
+          "row_count": 10000,
+          "status": "success",
+          "latency": 12.748852968215942,
+          "rows_returned": 6868
+        }
+      ]
+    }
+  ]
+}

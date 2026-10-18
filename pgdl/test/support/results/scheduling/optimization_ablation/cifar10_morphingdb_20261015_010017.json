@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-10-15T01:00:17.990980",
+  "experiment": "optimization_ablation_baselines",
+  "system": "morphingdb",
+  "workload": "cifar10",
+  "config": {
+    "row_count": 1000,
+    "device": "gpu",
+    "warmup_runs": 1,
+    "timed_runs": 3,
+    "cooldown_seconds": 60,
+    "load": "matmul on GPU 0, low=2x2GB medium=3x2GB high=8x1.5GB",
+    "reported_stat": "minimum of successful timed runs"
+  },
+  "total_time_seconds": 326.0,
+  "phases": [
+    {
+      "phase": "medium",
+      "phase_config": {
+        "n_workers": 3,
+        "mem_gb": 2.0,
+        "oom_style": false
+      },
+      "warmup": {
+        "latency_ms": 14830.3,
+        "status": "success",
+        "rows_returned": 1000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 15167.1,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 14760.4,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 14871.4,
+          "status": "success",
+          "rows_returned": 1000
+        }
+      ],
+      "min_latency_ms": 14760.4,
+      "avg_latency_ms": 14933.0,
+      "min_latency_s": 14.76
+    },
+    {
+      "phase": "high",
+      "phase_config": {
+        "n_workers": 8,
+        "mem_gb": 1.5,
+        "oom_style": true
+      },
+      "warmup": {
+        "latency_ms": 31400.7,
+        "status": "success",
+        "rows_returned": 1000
+      },
+      "timed_results": [
+        {
+          "latency_ms": 31599.9,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 31630.8,
+          "status": "success",
+          "rows_returned": 1000
+        },
+        {
+          "latency_ms": 31687.0,
+          "status": "success",
+          "rows_returned": 1000
+        }
+      ],
+      "min_latency_ms": 31599.9,
+      "avg_latency_ms": 31639.2,
+      "min_latency_s": 31.6
+    }
+  ]
+}

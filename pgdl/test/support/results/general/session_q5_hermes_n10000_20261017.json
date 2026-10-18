@@ -1,0 +1,31 @@
+{
+ "n": 10000,
+ "queries": 5,
+ "note": "model loaded once and warmed up; each of the 5 queries re-reads the CSV then infers, matching benchmark_series end-to-end timing",
+ "results": {
+  "slice": {
+   "min_s": 1.8879,
+   "runs": [
+    1.9392,
+    1.9276,
+    1.8879
+   ]
+  },
+  "swarm": {
+   "min_s": 17.4856,
+   "runs": [
+    17.853,
+    17.598,
+    17.4856
+   ]
+  },
+  "year_predict": {
+   "min_s": 0.88,
+   "runs": [
+    0.8915,
+    0.88,
+    0.8888
+   ]
+  }
+ }
+}

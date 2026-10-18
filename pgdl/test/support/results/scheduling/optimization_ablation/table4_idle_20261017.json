@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-10-17T02:57:59.829162",
+  "protocol": "fresh connection per query, 1 warmup discarded, min of 3, ADD_OPTIMIZATION_LOGIC off, uv run -> pgdl/test/.venv",
+  "note": "Table 4 idle. year_predict and swarm are not in the main-table CSV. slice DBAgent main-table value is 0.328s, lower than this measurement (0.466s), so the main table is unchanged and the table records 0.328.",
+  "results": {
+    "year_predict": {
+      "n": 10000,
+      "dbagent_min_s": 0.292,
+      "dbagent_timed_ms": [
+        291.9,
+        300.6,
+        296.3
+      ],
+      "morphingdb_min_s": 0.609,
+      "morphingdb_timed_ms": [
+        608.9,
+        613.2,
+        610.6
+      ]
+    },
+    "slice": {
+      "n": 10000,
+      "dbagent_min_s": 0.466,
+      "dbagent_timed_ms": [
+        467.1,
+        466.0,
+        468.1
+      ],
+      "morphingdb_min_s": 0.784,
+      "morphingdb_timed_ms": [
+        787.2,
+        788.2,
+        784.5
+      ],
+      "main_table_dbagent_s": 0.328,
+      "recorded_dbagent_s": 0.328
+    },
+    "swarm": {
+      "n": 1461,
+      "dbagent_min_s": 0.226,
+      "dbagent_timed_ms": [
+        230.2,
+        226.0,
+        247.6
+      ],
+      "morphingdb_min_s": 0.266,
+      "morphingdb_timed_ms": [
+        267.3,
+        269.6,
+        266.0
+      ]
+    }
+  }
+}

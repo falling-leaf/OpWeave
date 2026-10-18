@@ -1,0 +1,123 @@
+{
+  "timestamp": "2026-10-16T15:31:24.794309",
+  "table": "paper_workspace/MDB_Agent/tables/scheduling_load.tex",
+  "paper_seconds": {
+    "dbagent_year_predict": [
+      0.764,
+      1.092,
+      3.504
+    ],
+    "morphingdb_year_predict": [
+      1.079,
+      1.892,
+      4.918
+    ],
+    "hermes_year_predict": [
+      0.233,
+      0.239,
+      0.982
+    ],
+    "dbagent_cifar10": [
+      28.2,
+      31.3,
+      39.7
+    ],
+    "morphingdb_cifar10": [
+      31.8,
+      35.6,
+      48.0
+    ],
+    "hermes_cifar10": [
+      62.9,
+      93.9,
+      200.6
+    ],
+    "dbagent_hotpotqa": [
+      92.0,
+      149.9,
+      272.5
+    ],
+    "morphingdb_hotpotqa": [
+      168.6,
+      268.7,
+      345.1
+    ],
+    "hermes_hotpotqa": [
+      148.9,
+      298.3,
+      610.0
+    ]
+  },
+  "elapsed_seconds": 27.0,
+  "cells": [
+    {
+      "cell": "dbagent_year_predict",
+      "system": "dbagent",
+      "workload": "year_predict",
+      "load": "cpu",
+      "n": 64,
+      "warmup_runs": 1,
+      "timed_runs": 1,
+      "generation_ms": null,
+      "phases": [
+        {
+          "phase": "low",
+          "n_workers": 20,
+          "load_pct": 98.4,
+          "warmup": {
+            "latency_ms": 589.2,
+            "status": "success",
+            "rows_returned": 64
+          },
+          "timed_results": [
+            {
+              "latency_ms": 604.6,
+              "status": "success",
+              "rows_returned": 64
+            }
+          ],
+          "min_latency_ms": 604.6,
+          "avg_latency_ms": 604.6
+        },
+        {
+          "phase": "medium",
+          "n_workers": 60,
+          "load_pct": 100.0,
+          "warmup": {
+            "latency_ms": 997.3,
+            "status": "success",
+            "rows_returned": 64
+          },
+          "timed_results": [
+            {
+              "latency_ms": 955.8,
+              "status": "success",
+              "rows_returned": 64
+            }
+          ],
+          "min_latency_ms": 955.8,
+          "avg_latency_ms": 955.8
+        },
+        {
+          "phase": "high",
+          "n_workers": 120,
+          "load_pct": 98.8,
+          "warmup": {
+            "latency_ms": 2738.4,
+            "status": "success",
+            "rows_returned": 64
+          },
+          "timed_results": [
+            {
+              "latency_ms": 1305.5,
+              "status": "success",
+              "rows_returned": 64
+            }
+          ],
+          "min_latency_ms": 1305.5,
+          "avg_latency_ms": 1305.5
+        }
+      ]
+    }
+  ]
+}

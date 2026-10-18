@@ -1,0 +1,46 @@
+# Evadb cache directory - contains downloaded models, datasets, and temporary files
+evadb_data/
+!evadb_data/.gitkeep
+
+# Evadb test results (JSON timing data)
+result/*.json
+
+# Evadb database files
+evadb_data/*.db
+evadb_data/*.sqlite
+
+# Downloaded models
+evadb_data/models/*
+!evadb_data/models/.gitkeep
+
+# Downloaded datasets
+evadb_data/evadb_datasets/*
+!evadb_data/evadb_datasets/.gitkeep
+
+# S3 downloads cache
+evadb_data/s3_downloads/*
+!evadb_data/s3_downloads/.gitkeep
+
+# Function implementations
+evadb_data/functions/*
+!evadb_data/functions/.gitkeep
+
+# Index files
+evadb_data/index/*
+!evadb_data/index/.gitkeep
+
+# Temporary files
+evadb_data/tmp/*
+!evadb_data/tmp/.gitkeep
+
+# Evadb server log files
+evadb.log
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Compiled artifacts of the optimization ablation (rebuilt by run_experiment.sh)
+scheduling_tests/optimization_ablation/bin/

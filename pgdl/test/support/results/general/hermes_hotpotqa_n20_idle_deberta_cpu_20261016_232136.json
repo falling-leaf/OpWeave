@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-16T23:21:36.752193",
+  "config": {
+    "n": 20,
+    "load": "idle, GPU 0",
+    "device": "cross_encoder=cuda:0, deberta_reader=cpu",
+    "model_load_excluded_ms": 2054.4,
+    "note": "deberta per-sample on CPU, as in the 2026-10-14 hermes breakdown"
+  },
+  "warmup": {
+    "data_ms": 2.033,
+    "cross_ms": 305.162,
+    "deberta_ms": 18547.573,
+    "decoder_ms": 288.393,
+    "wall_ms": 19143.177,
+    "scores": 20
+  },
+  "timed": {
+    "data_ms": 23.47,
+    "cross_ms": 55.61,
+    "deberta_ms": 14055.871,
+    "decoder_ms": 296.574,
+    "wall_ms": 14431.541,
+    "scores": 20
+  }
+}

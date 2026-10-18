@@ -1,0 +1,51 @@
+{
+  "results_dir": "/home/why/dbagent/pgdl/test/support/results/scheduling/optimization_ablation",
+  "sources": {
+    "year_predict": {
+      "off": "/home/why/dbagent/pgdl/test/support/results/scheduling/optimization_ablation/year_predict_opt_off_20261014_232543.json",
+      "on": "/home/why/dbagent/pgdl/test/support/results/scheduling/optimization_ablation/year_predict_opt_on_20261014_230228.json"
+    },
+    "cifar10": {
+      "off": null,
+      "on": null
+    },
+    "hotpotqa": {
+      "off": null,
+      "on": null
+    }
+  },
+  "off_cells_low_med_high_by_workload": {
+    "year_predict": [
+      "0.414",
+      "1.274",
+      "3.784"
+    ],
+    "cifar10": [
+      "---",
+      "---",
+      "---"
+    ],
+    "hotpotqa": [
+      "---",
+      "---",
+      "---"
+    ]
+  },
+  "on_rerun_cells_low_med_high_by_workload": {
+    "year_predict": [
+      "0.414",
+      "1.270",
+      "0.399"
+    ],
+    "cifar10": [
+      "---",
+      "---",
+      "---"
+    ],
+    "hotpotqa": [
+      "---",
+      "---",
+      "---"
+    ]
+  }
+}
