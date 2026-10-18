@@ -2,8 +2,11 @@
 
 One entry point for the scheduling table in
 `paper_workspace/MDB_Agent/tables/scheduling_load.tex`. It replaces the nine
-separate scripts that used to live in `scheduling_tests/` (now under
-`recycle/scheduling_tests_table3/`). Nothing else in `scheduling_tests/` is
+separate scripts that used to live in `scheduling_tests/` (eight of them are
+now under `recycle/scheduling_tests_table3/`; the MorphingDB reasoning one was
+pulled back into `throughput_tests/` because
+`test_reasoning_baseline_concurrency.py` imports it). Nothing else in
+`scheduling_tests/` is
 part of this table: slice, the scheduling-decision sweep, fault tolerance,
 the all-GPU HotpotQA variants, and `optimization_ablation/` stay where they
 are.
