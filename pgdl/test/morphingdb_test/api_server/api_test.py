@@ -12,10 +12,10 @@ db_config = {
 
 
 def api_load_model_test():
-    # 初始化结果列表
+    # Initialize the results list
     results = []
 
-    # 定义要执行的 SQL 查询
+    # Define the SQL queries to execute
     queries = [
         ("resnet18", "/home/lhh/morphingdb/MorphingDB_test/models/resnet18_vec.pt"),
         ("resnet50", "/home/lhh/models/resnet50_resnet50_nabird.pt"),
@@ -32,23 +32,23 @@ def api_load_model_test():
         cur.execute(sql)
         end = time.time()
 
-        # 计算执行时间
+        # Compute the execution time
         execution_time = end - start
 
-        # 将结果存储为字典
+        # Store the result as a dict
         result = {
             "sql": sql,
             "execution_time": execution_time
         }
 
-        # 将字典添加到结果列表
+        # Append the dict to the results list
         results.append(result)
 
-        # 关闭数据库连接
+        # Close the database connection
         cur.close()
         conn.close()
 
-    # 将结果列表写入 JSON 文件
+    # Write the results list to a JSON file
     with open("result/api_load_model_results.json", "w") as result_file:
         json.dump(results, result_file, indent=4)
 

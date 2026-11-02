@@ -19,7 +19,7 @@ import os
 import numpy as np
 import psycopg2
 
-MODEL_PATH = "/home/why/baseline/models/googlenet_cifar10.pt"
+MODEL_PATH = "/opt/baselines/models/googlenet_cifar10.pt"
 DB_CONFIG = {
     "host": "localhost", "port": "5432", "user": "why",
     "password": "123456", "dbname": "postgres",

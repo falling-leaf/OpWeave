@@ -50,7 +50,7 @@ BINARY_SLEEP = 1
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
 TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools")
 DB_CONFIG = {"dbname": "postgres", "host": "localhost", "port": "5432", "user": "why", "password": "123456"}
-PSQL = "/home/why/dbagent/pg_base/bin/psql"
+PSQL = "/opt/opweave/pg_base/bin/psql"
 
 # =============================================================================
 # Dataset configurations

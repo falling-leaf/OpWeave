@@ -199,7 +199,7 @@ modify_model(PG_FUNCTION_ARGS)
         ereport(ERROR, (errmsg("model is not exist!")));
     }
 
-    //基于基础模型
+    // based on the base model
     if(model_manager.HaveBaseModel(model_name)){
         ereport(ERROR, (errmsg("models with base models do not support updates!")));
     }
@@ -1010,10 +1010,10 @@ print_cost(PG_FUNCTION_ARGS)
              time_filter.infer_time, (double)time_filter.infer_time * 100 / total,
              time_filter.post_time, (double)time_filter.post_time * 100 / total);
 
-    // 将C字符串转换为TEXT Datum
+    // convert the C string to a TEXT Datum
     Datum result = CStringGetTextDatum(message);
 
-    // 返回TEXT Datum
+    // return the TEXT Datum
     PG_RETURN_DATUM(result);
 }
 
@@ -1035,8 +1035,8 @@ image_classification(PG_FUNCTION_ARGS)
     select_model_path = TextDatumGetCString(PG_GETARG_DATUM(4));
     regression_model_path = TextDatumGetCString(PG_GETARG_DATUM(5));
 
-    // ModelSelection image_classification("/home/why/dbagent/pgdl/test/morphingdb_test/models/select_model/ViT-L-14_visual_traced.pt", 
-    //                             "/home/why/dbagent/pgdl/test/morphingdb_test/models/select_model/regression_model.onnx");
+    // ModelSelection image_classification("/opt/opweave/pgdl/test/morphingdb_test/models/select_model/ViT-L-14_visual_traced.pt", 
+    //                             "/opt/opweave/pgdl/test/morphingdb_test/models/select_model/regression_model.onnx");
     ModelSelection image_classification(select_model_path, regression_model_path);
 
     std::string result_str = image_classification.SelectModel(table_name, 
@@ -1065,20 +1065,20 @@ api_load_model(PG_FUNCTION_ARGS)
     }
 
 
-    // 构建动态的 JSON 请求体
+    // build the dynamic JSON request body
     std::ostringstream json_body_stream;
     json_body_stream << "{\"model_name\": \"" << model_name << "\", \"model_path\": \"" << model_path << "\"}";
     std::string json_body = json_body_stream.str();
 
-    // 设置请求头
+    // set the request headers
     const http::HeaderFields headers = {
         {"Content-Type", "application/json"}
     };
 
-    // 创建 HTTP 请求
+    // create the HTTP request
     http::Request request{"http://0.0.0.0:8000/load_model/"};
 
-    // 发送 POST 请求
+    // send the POST request
     const auto response = request.send("POST", json_body, headers);
 
     elog(INFO, "Response status: %d", response.status);
@@ -1102,17 +1102,17 @@ api_predict(PG_FUNCTION_ARGS)
         ereport(ERROR, (errmsg("image_url is empty!")));
     }
 
-    // 构建动态的 JSON 请求体
+    // build the dynamic JSON request body
     std::ostringstream json_body_stream;
     json_body_stream << "{\"model_name\": \"" << model_name << "\", \"image_url\": \"" << image_url << "\"}";
     std::string json_body = json_body_stream.str();
 
-    // 设置请求头
+    // set the request headers
     const http::HeaderFields headers = {
         {"Content-Type", "application/json"}
     };
 
-    // 创建 HTTP 请求
+    // create the HTTP request
     http::Request request{"http://0.0.0.0:8000/predict/"};
     const auto response = request.send("POST", json_body, headers);
 

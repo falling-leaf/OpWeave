@@ -78,13 +78,13 @@ static GPULoadPredictor gpu_load_predictor;
 static std::chrono::high_resolution_clock::time_point execution_start_time;
 static bool execution_timing_active = false;
 static bool data_cleaning = false;
-// 0 代表使用 cpu，1 代表使用 gpu。-1 表示这条查询还没有做过设备决定，
-// 不能拿去复用：using_gpu 的初值曾经是 0，ONCE_AND_FOR_ALL 会把它当成
-// “已经决定用 CPU”，把图像任务从第二个窗口起全改到 CPU 上。
+// 0 means use cpu, 1 means use gpu. -1 means this query has not made a device decision yet,
+// so it cannot be reused: the initial value of using_gpu used to be 0, and ONCE_AND_FOR_ALL treated it as
+// "already decided to use CPU", moving image tasks to CPU from the second window onward.
 static int using_gpu = -1;
 static int gpu_id = 0;
-// year_predict 的设备在一条查询里只判一次。进程级 static 跨窗口保不住，
-// 所以决策记在 TopMemoryContext，避免每个窗口都重扫 /proc。
+// The device for year_predict is decided only once per query. A process-level static cannot persist across windows,
+// so the decision is kept in TopMemoryContext to avoid rescanning /proc for every window.
 struct SeriesDeviceChoice {
     int chosen;  // 0 = not yet, 1 = decided
     int use_gpu;
@@ -192,27 +192,27 @@ void MemoryManager::PrintTimingStats() {
 Args* MemoryManager::Tuple2Vec(HeapTuple tuple, TupleDesc tupdesc, int start, int dim)
 {
     int mvec_oid = 0;
-    // get_mvec_oid定义于model_uitls.cpp, 用于获取mvec类型的oid
+    // get_mvec_oid is defined in model_utils.cpp and is used to obtain the oid of the mvec type
     if (!get_mvec_oid(mvec_oid))
     {
         ereport(ERROR, (errmsg("get mvec oid error!")));
         return nullptr;
     }
-    Args* vec = (Args*) palloc0(sizeof(Args) * dim);  // 仍然用 PG 的 palloc
+    Args* vec = (Args*) palloc0(sizeof(Args) * dim);  // still use PG's palloc
 
     // =============================================================================
 
     for (int i = start; i < dim + start; i++) {
-        // 1. 获取列的类型 OID
-        // tupdesc->attrs 是 0-based 数组，所以直接用 i (假设 start=0 时 i=0 对应第1列)
+        // 1. get the column type OID
+        // tupdesc->attrs is a 0-based array, so use i directly (assuming i=0 corresponds to column 1 when start=0)
         Oid argtype = tupdesc->attrs[i].atttypid;
 
-        // 2. 从元组中获取二进制数据 (Datum)
-        // heap_getattr 的 attnum 是 1-based，所以用 i + 1
+        // 2. get the binary data (Datum) from the tuple
+        // heap_getattr's attnum is 1-based, so use i + 1
         bool isnull;
         Datum datum = heap_getattr(tuple, i + 1, tupdesc, &isnull);
 
-        // 3. 处理 NULL 值（防止读取垃圾数据）
+        // 3. handle NULL values (to avoid reading garbage data)
         if (isnull) {
             vec[i - start].ptr = nullptr;
             vec[i - start].floating = 0.0;
@@ -220,7 +220,7 @@ Args* MemoryManager::Tuple2Vec(HeapTuple tuple, TupleDesc tupdesc, int start, in
             continue;
         }
 
-        // 4. 根据类型转换 Datum
+        // 4. convert the Datum according to its type
         if (argtype == INT4OID) {
             vec[i - start].integer = DatumGetInt32(datum);
         }
@@ -237,24 +237,24 @@ Args* MemoryManager::Tuple2Vec(HeapTuple tuple, TupleDesc tupdesc, int start, in
             vec[i - start].floating = DatumGetFloat8(datum);
         }
         else if (argtype == TEXTOID || argtype == VARCHAROID) {
-            // TextDatumGetCString 会分配新内存(palloc)，返回 C 风格字符串
+            // TextDatumGetCString allocates new memory (palloc) and returns a C-style string
             char* cur_text = TextDatumGetCString(datum);
             vec[i - start].ptr = cur_text;
         }
         else if (argtype == CSTRINGOID) {
-            // DatumGetCString 返回的指针可能直接指向 Tuple 内部，
-            // 建议使用 pstrdup 复制一份，保证生命周期安全
+            // the pointer returned by DatumGetCString may point directly inside the Tuple,
+            // so use pstrdup to make a copy and ensure lifetime safety
             char* cur_cstring = pstrdup(DatumGetCString(datum));
             vec[i - start].ptr = cur_cstring;
         }
         else if (argtype == NUMERICOID) {
-            // Numeric 转换逻辑保持不变，利用 PG 内部函数
+            // the Numeric conversion logic is unchanged, using PG internal functions
             float8 num_float = DatumGetFloat8(DirectFunctionCall1(numeric_float8, datum));
             vec[i - start].floating = num_float;
         }
         else if (argtype == mvec_oid) {
-            // MVec 通常是引用类型，使用 DatumGetPointer
-            // 如果你有自定义的 DatumGetMVec 宏也可以使用，本质通常是一样的
+            // MVec is usually a reference type, so use DatumGetPointer
+            // a custom DatumGetMVec macro can also be used; it is essentially the same
             // elog(INFO, "found mvec column at %d", i + 1);
             MVec* cur_mvec = DatumGetMVec(datum);
             vec[i - start].ptr = cur_mvec;
@@ -268,11 +268,11 @@ Args* MemoryManager::Tuple2Vec(HeapTuple tuple, TupleDesc tupdesc, int start, in
 }
 
 void MemoryManager::SPILoadOneRow(HeapTuple& tuple, TupleDesc& tupdesc, const std::string& table_name, size_t row_index) {
-    // 保存当前的内存上下文（这是调用者的上下文，比如 ExecutorState）
+    // save the current memory context (the caller's context, e.g. ExecutorState)
     MemoryContext caller_context = CurrentMemoryContext;
 
-    SPIConnector spi_connector; // 连接 SPI
-    // 注意：SPI_connect 会将 CurrentMemoryContext 切换为 SPI 的上下文
+    SPIConnector spi_connector; // connect SPI
+    // note: SPI_connect switches CurrentMemoryContext to the SPI context
 
     std::string sql_str = "SELECT * FROM " + table_name + " LIMIT 1 OFFSET $1";
     SPISqlWrapper sql(spi_connector, sql_str, 1);
@@ -295,27 +295,27 @@ void MemoryManager::SPILoadOneRow(HeapTuple& tuple, TupleDesc& tupdesc, const st
         return;
     }
 
-    // ================== 关键修改 ==================
+    // ================== key modification ==================
     
-    // 1. 获取 SPI 内部的指针
+    // 1. get the pointers inside SPI
     HeapTuple spi_tuple = SPI_tuptable->vals[0];
     TupleDesc spi_tupdesc = SPI_tuptable->tupdesc;
 
-    // 2. 临时切回调用者的内存上下文，以便分配的内存能在 SPI_finish 后存活
+    // 2. temporarily switch back to the caller's memory context so the allocated memory survives SPI_finish
     MemoryContext old_ctx = MemoryContextSwitchTo(caller_context);
 
-    // 3. 执行深拷贝
-    // heap_copytuple 会分配新内存并复制数据
+    // 3. perform a deep copy
+    // heap_copytuple allocates new memory and copies the data
     tuple = heap_copytuple(spi_tuple);
-    // CreateTupleDescCopy 会分配新内存并复制描述符
+    // CreateTupleDescCopy allocates new memory and copies the descriptor
     tupdesc = CreateTupleDescCopy(spi_tupdesc);
 
-    // 4. 切回 SPI 上下文（以便 spi_connector 析构时能正常清理环境，虽然大部分时候 SPI_finish 会重置它）
+    // 4. switch back to the SPI context (so spi_connector can clean up properly on destruction, although SPI_finish usually resets it)
     MemoryContextSwitchTo(old_ctx);
 
     // =============================================
     
-    return; // spi_connector 析构，释放 SPI 内部内存，但我们拷贝的数据在 caller_context 中，是安全的
+    return; // spi_connector destructs and frees SPI internal memory, but the copied data lives in caller_context and is safe
 }
 
 Args* MemoryManager::LoadOneRow(const std::string& table_name, size_t row_index)
@@ -330,7 +330,7 @@ Args* MemoryManager::LoadOneRow(const std::string& table_name, size_t row_index)
     if (table_name == "cifar_image_vector_table") {
         vec = MemoryManager::Tuple2Vec(tuple, tupdesc, 1, 1);
     } else if (table_name == "reasoning_vector_step2" || table_name == "musique_vector_step2") {
-        // reasoning_vector_step2 / musique_vector_step2 表的结构是 (id, text_vec)，text_vec 在第2列（索引1）
+        // the reasoning_vector_step2 / musique_vector_step2 tables have the structure (id, text_vec), with text_vec in column 2 (index 1)
         vec = MemoryManager::Tuple2Vec(tuple, tupdesc, 1, 1);
     } else {
         vec = MemoryManager::Tuple2Vec(tuple, tupdesc, 0, 1);
@@ -350,17 +350,17 @@ bool MemoryManager::LoadTextData(const std::string& table_name, size_t row_index
         return false;
     }
     
-    // 确保表有足够的列
+    // ensure the table has enough columns
     if (tupdesc->natts < 3) {
         elog(INFO, "LoadTextData: table %s has only %d columns, expected at least 3", table_name.c_str(), tupdesc->natts);
         return false;
     }
     
     try {
-        // 为 heap_getattr 准备 isnull 参数
+        // prepare the isnull argument for heap_getattr
         bool isnull = false;
         
-        // 读取 query 字段（第2列，索引1）
+        // read the query field (column 2, index 1)
         Datum query_datum = heap_getattr(tuple, 2, tupdesc, &isnull);
         if (!isnull) {
             char* query_str = TextDatumGetCString(query_datum);
@@ -368,7 +368,7 @@ bool MemoryManager::LoadTextData(const std::string& table_name, size_t row_index
             pfree(query_str);
         }
         
-        // 读取 context 字段（第3列，索引2）
+        // read the context field (column 3, index 2)
         isnull = false;
         Datum context_datum = heap_getattr(tuple, 3, tupdesc, &isnull);
         if (!isnull) {
@@ -395,43 +395,43 @@ void PerceptionAgent::LoadMVecData(MVec* current_data) {
         //                        (long)GET_MVEC_ROWID(current_data))));
     }
 
-    // 2. 安全地获取维度
+    // 2. safely obtain the dimension
     int dim = current_data->vec_d.dim;
 
-    // 【关键检查 2】维度合法性校验 (MAX_VECTOR_DIM 定义在 vector.h 中，通常为 1亿左右)
+    // [key check 2] dimension validity check (MAX_VECTOR_DIM is defined in vector.h and is usually around 100 million)
     if (dim <= 0 || dim > MAX_VECTOR_DIM) {
         ereport(ERROR, (errmsg("Invalid vector dimension: %d. Expected between 1 and %d.", 
                                dim, MAX_VECTOR_DIM)));
     }
 
-    // 3. 准备内存上下文
+    // 3. prepare the memory context
     int cache_idx = memory_manager.current_func_call;
     MemoryContext old_context = MemoryContextSwitchTo(TopMemoryContext);
 
-    // 4. 计算大小并分配 (Header + Data)
-    // 此时 dim 已经被校验过，不会导致 6GB 的请求
+    // 4. compute the size and allocate (Header + Data)
+    // dim has already been validated, so it will not cause a 6GB request
     size_t total_size = MVEC_HEADER_SIZE + ((size_t)dim * sizeof(float));
     
-    // 确保 ins_cache 已初始化 (防御性编程)
+    // ensure ins_cache is initialized (defensive programming)
     if (memory_manager.ins_cache == NULL) {
-         // 这里可以补救或者报错，视你的初始化逻辑而定
+         // this can be recovered or reported as an error depending on the initialization logic
          ereport(ERROR, (errmsg("Global memory ins_cache is not initialized.")));
     }
 
     memory_manager.ins_cache[cache_idx] = (MVec*)palloc0(total_size);
 
-    // 5. 拷贝 Header
+    // 5. copy the Header
     std::memcpy(memory_manager.ins_cache[cache_idx], current_data, MVEC_HEADER_SIZE);
 
-    // 6. 获取数据区指针并拷贝数据
-    // 注意：目标地址紧跟在 Header 之后
+    // 6. obtain the data area pointer and copy the data
+    // note: the destination address immediately follows the Header
     float* data_dst = (float*)((char*)memory_manager.ins_cache[cache_idx] + MVEC_HEADER_SIZE);
     
-    // 从源数据的 data 数组起始处拷贝
-    // 注意：current_data->vec_d.data 是柔性数组，直接指向 Header 后的内存
+    // copy from the start of the source data array
+    // note: current_data->vec_d.data is a flexible array pointing directly to the memory after the Header
     std::memcpy(data_dst, current_data->vec_d.data, sizeof(float) * dim);
 
-    // 7. 设置辅助指针
+    // 7. set the auxiliary pointer
     memory_manager.ins_cache_data[cache_idx] = data_dst;
 
     MemoryContextSwitchTo(old_context);
@@ -441,18 +441,18 @@ char* str_to_lower(const char* str) {
     if (str == nullptr) {
         return nullptr;
     }
-    // 分配内存存储小写字符串（+1 留空字符位置）
+    // allocate memory for the lowercase string (+1 for the null terminator)
     char* lower_str = (char*)malloc(strlen(str) + 1);
     if (lower_str == nullptr) {
         elog(ERROR, "Failed to allocate memory for lower case string");
         return nullptr;
     }
     
-    // 逐个字符转换为小写
+    // convert each character to lowercase
     for (int i = 0; str[i] != '\0'; i++) {
         lower_str[i] = tolower((unsigned char)str[i]);
     }
-    // 末尾添加字符串结束符
+    // append the string terminator at the end
     lower_str[strlen(str)] = '\0';
     
     return lower_str;
@@ -520,7 +520,7 @@ AgentAction PerceptionAgent::Execute(std::shared_ptr<AgentState> state) {
         state->task_info.emplace_back(task_info);
         MemoryContextSwitchTo(old_ctx);
     }
-    // 下面代码每次调用均会执行
+    // the following code runs on every call
     MVec* current_data;
     if (task_info.task_type == TaskType::REASONING || task_info.task_type == TaskType::MUSIQUE) {
         current_data = (MVec*)PG_GETARG_MVEC_P(load_index++);
@@ -546,7 +546,7 @@ AgentAction PerceptionAgent::Execute(std::shared_ptr<AgentState> state) {
     }
     else current_data = (MVec*)PG_GETARG_MVEC_P(load_index++);
     LoadMVecData(current_data);
-    // 打印验证：指针与部分数据
+    // print verification: pointer and part of the data
     // elog(INFO, "ins_cache[%d] header_size=%zu dim=%d data_ptr=%p first=%f", cache_idx, header_size, dim, (void*)(*data_slot), memory_manager.ins_cache_data[cache_idx][0]);
     // elog(NOTICE, "Global memory allocated in TopMemoryContext.");
     state->last_action = AgentAction::PERCEPTION;
@@ -708,7 +708,7 @@ void OrchestrationAgent::TaskInit(std::shared_ptr<AgentState> state, int window_
             elog(ERROR, "Failed to allocate memory for Task");
             throw std::bad_alloc();
         }
-        // 关键修复：为每个 task 复制字符串，而不是共享同一个指针
+        // key fix: copy the string for each task instead of sharing the same pointer
         task->model = pstrdup(task_unit.model_name);
         task->cuda = pstrdup(task_unit.cuda_name);
 
@@ -718,7 +718,7 @@ void OrchestrationAgent::TaskInit(std::shared_ptr<AgentState> state, int window_
         }
 
         task->input_start_index = window_start;
-        task->input_end_index = window_end; // 包含start，不包含end
+        task->input_end_index = window_end; // includes start, excludes end
 
         task->output_start_index = 0;
         task->output_end_index = task->input_end_index - task->input_start_index;
@@ -808,7 +808,7 @@ std::string OrchestrationAgent::SelectModel(std::shared_ptr<AgentState> state, T
             int result2 = GET_MVEC_SHAPE_VAL(input, 2);
             int result3 = GET_MVEC_SHAPE_VAL(input, 3);
             if (result0 == 1 && result1 == 3 && result2 == 224 && result3 == 224) {
-                // TODO: cifar10和imagenet shape一样
+                // TODO: cifar10 and imagenet have the same shape
                 char* sample_path_lower = str_to_lower(memory_manager.sample_path[0].c_str());
                 if (strstr(sample_path_lower, "cifar10")) {
                     finetune_ds = "cifar10";
@@ -829,15 +829,15 @@ std::string OrchestrationAgent::SelectModel(std::shared_ptr<AgentState> state, T
             elog(ERROR, "input shape size not 4");
             throw std::runtime_error("SelectModel: invalid input shape");
         }
-        std::string select_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/select_model/ViT-L-14_visual_traced.pt";
-        std::string regression_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/select_model/regression_model.onnx";
+        std::string select_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/select_model/ViT-L-14_visual_traced.pt";
+        std::string regression_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/select_model/regression_model.onnx";
         ModelSelection image_classification(select_model_path, regression_model_path);
 
         std::string col_name = "padding";
         std::string temp_result = image_classification.SelectModel(col_name, col_name, sample_size, finetune_ds, memory_manager.sample_path);
         size_t pos = temp_result.find('%');
         if (pos == std::string::npos) {
-            // 没找到 %, 根据需求处理
+            // '%' not found, handle according to requirements
             throw std::runtime_error("SelectModel: invalid result string");
         }
         std::string arch = temp_result.substr(0, pos);
@@ -883,11 +883,11 @@ bool OrchestrationAgent::InitModel(const char* model_name, bool from_select_mode
     // elog(INFO, "here");
     std::string full_path;
     if (from_select_model) {
-        full_path = "/home/why/models_all/";
+        full_path = "/opt/models/";
     } else {
-        full_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/";
+        full_path = "/opt/opweave/pgdl/test/morphingdb_test/models/";
     }
-    // TODO: sentiment模型很大，MD5计算缓慢（硬性），因此时间计算时要把InitModel模块剥离出来
+    // TODO: the sentiment model is very large and MD5 computation is slow (unavoidable), so the InitModel module must be excluded from the timing
     if (strcmp(model_name, "sst2_vec") == 0) {
         full_path += "traced_albert_vec";
     } else if (strcmp(model_name, "finance") == 0) {
@@ -1224,7 +1224,7 @@ double estimate_cpu_flops() {
                 if (colon_pos != std::string::npos) {
                     model_name = line.substr(colon_pos + 2);
                     // elog(INFO, "Detected CPU model: %s", model_name.c_str());
-                    // 仅获取第一个CPU型号后继续循环，不立即跳出
+                    // only obtain the first CPU model and then continue the loop without breaking out immediately
                     reading_state += 1;
                 }
             } else if (line.find("cpu MHz") != std::string::npos) {
@@ -1232,13 +1232,13 @@ double estimate_cpu_flops() {
                 if (colon_pos != std::string::npos) {
                     cpu_mhz = std::stod(line.substr(colon_pos + 2));
                     // elog(INFO, "Detected CPU frequency: %.2f MHz", cpu_mhz);
-                    // 获取频率后也不跳出，继续读取直到文件结束
+                    // after obtaining the frequency, also do not break out; continue reading until the end of the file
                     reading_state += 1;
                 }
             }
         }
         
-        // 用当前的实际频率进行估算
+        // estimate using the current actual frequency
         double freq_ghz = cpu_mhz / 1000.0;
         
         double flops_per_cycle = 8.0;
@@ -1267,7 +1267,7 @@ double get_gpu_flops() {
     try {
         std::string gpu_status = exec_command("nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null | head -c 5");
         if (gpu_status.empty()) {
-            // 如果empty说明没有显卡驱动
+            // if empty, it means there is no graphics driver
             elog(INFO, "No GPU available, returning 0.0 FLOPS");
             return 0.0; // No GPU available
         }
@@ -1319,7 +1319,7 @@ double get_cpu_mem_bandwidth() {
         }
         double avg_speed = std::accumulate(speeds.begin(), speeds.end(), 0.0) / speeds.size();
         // elog(INFO, "Average memory bandwidth: %.2f MT/s", avg_speed);
-        // TODO: 假设双通道64位总线
+        // TODO: assume a dual-channel 64-bit bus
         double bandwidth_GBs = (avg_speed * 2 * 64 / 8) / 1000;
         return bandwidth_GBs * 1e9; // Convert to bytes/sec
     } catch (const std::exception& e) {
@@ -1355,24 +1355,24 @@ double get_gpu_mem_bandwidth() {
     }
 }
 
-// 获取系统平均负载 (1分钟内)
+// get the system average load (over 1 minute)
 double get_cpu_load_factor() {
     try {
         std::string load_str = exec_command("cat /proc/loadavg | awk '{print $1}'");
         double load = std::stod(load_str);
-        // 获取逻辑核心数
+        // get the number of logical cores
         std::string nproc_str = exec_command("nproc");
         double nproc = std::stod(nproc_str);
-        // 如果负载超过核心数，说明存在严重的调度排队
+        // if the load exceeds the number of cores, serious scheduling queuing exists
         return (load / nproc); 
     } catch (...) { return 1.0; }
 }
 
-// 获取所有 GPU 的状态信息
+// get the status information of all GPUs
 std::vector<GpuStatus> get_all_gpu_status() {
     std::vector<GpuStatus> status_list;
     try {
-        // 一次性查询所有 GPU 的 ID, 利用率, 已用显存, 总显存
+        // query the ID, utilization, used memory, and total memory of all GPUs at once
         std::string output = exec_command("nvidia-smi --query-gpu=index,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits");
         std::stringstream ss(output);
         std::string line;
@@ -1390,9 +1390,9 @@ std::vector<GpuStatus> get_all_gpu_status() {
 AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
     // if (false) {
     if (ADD_OPTIMIZATION_LOGIC && (memory_manager.current_func_call % WINDOW_SIZE == WINDOW_SIZE - 1 || memory_manager.is_last_call == 1)) {
-        // year_predict 的设备只由 CPUs 0-19 上的可运行线程数决定。扫描一次
-        // 全量 /proc 要几十到几百毫秒，而一条查询有三百多个窗口。进程级 static
-        // 跨窗口保不住，所以决策记在 TopMemoryContext，只扫一次。
+        // The year_predict device is determined only by the number of runnable threads on CPUs 0-19. A full
+        // /proc scan takes tens to hundreds of milliseconds, while one query has more than 300 windows. A process-level static
+        // cannot persist across windows, so the decision is kept in TopMemoryContext and scanned only once.
         if (list_length(state->task_list) > 0) {
             Task* pending = (Task*)list_nth(state->task_list, 0);
             if (pending->task_type == TaskType::SERIES) {
@@ -1444,9 +1444,9 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                 return AgentAction::SCHEDULE;
             }
         }
-        // 设备一条查询只判一次。决定记在 using_gpu 里，后面的窗口直接复用，
-        // 不再重跑代价模型：cifar10 一条查询有 32 个窗口，每个窗口重算要 0.5s，
-        // 光这一项就比不做优化更慢。using_gpu 初值是 -1，第一次还没决定时不会进这里。
+        // The device is decided only once per query. The decision is stored in using_gpu and reused directly by later windows,
+        // without rerunning the cost model: one cifar10 query has 32 windows and each recomputation takes 0.5s,
+        // which alone is slower than no optimization. The initial value of using_gpu is -1, so the first call does not enter here.
         if (ONCE_AND_FOR_ALL && using_gpu != -1) {
             if (list_length(state->task_list) == 0) {
                 // No task to optimize (e.g., in sfinal after task was already processed)
@@ -1467,7 +1467,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
         if (enable_dynamic_cost) {
             // elog(INFO, "OptimizationAgent::Execute - Using Dynamic Cost Model");
 
-            // 1. 基础信息提取 (利用现有工具函数)
+            // 1. basic information extraction (using existing utility functions)
             double cpu_flops = estimate_cpu_flops();
             double cpu_bandwidth = get_cpu_mem_bandwidth();
             double gpu_bandwidth = get_gpu_mem_bandwidth();
@@ -1479,12 +1479,12 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             ModelAnalysisResult analysis_result = AnalyzeModelWithInference(task->model);
             int num_rows = WINDOW_SIZE;
 
-            // --- CPU 动态 Cost 计算 ---
-            // 静态部分
+            // --- CPU dynamic cost calculation ---
+            // static part
             double cpu_cost_static = (analysis_result.param_size_bytes / cpu_bandwidth) + 
                                     (analysis_result.mac_count / cpu_flops) * num_rows;
             
-            // 动态部分：提取 CPU 负载情况 (Load Average)
+            // dynamic part: extract the CPU load situation (Load Average)
             double cpu_load = 0.0;
             int cpu_cores = 1;
             try {
@@ -1493,23 +1493,23 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             } catch (...) { cpu_load = 0.5; cpu_cores = 1; }
             
             // OLD FIXED FORMULA (preserved as comment):
-            // 动态公平性修正：负载越高，调度延迟越大
-            // 修正系数 = (当前负载 / 核心数) + 1.0 (基础开销)
+            // dynamic fairness correction: the higher the load, the greater the scheduling delay
+            // correction factor = (current load / number of cores) + 1.0 (base overhead)
             // double m = (cpu_load / (double)cpu_cores) + 1.0;
 
             // double threshold = 1.2 + 0.1 * std::log2((double)cpu_cores);
     
-            // // 利用对数缩放模型进行辅助判断
+            // // use a logarithmic scaling model as an auxiliary judgment
             // double cpu_dynamic_multiplier = m;
 
-            // // 3. 判定是否进入指数惩罚区
+            // // 3. determine whether to enter the exponential penalty region
             // if (m > threshold) {
             //     // m * e^(m - T) 
-            //     // 保证在 m = threshold 时曲线连续（e^0 = 1）
-            //     // 且当 m 超过阈值后，Cost 会随负载比增加呈指数级飞升
+            //     // ensure the curve is continuous at m = threshold (e^0 = 1)
+            //     // and once m exceeds the threshold, Cost rises exponentially with the load ratio
             //     cpu_dynamic_multiplier = m * std::exp(5.0 * (m - threshold));
             // } else {
-            //     cpu_dynamic_multiplier = m; // 线性增长区
+            //     cpu_dynamic_multiplier = m; // linear growth region
             // }
             
             // NEW MODEL-BASED APPROACH:
@@ -1524,7 +1524,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             if (is_slice_task) {
                 if (!slice_cpu_model_tried_loading) {
                     cpu_load_predictor.SetTrainingTable("year_predict_cpu_load_training_data");
-                    std::string slice_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/year_predict_cpu_load_model.pt";
+                    std::string slice_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/year_predict_cpu_load_model.pt";
                     if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !cpu_load_predictor.LoadModel(slice_model_path))) {
                         elog(INFO, "year_predict CPU model file not found, attempting to train from training data");
                         if (cpu_load_predictor.TrainModel()) {
@@ -1539,7 +1539,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             } else if (is_reasoning_task) {
                 if (!reasoning_cpu_model_tried_loading) {
                     cpu_load_predictor.SetTrainingTable("reasoning_cpu_load_training_data");
-                    std::string reasoning_cpu_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/reasoning_cpu_load_model.pt";
+                    std::string reasoning_cpu_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/reasoning_cpu_load_model.pt";
                     if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !cpu_load_predictor.LoadModel(reasoning_cpu_model_path))) {
                         elog(INFO, "reasoning CPU model file not found, attempting to train from training data");
                         if (cpu_load_predictor.TrainModel()) {
@@ -1554,7 +1554,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             } else {
                 if (!cpu_model_tried_loading) {
                     cpu_load_predictor.SetTrainingTable("cifar10_cpu_load_training_data");
-                    std::string cifar_cpu_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/cifar10_cpu_load_model.pt";
+                    std::string cifar_cpu_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/cifar10_cpu_load_model.pt";
                     if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !cpu_load_predictor.LoadModel(cifar_cpu_model_path))) {
                         elog(INFO, "cifar10 CPU model file not found, attempting to train from training data");
                         if (cpu_load_predictor.TrainModel()) {
@@ -1604,11 +1604,11 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
 
             double cpu_cost = cpu_dynamic_cost;
 
-            // --- GPU 动态 Cost 计算与多卡评估 ---
+            // --- GPU dynamic cost calculation and multi-GPU evaluation ---
             double min_gpu_cost = std::numeric_limits<double>::max();
             int best_gpu_id = -1;
 
-            // 提取所有 GPU 状态：index, utilization, memory_used, memory_total
+            // extract all GPU status: index, utilization, memory_used, memory_total
             std::string gpu_info = exec_command("nvidia-smi --query-gpu=index,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits");
             std::stringstream ss(gpu_info);
             std::string line;
@@ -1619,15 +1619,15 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                 char comma;
                 std::stringstream ls(line);
                 if (ls >> idx >> comma >> util >> comma >> mem_used >> comma >> mem_total) {
-                    // 静态部分 (针对当前 GPU)
-                    // 注意：此处假设各卡规格相近，使用全局 get_gpu_flops，可根据 idx 进一步精细化
+                    // static part (for the current GPU)
+                    // note: this assumes GPUs have similar specifications and uses the global get_gpu_flops; it can be refined further by idx
                     double current_gpu_flops = get_gpu_flops(); 
                     double latency = 5e-4;
                     double gpu_cost_static = latency + (analysis_result.param_size_bytes / cpu_bandwidth) + 
                                             (analysis_result.param_size_bytes / gpu_bandwidth) + 
                                             (analysis_result.mac_count / current_gpu_flops) * num_rows;
 
-                    // 使用 GPU 负载预测器获取动态乘数
+                    // use the GPU load predictor to obtain the dynamic multiplier
                     std::vector<double> workload = {
                         (double)result0,
                         (double)result1,
@@ -1650,7 +1650,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                         // year_predict GPU model (SERIES task)
                         if (!slice_gpu_model_tried_loading) {
                             gpu_load_predictor.SetTrainingTable("year_predict_gpu_load_training_data");
-                            std::string yp_gpu_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/year_predict_gpu_load_model.pt";
+                            std::string yp_gpu_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/year_predict_gpu_load_model.pt";
                             if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !gpu_load_predictor.LoadModel(yp_gpu_model_path))) {
                                 elog(INFO, "year_predict GPU model file not found, attempting to train from training data");
                                 if (gpu_load_predictor.TrainModel()) {
@@ -1670,7 +1670,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                         // reasoning (cross_encoder) GPU model (REASONING/MUSIQUE task)
                         if (!reasoning_gpu_model_tried_loading) {
                             gpu_load_predictor.SetTrainingTable("reasoning_gpu_load_training_data");
-                            std::string reasoning_gpu_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/reasoning_gpu_load_model.pt";
+                            std::string reasoning_gpu_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/reasoning_gpu_load_model.pt";
                             if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !gpu_load_predictor.LoadModel(reasoning_gpu_model_path))) {
                                 elog(INFO, "reasoning GPU model file not found, attempting to train from training data");
                                 if (gpu_load_predictor.TrainModel()) {
@@ -1689,7 +1689,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                     } else {
                         if (!gpu_model_tried_loading) {
                             gpu_load_predictor.SetTrainingTable("cifar10_gpu_load_training_data");
-                            std::string cifar_gpu_model_path = "/home/why/dbagent/pgdl/test/morphingdb_test/models/load_predictors/cifar10_gpu_load_model.pt";
+                            std::string cifar_gpu_model_path = "/opt/opweave/pgdl/test/morphingdb_test/models/load_predictors/cifar10_gpu_load_model.pt";
                             if (ALWAYS_TRAINING || (!ALWAYS_TRAINING && !gpu_load_predictor.LoadModel(cifar_gpu_model_path))) {
                                 elog(INFO, "cifar10 GPU model file not found, attempting to train from training data");
                                 if (gpu_load_predictor.TrainModel()) {
@@ -1707,7 +1707,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                         }
                     }
                     
-                    // 获取特定GPU的计算能力和频率信息
+                    // get the compute capability and frequency information of the specific GPU
                     double cuda_cores = 0.0;
                     double gpu_freq = 0.0;
                     try {
@@ -1738,13 +1738,13 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                         gpu_freq = 1500.0;  // Default frequency in MHz
                     }
                     
-                    // 构造GPU资源向量: {cuda_cores, gpu_freq, util, mem_used, mem_total}
+                    // build the GPU resource vector: {cuda_cores, gpu_freq, util, mem_used, mem_total}
                     std::vector<double> gpu_resource = {
-                        cuda_cores,           // cuda_cores - 特定GPU的CUDA核心数
-                        gpu_freq,             // gpu_freq - 特定GPU的频率
-                        util,                 // util - 当前GPU利用率
-                        mem_used,             // mem_used - 已使用的显存
-                        mem_total             // mem_total - 总显存
+                        cuda_cores,           // cuda_cores - number of CUDA cores of the specific GPU
+                        gpu_freq,             // gpu_freq - frequency of the specific GPU
+                        util,                 // util - current GPU utilization
+                        mem_used,             // mem_used - used memory
+                        mem_total             // mem_total - total memory
                     };
                     
                     double predicted_runtime;
@@ -1770,14 +1770,14 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
                 break;
             }
 
-            // 2. 最终决策。两类负载的信号不一样，不能共用一个条件：
-            //   series（year_predict）是 CPU 争用。CPU 推理绑在 CPU 0，GPU 推理
-            //     从 CPU 20 发起。low=1、medium=2 的 spin 在 CPU 0 上，留在 CPU；
-            //     high=8（>6）切到 GPU 0，同时 spin 绑在 CPU 20 上拖慢它。
-            //   图像（cifar10）三档都留在 GPU 0。实测 n=1000：低、中两档 GPU
-            //     8.3s、10.9s，单线程 CPU 约 16s；高负载（8 个 matmul worker）GPU
-            //     23.3s，切到 CPU 要 116s。GPU 被占满时仍然比 CPU 快，所以不看
-            //     进程数，也不用外推失效的 GPU 代价模型。
+            // 2. Final decision. The signals of the two load types differ and cannot share one condition:
+            //   series (year_predict) is CPU contention. CPU inference is pinned to CPU 0, while GPU inference
+            //     is launched from CPU 20. low=1 and medium=2 spins run on CPU 0 and stay on CPU;
+            //     high=8 (>6) switches to GPU 0, while the spin pinned to CPU 20 slows it down.
+            //   Images (cifar10) stay on GPU 0 in all three levels. Measured n=1000: the low and medium GPU levels take
+            //     8.3s and 10.9s, single-threaded CPU takes about 16s; under high load (8 matmul workers) GPU takes
+            //     23.3s, while switching to CPU takes 116s. A saturated GPU is still faster than CPU, so the
+            //     process count is ignored and the invalid extrapolated GPU cost model is not used.
             const int RUNNABLE_THRESHOLD = 3;
             int runnable_threads = 0;
             {
@@ -1815,7 +1815,7 @@ AgentAction OptimizationAgent::Execute(std::shared_ptr<AgentState> state) {
             }
 
         } else if (false) {
-            // --- 原有静态逻辑完全不变 ---
+            // --- the original static logic is completely unchanged ---
             elog(INFO, "OptimizationAgent::Execute - Starting hardware information gathering");
             // Get hardware information
             double cpu_flops = estimate_cpu_flops();
@@ -1881,12 +1881,12 @@ AgentAction ExecutionAgent::Execute(std::shared_ptr<AgentState> state) {
         return AgentAction::FAILURE;
     }
 
-    // 设置模型参数
+    // set the model parameters
     state->current_state.model = task->model;
     state->current_state.cuda = task->cuda;
 
-    // 【关键修正 2】: 抛弃“滑动窗口”逻辑，每次执行 Task 前彻底重置 Input/Output 列表
-    // 之前的逻辑导致 outs 列表无限增长，导致第二次 infer 时崩溃
+    // [key fix 2]: abandon the "sliding window" logic and completely reset the Input/Output lists before each Task execution
+    // the previous logic caused the outs list to grow unboundedly, causing a crash on the second infer
     state->current_state.ins = NIL;
     state->current_state.outs = NIL;
 
@@ -1965,8 +1965,8 @@ std::string CallToolReaderDecoder(std::string id_str) {
     static std::mutex decode_mutex;
     std::lock_guard<std::mutex> guard(decode_mutex);
     std::string cmd =
-                "/home/why/dbagent/pgdl/test/.venv/bin/python3 "
-                "/home/why/dbagent/pgdl/test/tools/reader_decoder.py --ids \"";
+                "/opt/opweave/pgdl/test/.venv/bin/python3 "
+                "/opt/opweave/pgdl/test/tools/reader_decoder.py --ids \"";
     cmd += id_str;
     cmd += "\"";
     return exec_command(cmd.c_str());
@@ -1976,8 +1976,8 @@ std::string CallToolReaderDecoder(std::string id_str) {
 AgentAction EvaluationAgent::Execute(std::shared_ptr<AgentState> state) {
     Task* task = (Task*)list_nth(state->task_list, state->current_task_id);
     
-    // 【关键修正 3】: 配合 Execution 的修改
-    // 现在 outs 列表只包含当前 Task 的结果，索引从 0 开始
+    // [key fix 3]: coordinate with the changes in Execution
+    // now the outs list contains only the results of the current Task, with indices starting from 0
     int result_count = list_length(state->current_state.outs);
     int expected_count = task->input_end_index - task->input_start_index;
 
@@ -2007,7 +2007,7 @@ AgentAction EvaluationAgent::Execute(std::shared_ptr<AgentState> state) {
                 if (i != result_count - 1) res_str += ";";
                 continue;
             }
-            // 将ret_string(19,19)拆成两个变量：
+            // split ret_string(19,19) into two variables:
             int pos = strchr(ret_string, ',') - ret_string;
             if (pos < 0) {
                 memory_manager.out_cache_data[memory_manager.out_cache_size++] = 0.0f;
@@ -2079,7 +2079,7 @@ AgentAction EvaluationAgent::Execute(std::shared_ptr<AgentState> state) {
         elog(WARNING, "EvaluationAgent: unknown task type %d", static_cast<int>(task->task_type));
     }
 
-    // 任务完成后，可以在这里选择性释放 current_state.outs 里的 Args* 内存，但这通常由 PG 上下文自动处理
+    // after the task completes, the Args* memory in current_state.outs can optionally be released here, but this is usually handled automatically by the PG context
     
     state->last_action = AgentAction::EVALUATION;
     return AgentAction::SCHEDULE;
@@ -2107,7 +2107,7 @@ AgentAction ScheduleAgent::Execute(std::shared_ptr<AgentState> state) {
             }
             return AgentAction::OPTIMIZATION;
         } else if (state->last_action == AgentAction::OPTIMIZATION) {
-            // to be done: 决策执行什么任务，若无任务可执行应当直接调到结束状态
+            // to be done: decide which task to execute; if no task can be executed, jump directly to the end state
             if (list_length(state->task_list) == 0) {
                 return AgentAction::SUCCESS;
             }
@@ -2426,8 +2426,8 @@ void temp_addition_function_musique(std::shared_ptr<AgentState> state) {
             // Call LLM generation
             auto llm_start = std::chrono::high_resolution_clock::now();
             std::string cmd =
-                "/home/why/dbagent/pgdl/test/.venv/bin/python3 "
-                "/home/why/dbagent/pgdl/test/tools/llm_generate.py --input \"";
+                "/opt/opweave/pgdl/test/.venv/bin/python3 "
+                "/opt/opweave/pgdl/test/tools/llm_generate.py --input \"";
             cmd += context;
             cmd += "\"";
             result_string = exec_command(cmd.c_str());

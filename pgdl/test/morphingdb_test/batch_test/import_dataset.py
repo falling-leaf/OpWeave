@@ -17,19 +17,19 @@ image_name = os.listdir(IMAGE_PRE_PATH)
 def import_image_dataset():
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    # 创建表
+    # Create the table
     for image_count in IMAGE_COUNT_LIST:
         cur.execute("create table if not exists " + IMAGE_TABLE + str(image_count) + " (id int, image_path text);")
         cur.execute("create table if not exists " + IMAGE_VECTOR_TABLE + str(image_count) + " (id int, image_vector mvec);")
         conn.commit()
 
-    # 删除表中的行
+    # Delete rows from the table
     for image_count in IMAGE_COUNT_LIST:
         cur.execute("delete from " + IMAGE_TABLE + str(image_count) + ";")
         cur.execute("delete from " + IMAGE_VECTOR_TABLE + str(image_count) + ";")
         conn.commit()
 
-    # 插入表
+    # Insert into the table
     for image_count in IMAGE_COUNT_LIST:
         for index in range(image_count):
             sql = f"INSERT INTO " + IMAGE_TABLE + str(image_count) + " (id, image_path) VALUES ({},'{}')".format(index+1, IMAGE_PRE_PATH+image_name[index])
@@ -49,19 +49,19 @@ def import_image_dataset():
 def import_text_dataset():
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    # 创建表
+    # Create the table
     for image_count in IMAGE_COUNT_LIST:
         cur.execute("create table if not exists " + IMAGE_TABLE + str(image_count) + " (id int, image_path text);")
         cur.execute("create table if not exists " + IMAGE_VECTOR_TABLE + str(image_count) + " (id int, image_vector mvec);")
         conn.commit()
 
-    # 删除表中的行
+    # Delete rows from the table
     for image_count in IMAGE_COUNT_LIST:
         cur.execute("delete from " + IMAGE_TABLE + str(image_count) + ";")
         cur.execute("delete from " + IMAGE_VECTOR_TABLE + str(image_count) + ";")
         conn.commit()
 
-    # 插入表
+    # Insert into the table
     for image_count in IMAGE_COUNT_LIST:
         for index in range(image_count):
             sql = f"INSERT INTO " + IMAGE_TABLE + str(image_count) + " (id, image_path) VALUES ({},'{}')".format(index+1, IMAGE_PRE_PATH+image_name[index])
@@ -79,6 +79,6 @@ def import_text_dataset():
 
 
 if __name__ == "__main__":
-    # 连接数据库
+    # Connect to the database
     import_image_dataset()
     #import_text_dataset()

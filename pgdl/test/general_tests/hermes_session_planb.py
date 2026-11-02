@@ -26,13 +26,13 @@ import torch
 from datetime import datetime
 
 # ─── Config ──────────────────────────────────────────────────────────────────
-BASE_DIR   = "/home/why/baseline"
+BASE_DIR   = "/opt/baselines"
 DATA_DIR   = os.path.join(BASE_DIR, "data")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 OUTPUT_DIR = ensure_dir(GENERAL_RESULTS_DIR)
-HERMES_CLI = "/home/why/.local/bin/hermes"
+HERMES_CLI = "/opt/hermes/bin/hermes"
 
 BATCH_SIZE     = 32
 ROWS_PER_QUERY = 1000
@@ -66,23 +66,23 @@ DATASETS = {
 
 HERMES_PROMPTS = {
     "slice": (
-        "Load the TorchScript model at /home/why/baseline/models/slice.pt on CPU. "
+        "Load the TorchScript model at /opt/baselines/models/slice.pt on CPU. "
         "Read the first 1000 rows of "
-        "/home/why/baseline/data/series/slice/slice_localization_data.csv, "
+        "/opt/baselines/data/series/slice/slice_localization_data.csv, "
         "use columns index 1 to -1 as float32 features. "
         "Run batched inference with batch_size=32 and print the output shape."
     ),
     "swarm": (
-        "Load the TorchScript model at /home/why/baseline/models/swarm.pt on CPU. "
+        "Load the TorchScript model at /opt/baselines/models/swarm.pt on CPU. "
         "Read the first 1000 rows of "
-        "/home/why/baseline/data/series/swarm/Swarm_Behaviour.csv, "
+        "/opt/baselines/data/series/swarm/Swarm_Behaviour.csv, "
         "drop the column 'Swarm_Behaviour', use remaining columns as float32 features. "
         "Run batched inference with batch_size=32 and print the output shape."
     ),
     "year_predict": (
-        "Load the TorchScript model at /home/why/baseline/models/year_predict.pt on CPU. "
+        "Load the TorchScript model at /opt/baselines/models/year_predict.pt on CPU. "
         "Read the first 1000 rows of "
-        "/home/why/baseline/data/series/yead_predict/YearPredictionMSD.csv, "
+        "/opt/baselines/data/series/yead_predict/YearPredictionMSD.csv, "
         "drop the column 'value90', use remaining 90 columns as float32 features. "
         "Run batched inference with batch_size=32 and print the output shape."
     ),

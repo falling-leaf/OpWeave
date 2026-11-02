@@ -17,8 +17,8 @@ from datetime import datetime
 
 def get_cpu_load():
     """
-    获取系统当前的平均负载 (CPU average load)
-    读取 /proc/loadavg 文件获取1分钟平均负载
+    Get the current system average load (CPU average load)
+    Read the /proc/loadavg file to obtain the 1-minute average load
     """
     try:
         with open('/proc/loadavg', 'r') as f:
@@ -33,14 +33,14 @@ def get_cpu_load():
 
 def get_gpu_info():
     """
-    获取 GPU 利用率和显存使用情况
-    使用 nvidia-smi 命令获取 GPU 信息
+    Get GPU utilization and memory usage
+    Use the nvidia-smi command to obtain GPU information
     """
     try:
         import subprocess
         import re
         
-        # 运行 nvidia-smi 命令
+        # Run the nvidia-smi command
         result = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu,memory.used,memory.total', '--format=csv,noheader,nounits'], 
                               capture_output=True, text=True)
         
@@ -71,7 +71,7 @@ def get_gpu_info():
 
 def run_single_task_worker(task_id, row_count, query_times, sql_query):
     """
-    单个进程执行的任务单元
+    Task unit executed by a single process
     """
     try:
         conn = psycopg2.connect(**db_config)
@@ -112,26 +112,26 @@ def test_concurrency(concurrency_level, row_count, query_times, sql_query):
     cpu_load_before = get_cpu_load()
     gpu_info_before = get_gpu_info()
     
-    # 用于存储 GPU 测量数据
+    # Store GPU measurement data
     import threading
     import time
     gpu_measurements = []
     stop_measuring = False
     
-    # 定期获取 GPU 信息的函数
+    # Function that periodically fetches GPU information
     def measure_gpu(): 
         while not stop_measuring:
             gpu_info = get_gpu_info()
             if gpu_info:
                 gpu_measurements.append(gpu_info)
-            time.sleep(0.5)  # 每0.5秒测量一次，增加测量频率
+            time.sleep(0.5)  # Measure every 0.5 seconds to increase sampling frequency
     
-    # 启动 GPU 测量线程
+    # Start the GPU measurement thread
     gpu_thread = threading.Thread(target=measure_gpu)
     gpu_thread.daemon = True
     gpu_thread.start()
     
-    # 给测量线程一点时间初始化
+    # Give the measurement thread some time to initialize
     time.sleep(0.2)
     
     with ProcessPoolExecutor(max_workers=concurrency_level) as executor:
@@ -149,20 +149,20 @@ def test_concurrency(concurrency_level, row_count, query_times, sql_query):
                 print(f"Timeout or error in task {i}: {str(e)}")
                 results.append({"task_id": i, "status": "failed", "error": f"Timeout or error: {str(e)}"})
     
-    # 停止 GPU 测量
+    # Stop GPU measurement
     stop_measuring = True
-    gpu_thread.join(timeout=2)  # 等待测量线程结束
+    gpu_thread.join(timeout=2)  # Wait for the measurement thread to finish
     
     cpu_load_during = get_cpu_load()
     
-    # 计算 GPU 信息的最大值
+    # Compute the maximum GPU information
     gpu_info_during = None
     if gpu_measurements:
-        # 初始化最大值计算
+        # Initialize the maximum computation
         max_gpu_info = []
         num_gpus = len(gpu_measurements[0])
         
-        # 对每个 GPU 计算最大值
+        # Compute the maximum for each GPU
         for gpu_idx in range(num_gpus):
             max_util = 0
             max_mem_used = 0
@@ -199,7 +199,7 @@ def test_concurrency(concurrency_level, row_count, query_times, sql_query):
     print(f"  Avg latency: {avg_latency:.4f}s, Min: {min_latency:.4f}s, Max: {max_latency:.4f}s")
     print(f"  CPU Load (before): {cpu_load_before}, CPU Load (during): {cpu_load_during}")
     
-    # 打印 GPU 信息
+    # Print GPU information
     if gpu_info_before:
         print("  GPU Info (before):")
         for i, gpu in enumerate(gpu_info_before):
@@ -307,7 +307,7 @@ def test_db_agent_single_queries():
                        'GPU_Util_Before', 'GPU_Util_During (Max)', 'GPU_Mem_Used_Before', 'GPU_Mem_Used_During (Max)'])
         
         for i, result in enumerate(results_1):
-            # 提取 GPU 信息
+            # Extract GPU information
             gpu_util_before = 'N/A'
             gpu_util_during = 'N/A'
             gpu_mem_before = 'N/A'
@@ -320,7 +320,7 @@ def test_db_agent_single_queries():
                 gpu_util_during = result['gpu_info_during'][0]['utilization'] if len(result['gpu_info_during']) > 0 else 'N/A'
                 gpu_mem_during = result['gpu_info_during'][0]['memory_used'] if len(result['gpu_info_during']) > 0 else 'N/A'
             
-            # 确保数值格式正确
+            # Ensure numeric formatting is correct
             if gpu_util_before != 'N/A':
                 gpu_util_before = f"{gpu_util_before:.1f}"
             if gpu_util_during != 'N/A':
@@ -337,7 +337,7 @@ def test_db_agent_single_queries():
                            gpu_util_before, gpu_util_during, gpu_mem_before, gpu_mem_during])
         
         for i, result in enumerate(results_2):
-            # 提取 GPU 信息
+            # Extract GPU information
             gpu_util_before = 'N/A'
             gpu_util_during = 'N/A'
             gpu_mem_before = 'N/A'
@@ -350,7 +350,7 @@ def test_db_agent_single_queries():
                 gpu_util_during = result['gpu_info_during'][0]['utilization'] if len(result['gpu_info_during']) > 0 else 'N/A'
                 gpu_mem_during = result['gpu_info_during'][0]['memory_used'] if len(result['gpu_info_during']) > 0 else 'N/A'
             
-            # 确保数值格式正确
+            # Ensure numeric formatting is correct
             if gpu_util_before != 'N/A':
                 gpu_util_before = f"{gpu_util_before:.1f}"
             if gpu_util_during != 'N/A':

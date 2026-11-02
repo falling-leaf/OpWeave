@@ -10,7 +10,7 @@ Each run executes:
 Reports per-sample-size latency. Does NOT modify or affect any other dataset logic.
 
 Usage:
-    cd /home/why/dbagent/pgdl/test
+    cd /opt/opweave/pgdl/test
     uv run python test_reasoning_samples.py
 """
 
@@ -88,9 +88,9 @@ def run_benchmark(repetitions=DEFAULT_REPETITIONS):
     Handles server crashes gracefully: if a sample size crashes the server,
     the script restarts PostgreSQL and continues with the next sample size.
     """
-    pg_ctl = "/home/why/dbagent/pg_base/bin/pg_ctl"
-    pg_data = "/home/why/dbagent/pg_base/data"
-    pg_log = "/home/why/dbagent/pg_base/data/logfile"
+    pg_ctl = "/opt/opweave/pg_base/bin/pg_ctl"
+    pg_data = "/opt/opweave/pg_base/data"
+    pg_log = "/opt/opweave/pg_base/data/logfile"
 
     print("=" * 80)
     print("Reasoning Multi-Sample Benchmark")

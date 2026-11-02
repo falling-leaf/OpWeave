@@ -4,7 +4,7 @@
  * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2023-06-30 11:44:37
  * @FilePath: /postgres-DB4AI/src/udf/spi_connection.cpp
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: This is the default setting. Please set `customMade`, open koroFileHeader to view the configuration: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 #include "env.h"
 #include "spi_connection.h"

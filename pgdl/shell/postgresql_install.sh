@@ -1,6 +1,6 @@
-cd /home/why/dbagent/pgdl/third_party/postgresql-13.22/
+cd /opt/opweave/pgdl/third_party/postgresql-13.22/
 make distclean
-./configure --prefix=/home/why/dbagent/pg_base
+./configure --prefix=/opt/opweave/pg_base
 make -j$(nproc)
 make install
-/home/why/dbagent/pg_base/bin/initdb -D /home/why/dbagent/pg_base/data
+/opt/opweave/pg_base/bin/initdb -D /opt/opweave/pg_base/data

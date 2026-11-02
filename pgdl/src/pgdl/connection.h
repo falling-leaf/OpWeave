@@ -20,7 +20,7 @@ struct LastError {
     std::string   error_message;
 };
 
-// pg外部连接类
+// pg external connection class
 class PostgresConnector {
 public:
     PostgresConnector();
@@ -107,7 +107,7 @@ public:
 
     
     /**
-     * @description: 执行普通sql语句
+     * @description: Execute a regular SQL statement
      * @event: 
      * @param {string&} sql
      * @return {*}
@@ -115,7 +115,7 @@ public:
     bool  Execute(const std::string& sql, int& tup_num);
 
     /**
-     * @description:  prepare语句
+     * @description:  Prepare a statement
      * @event: 
      * @param {string&} stmtName
      * @param {string&} sql
@@ -127,7 +127,7 @@ public:
                   int nparams, const Oid* param_types);
 
     /**
-     * @description: 执行prepare语句
+     * @description: Execute the prepared statement
      * @event: 
      * @param {string&} stmtName
      * @param {int} nParams
@@ -141,9 +141,9 @@ public:
     bool  PrepareExecute(const std::string& stmt_name, int nparams, const char* const* param_values, 
                          const int* param_lengths, const int* param_formats, int result_format, int& tup_num);
 private:
-    PGconn*              conn_;       //pg连接句柄
-    //std::string          sql_string_; //sql语句
-    LastError            last_error_;  //最后发生的错误
+    PGconn*              conn_;       //pg connection handle
+    //std::string          sql_string_; //sql statement
+    LastError            last_error_;  //last error that occurred
 };
 
 class SqlWrapper {
@@ -196,7 +196,7 @@ public:
     /**
      * @description: 
      * @event: 
-     * @param {int} tup_num 修改的行数
+     * @param {int} tup_num number of modified rows
      * @return {*}
      */    
     bool  Execute(int& tup_num);
@@ -209,8 +209,8 @@ private:
     void  Prepare();
 
 private:
-    PostgresConnector&              pg_conn_;       //pg连接类 
-    std::string                     sql_;           //sql语句
+    PostgresConnector&              pg_conn_;       //pg connection class 
+    std::string                     sql_;           //sql statement
     std::string                     stmt_name_;
     std::vector<const char*>        param_values_;  
     std::vector<int>                param_lengths_;

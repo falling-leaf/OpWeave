@@ -27,7 +27,7 @@ import pandas as pd
 import torch
 from datetime import datetime
 
-BASE_DIR = "/home/why/baseline"
+BASE_DIR = "/opt/baselines"
 DATA_DIR = os.path.join(BASE_DIR, "data")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir

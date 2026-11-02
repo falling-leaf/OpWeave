@@ -17,7 +17,7 @@ from morphingdb_test.config import db_config, sst2_dataset_path, imagenet_datase
 
 
 
-location_list = ['杭州', '宁波', '温州', '嘉兴','湖州','绍兴','金华','衢州','舟山','台州','丽水']
+location_list = ['Hangzhou', 'Ningbo', 'Wenzhou', 'Jiaxing','Huzhou', 'Shaoxing', 'Jinhua', 'Quzhou', 'Zhoushan', 'Taizhou', 'Lishui']
 
 start_date = datetime(1960, 1, 1)
 conversation_2024_start_time = datetime(2024, 1, 1)
@@ -151,19 +151,19 @@ def morphing_insert():
         # formatted_str = ','.join('[' + format_layer(layer) + ']' for layer in image)
         # formatted_str = '[' + formatted_str + ']'
         # dimension_str_list = []
-        # # 遍历数组的每一行
+        # # Iterate over each row of the array
         # for i in range(image.shape[0]):
-        #     # 创建一个空列表，用于存储当前行的像素字符串
+        #     # Create an empty list to store the pixel string of the current row
         #     row_list = []
         #     for j in range(image.shape[1]):
-        #         # 将当前像素的 RGB 值转换为用逗号分隔的字符串
+        #         # Convert the current pixel's RGB values into a comma-separated string
         #         pixel_str = ','.join(map(str, image[i, j]))
-        #         # 将像素字符串添加到当前行的列表
+        #         # Append the pixel string to the current row's list
         #         row_list.append(f"[{pixel_str}]")
-        #     # 将当前行的像素列表用空格分隔并添加到维度字符串列表
+        #     # Join the current row's pixel list with spaces and append it to the dimension string list
         #     dimension_str_list.append(f"[{', '.join(row_list)}]")
 
-        # # 将所有行的字符串用换行符分隔，形成最终的三维数组字符串表示
+        # # Join all row strings with newlines to form the final 3D array string
         # image_str = ','.join(dimension_str_list)
         # image_str = '[' + image_str + ']'
 

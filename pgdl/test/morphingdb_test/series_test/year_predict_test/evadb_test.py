@@ -71,18 +71,18 @@ def gpu_test():
 
         try:
             with open(YEAR_PREDICT_TEST_FILE, 'r') as f_image:
-                # 加载现有数据
+                # Load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"An error occurred: {e}")
-            timing_data_image = []  # 初始化一个空列表，因为文件不存在
+            timing_data_image = []  # initialize an empty list because the file does not exist
             
             # print(timing_data_image)
         timing_data_image.append({"sql": "gpu" + sql, 
                                 "count": count, 
                                 "total_time": end_time - start_time})
         
-        # 将更新后的列表写回文件
+        # Write the updated list back to the file
         with open(YEAR_PREDICT_TEST_FILE, 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 
@@ -100,18 +100,18 @@ def cpu_test():
 
         try:
             with open(YEAR_PREDICT_TEST_FILE, 'r') as f_image:
-                # 加载现有数据
+                # Load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"An error occurred: {e}")
-            timing_data_image = []  # 初始化一个空列表，因为文件不存在
+            timing_data_image = []  # initialize an empty list because the file does not exist
             
             # print(timing_data_image)
         timing_data_image.append({"sql": "cpu" + sql, 
                                 "count": count, 
                                 "total_time": end_time - start_time})
         
-        # 将更新后的列表写回文件
+        # Write the updated list back to the file
         with open(YEAR_PREDICT_TEST_FILE, 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 

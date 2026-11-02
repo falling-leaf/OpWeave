@@ -3,15 +3,15 @@ import json
 import re
 from transformers import AutoTokenizer
 
-MODEL_PATH = "/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta-v3-large-squad2"
+MODEL_PATH = "/opt/opweave/pgdl/test/morphingdb_test/models/deberta-v3-large-squad2"
 _TOKENIZER = None
 
 def clean_control_chars(text):
     """
-    使用正则表达式移除所有不可见/控制字符 (Unicode 类别 C)
-    这将清除像 \u001a, \u0013, \x00 等干扰项
+    Remove all invisible/control characters (Unicode category C) with a regex
+    This clears interference such as \u001a, \u0013, \x00
     """
-    # 匹配所有 Unicode 控制字符
+    # Match all Unicode control characters
     return re.sub(r'[\x00-\x1f\x7f-\x9f]', '', text)
 
 def get_tokenizer():

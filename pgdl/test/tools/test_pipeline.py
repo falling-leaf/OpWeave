@@ -42,14 +42,14 @@ conn.close()
 
 # Load models on CPU
 cross_encoder = torch.load(
-    "/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt",
+    "/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt",
     map_location="cpu",
     weights_only=False
 )
 cross_encoder.eval()
 
 deberta_reader = torch.load(
-    "/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader.pt",
+    "/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader.pt",
     map_location="cpu",
     weights_only=False
 )
@@ -130,8 +130,8 @@ for i in range(10):
         ids_string = ",".join(str(int(x)) for x in ids_list[:50])  # limit length
         try:
             result = subprocess.run(
-                ["uv", "run", "/home/why/dbagent/pgdl/test/tools/reader_decoder.py", "--ids", ids_string],
-                cwd="/home/why/dbagent/pgdl/test/tools",
+                ["uv", "run", "/opt/opweave/pgdl/test/tools/reader_decoder.py", "--ids", ids_string],
+                cwd="/opt/opweave/pgdl/test/tools",
                 capture_output=True,
                 text=True,
                 timeout=30

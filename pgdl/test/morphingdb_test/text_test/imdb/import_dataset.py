@@ -14,26 +14,26 @@ df = pd.read_parquet(imdb_dataset_path)
 
 
 def import_imdb_mvec_dataset():
-    # 连接数据库
+    # Connect to the database
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
 
 
 
-    # 创建表
+    # Create the table
     cur.execute("create table if not exists " + IMAGE_VECTOR_TABLE + " (comment_vec mvec);")
     conn.commit()
 
-    # 删除表中的行
+    # Delete rows from the table
     cur.execute("delete from " + IMAGE_VECTOR_TABLE + ";")
     conn.commit()
 
     inserted_count = 0
-    #插入表
+    #Insert into the table
     for index, row in df.iterrows():
         inserted_count += 1
-        if inserted_count >= 10000:  # 检查是否已经插入了10000条数据
-            break  # 如果已经插入了10000条数据，则退出循环
+        if inserted_count >= 10000:  # check whether 10000 rows have been inserted
+            break  # exit the loop once 10000 rows have been inserted
         sql_vec = f"INSERT INTO " + IMAGE_VECTOR_TABLE + " (comment_vec) VALUES ({})".format("text_to_vector('{}','{}')".format(spiece_model_path, df.iloc[index,0].replace("'","''")))
         cur.execute(sql_vec)
         conn.commit()
@@ -42,26 +42,26 @@ def import_imdb_mvec_dataset():
 
 
 def import_imdb_dataset():
-    # 连接数据库
+    # Connect to the database
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
 
 
 
-    # 创建表
+    # Create the table
     cur.execute("create table if not exists " + TEXT_TABLE + " (comment text);")
     conn.commit()
 
-    # 删除表中的行
+    # Delete rows from the table
     cur.execute("delete from " + TEXT_TABLE + ";")
     conn.commit()
 
     inserted_count = 0
-    #插入表
+    #Insert into the table
     for index, row in df.iterrows():
         inserted_count += 1
-        if inserted_count >= 10000:  # 检查是否已经插入了10000条数据
-            break  # 如果已经插入了10000条数据，则退出循环
+        if inserted_count >= 10000:  # check whether 10000 rows have been inserted
+            break  # exit the loop once 10000 rows have been inserted
         sql_comment = f"INSERT INTO " + TEXT_TABLE + " (comment) VALUES ('{}')".format(row['text'].replace("'","''"))
         cur.execute(sql_comment)
         conn.commit()

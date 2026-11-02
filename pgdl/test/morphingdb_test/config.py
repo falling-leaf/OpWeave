@@ -15,8 +15,8 @@ evadb_db_config = """{
 }"""
 
 
-model_prefix = "/home/why/dbagent/pgdl/test/morphingdb_test/models/"
-select_model_prefix = "/home/why/dbagent/pgdl/test/morphingdb_test/models/select_model/"
+model_prefix = "/opt/opweave/pgdl/test/morphingdb_test/models/"
+select_model_prefix = "/opt/opweave/pgdl/test/morphingdb_test/models/select_model/"
 
 # series
 slice_model_path = model_prefix + "slice.pt"
@@ -43,7 +43,7 @@ reasoning_cross_encoder_output_path = model_prefix + "cross_encoder.pt"
 reasoning_deberta_output_path = model_prefix + "deberta_reader.pt"
 reasoning_flant5_output_path = model_prefix + "flan_t5_reader_gpu.pt"
 
-dataset_prefix = "/home/why/dbagent/pgdl/test/morphingdb_test/data/"
+dataset_prefix = "/opt/opweave/pgdl/test/morphingdb_test/data/"
 
 # series
 slice_dataset_path = dataset_prefix + "series/slice/slice_localization_data.csv"

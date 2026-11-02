@@ -86,7 +86,7 @@ bool ReasoningOutPutProcessfloat(torch::jit::IValue& output_tensor, Args* args, 
         // for(int i=0;i<tensor.dim();i++)
         //     elog(INFO, "size[%d] = %ld", i, tensor.size(i));
 
-        // ---------- 取score ----------
+        // ---------- get score ----------
         double score;
 
         if (tensor.dim() == 2)
@@ -121,16 +121,16 @@ bool ReasoningOutPutProcessfloat(torch::jit::IValue& output_tensor, Args* args, 
 bool MyOutPutProcessfloat(torch::jit::IValue& output_tensor, Args* args, float8& result)
 {
     try {
-        // 检查 output_tensor 是否是 Tensor
+        // check whether output_tensor is a Tensor
         if (output_tensor.isTensor()) {
             auto tensor = output_tensor.toTensor(); //.slice(1, 0, 120);
             std::tuple<torch::Tensor, torch::Tensor> res = tensor.sort(1, true);
             torch::Tensor top_scores = std::get<1>(res);
             result = top_scores[0][0].item<float8>();
         }
-        // 检查 output_tensor 是否是 Tuple
+        // check whether output_tensor is a Tuple
         else if (output_tensor.isTuple()) {
-            // 获取 Tuple 中的第一个元素，假设它是 Tensor
+            // get the first element in the Tuple, assuming it is a Tensor
             auto tuple = output_tensor.toTuple();
             if (tuple->elements().size() > 0 && tuple->elements()[0].isTensor()) {
                 auto tensor = tuple->elements()[0].toTensor(); //.slice(1, 0, 120);
@@ -268,7 +268,7 @@ bool SST2_VecPreProcess(std::vector<torch::jit::IValue>& img_tensor, Args* args)
 
 // bool SST2OutputProcessFloat(torch::jit::IValue& outputs, Args* args, float8& result)
 // {
-//     elog(INFO, "outputs 类型检查:");
+//     elog(INFO, "outputs type check:");
 //     elog(INFO, "  - isTuple(): %s", outputs.isTuple() ? "true" : "false");
 //     elog(INFO, "  - isTensor(): %s", outputs.isTensor() ? "true" : "false");
 //     elog(INFO, "  - isList(): %s", outputs.isList() ? "true" : "false");
@@ -279,12 +279,12 @@ bool SST2_VecPreProcess(std::vector<torch::jit::IValue>& img_tensor, Args* args)
 // }
 bool SST2OutputProcessFloat(torch::jit::IValue& outputs, Args* args, float8& result)
 {
-    // 1. 安全检查并获取 Tensor
+    // 1. safely check and get the Tensor
     torch::Tensor tensor;
     if (outputs.isTensor()) {
         tensor = outputs.toTensor();
     } else if (outputs.isTuple()) {
-        // 兼容模式：如果模型以后改回了 Tuple，取第一个元素
+        // compatibility mode: if the model later reverts to a Tuple, take the first element
         tensor = outputs.toTuple()->elements()[0].toTensor();
     } else {
         elog(ERROR, "Unexpected output type: expected Tensor or Tuple");
@@ -307,9 +307,9 @@ bool SST2OutputProcessText(torch::jit::IValue& outputs, Args* args, std::string&
     auto tensor = outputs.toTuple()->elements()[0].toTensor();
     result_float = torch::cat(tensor, 0).argmax(1).item<float8>();
     if(result_float == 0){
-        result = "消极情绪";
+        result = "negative sentiment";
     }else if(result_float == 1){
-        result = "积极情绪";
+        result = "positive sentiment";
     }else{
         return false;
     }
@@ -533,7 +533,7 @@ bool SquardPreProcess(std::vector<torch::jit::IValue>& img_tensor, Args* args)
 
     for (size_t i = 0; i < 4; ++i) {
         torch::Tensor sub_tensor = tensor.unbind(1)[i];
-        // 如果需要转换数据类型，使用std::move减少复制
+        // if the data type needs conversion, use std::move to reduce copies
         img_tensor.push_back(sub_tensor);
     }
     return true;
@@ -541,7 +541,7 @@ bool SquardPreProcess(std::vector<torch::jit::IValue>& img_tensor, Args* args)
 
 bool SquardOutputProcessText(torch::jit::IValue& outputs, Args* args, std::string& result)
 {
-    // 还需要decode 需要将token_ids的内容拿出来
+    // decoding is also needed; the contents of token_ids must be extracted
     try{
         MVec* vector = (MVec*)args[0].ptr;
         torch::Tensor stacked_inputs = vector_to_tensor(vector);
@@ -591,7 +591,7 @@ bool FinancePreProcess(std::vector<torch::jit::IValue>& img_tensor, Args* args)
 
     for (size_t i = 0; i < 2; ++i) {
         torch::Tensor sub_tensor = tensor.unbind(1)[i].to(torch::kInt64);
-        // 如果需要转换数据类型，使用std::move减少复制
+        // if the data type needs conversion, use std::move to reduce copies
         img_tensor.push_back(sub_tensor);
     }
     return true;
@@ -611,7 +611,7 @@ bool FinanceOutputProcessFloat(torch::jit::IValue& outputs, Args* args, float8& 
 bool deberta_reader_OutputProcessFloat(torch::jit::IValue& outputs, Args* args, float8& result)
 {
     try {
-        // 检查 output_tensor 是否是 Tensor
+        // check whether output_tensor is a Tensor
         if (outputs.isTensor()) {
             auto tensor = outputs.toTensor();
             if (tensor.numel() == 0 || tensor.dim() < 2) {
@@ -625,10 +625,10 @@ bool deberta_reader_OutputProcessFloat(torch::jit::IValue& outputs, Args* args, 
             torch::Tensor top_scores = std::get<1>(res);
             result = top_scores[0][0].item<float8>();
         }
-        // 检查 output_tensor 是否是 Tuple
+        // check whether output_tensor is a Tuple
         else if (outputs.isTuple()) {
             elog(INFO, "tuple size: %d", outputs.toTuple()->elements().size());
-            // 获取 Tuple 中的第一个元素，假设它是 Tensor
+            // get the first element in the Tuple, assuming it is a Tensor
             auto tuple = outputs.toTuple();
             if (tuple->elements().size() > 0 && tuple->elements()[0].isTensor()) {
                 auto tensor = tuple->elements()[0].toTensor();
@@ -716,13 +716,13 @@ void register_callback()
     model_manager.RegisterPreProcess("swarm", SlicePreProcess);
     model_manager.RegisterOutoutProcessFloat("swarm", SliceOutputProcessFloat);
 
-    model_manager.RegisterPreProcess("银行信贷", BankMarketPreProcess);
-    model_manager.RegisterOutoutProcessFloat("银行信贷", BankMarketOutputProcessFloat);
-    model_manager.RegisterOutoutProcessText("银行信贷", BankMarketOutputProcessText);
+    model_manager.RegisterPreProcess("bank_credit", BankMarketPreProcess);
+    model_manager.RegisterOutoutProcessFloat("bank_credit", BankMarketOutputProcessFloat);
+    model_manager.RegisterOutoutProcessText("bank_credit", BankMarketOutputProcessText);
 
-    model_manager.RegisterPreProcess("信用卡客户信用评级分类", CreditPreProcess);
-    model_manager.RegisterOutoutProcessFloat("信用卡客户信用评级分类", CreditOutputProcessFloat);
-    model_manager.RegisterOutoutProcessText("信用卡客户信用评级分类", CreditOutputProcessText);
+    model_manager.RegisterPreProcess("credit_card_credit_rating_classification", CreditPreProcess);
+    model_manager.RegisterOutoutProcessFloat("credit_card_credit_rating_classification", CreditOutputProcessFloat);
+    model_manager.RegisterOutoutProcessText("credit_card_credit_rating_classification", CreditOutputProcessText);
 
     model_manager.RegisterPreProcess("googlenet_cifar10", MyProcessImage_vec);
     model_manager.RegisterOutoutProcessFloat("googlenet_cifar10", MyOutPutProcessfloat);

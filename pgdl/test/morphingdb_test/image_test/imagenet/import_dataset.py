@@ -16,11 +16,11 @@ image_name = image_name[:10000]
 def import_imagenet_mvec_dataset():
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    # 创建表
+    # Create the table
     cur.execute("create table if not exists " + IMAGE_VECTOR_TABLE + " (id int, image_vector mvec);")
     conn.commit()
 
-    # 删除表中的行
+    # Delete rows from the table
     cur.execute("delete from " + IMAGE_VECTOR_TABLE + ";")
     conn.commit()
 
@@ -36,14 +36,14 @@ def import_imagenet_mvec_dataset():
 def import_imagenet_dataset():
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
-    # 创建表
+    # Create the table
     cur.execute("create table if not exists " + IMAGE_TABLE + " (id int, image_path text);")
     conn.commit()
     
     cur.execute("delete from " + IMAGE_TABLE + ";")
     conn.commit()
 
-    # 插入表
+    # Insert into the table
     for index in range(len(image_name)):
         sql = f"INSERT INTO " + IMAGE_TABLE  + " (id, image_path) VALUES ({},'{}')".format(index+1, imagenet_dataset_path+image_name[index])
         #print(sql)
@@ -53,7 +53,7 @@ def import_imagenet_dataset():
     conn.close()
 
 # def import_evadb_imagenet_dataset():
-#     # 连接evadb -- DISABLED: creates hash-named cache dirs (e.g. 9bfebd13...)
+#     # Connect evadb -- DISABLED: creates hash-named cache dirs (e.g. 9bfebd13...)
 #     # cursor = evadb.connect().cursor()
 #     # cursor.query("DROP TABLE IF EXISTS IMAGENET").df()
 #     # for index in range(len(image_name)):

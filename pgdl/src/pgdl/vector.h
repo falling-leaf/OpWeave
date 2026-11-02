@@ -98,7 +98,7 @@ extern "C"
 	extern volatile Oid mvec_type_id;
 
 void mvec_to_str(MVec *mvec, std::string& str);
-// tensor 与 Mvec的互相转换
+// conversion between tensor and Mvec
 MVec* tensor_to_vector(torch::Tensor& tensor);
 torch::Tensor vector_to_tensor(MVec* vector);
 #ifdef __cplusplus

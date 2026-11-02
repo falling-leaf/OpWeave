@@ -17,14 +17,14 @@ timing_data_vector = []
 
 # parse time
 def parse_timing_info(timing_str):
-    # 使用正则表达式匹配所需的时间信息
+    # Match the required timing information with a regex
     pattern = r'total: (\d+) ms\n load model: (\d+) ms\((\d+\.\d+)%\)\n pre process: (\d+) ms\((\d+\.\d+)%\)\n infer: (\d+) ms\((\d+\.\d+)%\)\n post process: (\d+) ms\((\d+\.\d+)%\)'
     
-    # 使用search方法寻找与正则表达式相匹配的子串
+    # Use search to find the substring matching the regex
     match = re.search(pattern, timing_str)
     
     if match:
-        # 将捕获的组转换为字典
+        # Convert the captured groups into a dict
         timing_info = {
             'total_time': int(match.group(1)),
             'load_model_time': int(match.group(2)),
@@ -38,7 +38,7 @@ def parse_timing_info(timing_str):
         }
         return timing_info
     else:
-        # 如果没有找到匹配项，返回None或抛出异常
+        # If no match is found, return None or raise an exception
         return None
     
 def create_model():
@@ -63,10 +63,10 @@ def create_model():
 
 def single_model_test(limit_flag:str):
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -86,16 +86,16 @@ def single_model_test(limit_flag:str):
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -106,7 +106,7 @@ def single_model_test(limit_flag:str):
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4) 
 
@@ -114,10 +114,10 @@ def single_model_test(limit_flag:str):
 
 def single_model_join_test(limit_flag:str):
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -139,16 +139,16 @@ def single_model_join_test(limit_flag:str):
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -159,16 +159,16 @@ def single_model_join_test(limit_flag:str):
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
 def single_model_batch_test(limit_flag:str):
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -191,16 +191,16 @@ def single_model_batch_test(limit_flag:str):
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -211,16 +211,16 @@ def single_model_batch_test(limit_flag:str):
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)  
 
 def muti_model_test(limit_flag:str):
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         # sql = """
@@ -248,16 +248,16 @@ def muti_model_test(limit_flag:str):
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -268,17 +268,17 @@ def muti_model_test(limit_flag:str):
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format(limit_flag), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4) 
 
 
 def different_data_distribution():
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -299,16 +299,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -319,15 +319,15 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -348,16 +348,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -368,16 +368,16 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
 
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -398,16 +398,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -418,16 +418,16 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
 
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -448,16 +448,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -468,15 +468,15 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -497,16 +497,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -517,16 +517,16 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
 
     for count in TEXT_COUNT_LIST:
-        # 连接数据库
+        # Connect to the database
         conn = psycopg2.connect(**db_config)
         cur = conn.cursor()
-        # 使用conn执行数据库操作
+        # Execute database operations with conn
         cur.execute("select register_process();")
         start = time.time()
         sql = """
@@ -547,16 +547,16 @@ def different_data_distribution():
         conn.close()
 
 
-        # 读取和追加写入TEXT_VECTOR_TEST_FILE
+        # Read and append to TEXT_VECTOR_TEST_FILE
         try:
             with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'r') as f_vector:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_vector = json.load(f_vector)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_vector = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         timing_data_vector.append({"sql": sql,
                                 "count": count, 
                                 "total_time": res["total_time"]/1000000, 
@@ -567,7 +567,7 @@ def different_data_distribution():
                                 "post_time": res["post_time"]/1000000})
         
 
-        # 写回文件
+        # Write back to the file
         with open(TEXT_VECTOR_TEST_FILE.format("different_data_distribution"), 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 

@@ -24,28 +24,28 @@ extern "C" {
 
 
 
-// pg内部SPI连接类
+// internal SPI connection class for pg
 class SPIConnector {
 public:
     SPIConnector();
     ~SPIConnector();
 
     /**
-     * @description: 创建SPI 连接
+     * @description: Create an SPI connection
      * @event: 
      * @return {*}
      */    
     bool Connect();
 
     /**
-     * @description: 关闭SPI 连接
+     * @description: Close the SPI connection
      * @event: 
      * @return {*}
      */    
     void DisConnect();
 
     /**
-     * @description: 返回连接状态
+     * @description: Return the connection status
      * @event: 
      * @return {*}
      */    
@@ -59,7 +59,7 @@ public:
     bool IsPrepared();
 
     /**
-     * @description: prepare语句准备
+     * @description: Prepare the prepared statement
      * @event: 
      * @param {string&} query
      * @return {*}
@@ -78,8 +78,8 @@ private:
      * before call Bind and Execute
     */
     static inline std::mutex  conn_lock_;
-    bool              is_connected_; // 连接标识
-    bool              is_prepared_;  // prepare标识
+    bool              is_connected_; // connection flag
+    bool              is_prepared_;  // prepared flag
     SPIPlanPtr        plan_;         
 };
 
@@ -116,7 +116,7 @@ private:
 
 private:
     SPIConnector&             pg_conn_;
-    std::string               sql_;             //sql语句
+    std::string               sql_;             //sql statement
     std::vector<Oid>          param_types_;     
     std::vector<Datum>        param_values_;
 };

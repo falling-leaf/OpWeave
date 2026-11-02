@@ -39,7 +39,7 @@ from morphingdb_test.config import db_config
 
 
 def test_hotpotqa_chart_has_dbagent_latency_rows():
-    csv_path = "/home/why/dbagent/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/main_result_barcharts_data.csv"
+    csv_path = "/opt/opweave/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/main_result_barcharts_data.csv"
     with open(csv_path, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 
@@ -53,7 +53,7 @@ def test_hotpotqa_chart_has_dbagent_latency_rows():
 
 
 def test_hotpotqa_dbagent_chart_values_are_numeric():
-    csv_path = "/home/why/dbagent/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/main_result_barcharts_data.csv"
+    csv_path = "/opt/opweave/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/main_result_barcharts_data.csv"
     with open(csv_path, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 

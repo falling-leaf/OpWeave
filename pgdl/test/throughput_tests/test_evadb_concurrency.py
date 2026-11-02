@@ -107,29 +107,29 @@ test_cases = [
 
 def run_single_task_worker(task_id, test_function, module_path):
     """
-    单个进程执行的任务单元，运行指定的test_function
+    Task unit executed by a single process, runs the specified test_function
     """
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Starting execution")
     try:
-        # 导入模块
+        # Import the module
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Importing module {module_path}")
         module = importlib.import_module(module_path)
         
-        # 存储原始TEXT_COUNT_LIST
+        # Save the original TEXT_COUNT_LIST
         original_text_count_list = getattr(module, "TEXT_COUNT_LIST", None)
-        # 修改TEXT_COUNT_LIST为只包含1000
+        # Change TEXT_COUNT_LIST to contain only 1000
         if original_text_count_list:
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Modifying TEXT_COUNT_LIST to [1000]")
             setattr(module, "TEXT_COUNT_LIST", [1000])
         
-        # 记录开始时间
+        # Record the start time
         start_time = time.time()
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Executing test function")
         
-        # 执行测试函数
+        # Execute the test function
         test_function()
         
-        # 恢复原始TEXT_COUNT_LIST
+        # Restore the original TEXT_COUNT_LIST
         if original_text_count_list:
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Restoring original TEXT_COUNT_LIST")
             setattr(module, "TEXT_COUNT_LIST", original_text_count_list)
@@ -146,7 +146,7 @@ def run_single_task_worker(task_id, test_function, module_path):
     except Exception as e:
         error_msg = str(e)
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Task {task_id}: Error occurred: {error_msg}")
-        # 尝试恢复原始TEXT_COUNT_LIST
+        # Try to restore the original TEXT_COUNT_LIST
         try:
             module = importlib.import_module(module_path)
             original_text_count_list = getattr(module, "TEXT_COUNT_LIST", None)
@@ -229,7 +229,7 @@ def test_concurrency(concurrency_level, test_function, module_path):
 
 def find_exact_max_concurrency(start_level, end_level, test_function, module_path):
     """
-    使用二分法精确找到最大安全并发数
+    Find the maximum safe concurrency precisely using binary search
     """
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Starting binary search in range [{start_level}, {end_level}]")
     
@@ -237,19 +237,19 @@ def find_exact_max_concurrency(start_level, end_level, test_function, module_pat
     
     while start_level <= end_level:
         if start_level == end_level:
-            # 只有一个值需要测试
+            # Only one value needs to be tested
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Testing single level {start_level}")
             test_result = test_concurrency(start_level, test_function, module_path)
             all_results.append(test_result)
             
             if test_result["failed_tasks"] == 0:
-                # 当前并发数成功，这是最大安全值
+                # Current concurrency succeeded; this is the maximum safe value
                 print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Level {start_level} succeeded, returning as max safe concurrency")
                 return all_results, start_level
             else:
-                # 当前并发数失败，需要返回上一个成功的值
+                # Current concurrency failed; return the previous successful value
                 print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Level {start_level} failed, returning {start_level - 1} as max safe concurrency")
-                return all_results, start_level - 1  # 假设前一个值是成功的
+                return all_results, start_level - 1  # Assume the previous value succeeded
         
         mid = (start_level + end_level) // 2
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Testing mid level {mid} in range [{start_level}, {end_level}]")
@@ -257,26 +257,26 @@ def find_exact_max_concurrency(start_level, end_level, test_function, module_pat
         all_results.append(test_result)
         
         if test_result["failed_tasks"] == 0:
-            # 当前并发数成功，尝试更高
+            # Current concurrency succeeded; try a higher level
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Level {mid} succeeded, moving to range [{mid + 1}, {end_level}]")
             start_level = mid + 1
         else:
-            # 当前并发数失败，尝试更低
+            # Current concurrency failed; try a lower level
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Level {mid} failed, moving to range [{start_level}, {mid - 1}]")
             end_level = mid - 1
         
-        # 小延迟以允许系统恢复
+        # Small delay to allow system recovery
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Pausing for 1 second to allow system recovery")
         time.sleep(1)
     
-    # 循环结束后，start_level > end_level
-    # 此时end_level应该是最大的成功值
+    # After the loop ends, start_level > end_level
+    # At this point end_level should be the largest successful value
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Binary search: Loop ended, returning {end_level} as max safe concurrency")
     return all_results, end_level
 
 def find_max_concurrency_optimized(test_function, module_path, start_level=1, max_level=1000, coarse_step=32):
     """
-    优化的并发查找函数，结合粗粒度搜索和二分查找
+    Optimized concurrency search function combining coarse-grained search and binary search
     """
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Starting optimized concurrency test: start={start_level}, max={max_level}, coarse_step={coarse_step}")
     
@@ -354,22 +354,22 @@ def run_evadb_concurrency_tests():
         # First run the original test to ensure it works
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Running original test to verify functionality...")
         try:
-            # 导入模块
+            # Import the module
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Importing module {module_path}")
             module = importlib.import_module(module_path)
-            # 存储原始TEXT_COUNT_LIST
+            # Save the original TEXT_COUNT_LIST
             original_text_count_list = getattr(module, "TEXT_COUNT_LIST", None)
-            # 修改TEXT_COUNT_LIST为只包含1000
+            # Change TEXT_COUNT_LIST to contain only 1000
             if original_text_count_list:
                 print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Modifying TEXT_COUNT_LIST to [1000]")
                 setattr(module, "TEXT_COUNT_LIST", [1000])
             
-            # 运行测试函数
+            # Run the test function
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Executing test function")
             test_function()
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Original test passed")
             
-            # 恢复原始TEXT_COUNT_LIST
+            # Restore the original TEXT_COUNT_LIST
             if original_text_count_list:
                 print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Restoring original TEXT_COUNT_LIST")
                 setattr(module, "TEXT_COUNT_LIST", original_text_count_list)

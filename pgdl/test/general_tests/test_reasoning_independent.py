@@ -10,7 +10,7 @@ Each independent query:
     FROM (SELECT * FROM reasoning_vector_test LIMIT 1 OFFSET {i}) AS sub_table;
 
 Usage:
-    cd /home/why/dbagent/pgdl/test
+    cd /opt/opweave/pgdl/test
     uv run python test_reasoning_independent.py [--queries 10]
 """
 

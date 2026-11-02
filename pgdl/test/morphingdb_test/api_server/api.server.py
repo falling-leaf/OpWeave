@@ -9,16 +9,16 @@ import os
 from typing import Dict
 import uvicorn
 
-# 初始化FastAPI应用
+# Initialize the FastAPI application
 app = FastAPI(
-    title="PyTorch模型推理服务",
-    description="提供PyTorch模型加载和图像推理功能的API服务"
+    title="PyTorch model inference service",
+    description="API service that provides PyTorch model loading and image inference"
 )
 
-# 全局变量存储已加载的模型
+# Global store for loaded models
 loaded_models: Dict[str, torch.nn.Module] = {}
 
-# 定义请求体模型
+# Request body models
 class LoadModelRequest(BaseModel):
     model_name: str
     model_path: str
@@ -27,7 +27,7 @@ class PredictRequest(BaseModel):
     model_name: str
     image_url: str
 
-# 图像预处理转换
+# Image preprocessing transform
 def get_transform():
     return transforms.Compose([
         transforms.Resize((224, 224)),
@@ -35,20 +35,20 @@ def get_transform():
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-# 加载模型接口
+# Load model endpoint
 @app.post("/load_model/")
 async def load_model(request: LoadModelRequest):
     try:
-        # 检查模型文件是否存在
+        # Check whether the model file exists
         if not os.path.exists(request.model_path):
             raise HTTPException(status_code=404, detail=f"Model file not found at {request.model_path}")
         
-        # 加载模型
+        # Load the model
         model = torch.load(request.model_path, weights_only=False)
         model = model.to("cuda:0")
-        model.eval()  # 设置为评估模式
+        model.eval()  # set to eval mode
         
-        # 存储到全局字典
+        # Store in the global dict
         loaded_models[request.model_name] = model
         
         return {
@@ -59,32 +59,32 @@ async def load_model(request: LoadModelRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 推理接口
+# Inference endpoint
 @app.post("/predict/")
 async def predict(request: PredictRequest):
     try:
-        # 检查模型是否已加载
+        # Check whether the model is loaded
         if request.model_name not in loaded_models:
             raise HTTPException(
                 status_code=404,
                 detail=f"Model '{request.model_name}' not loaded. Please load it first using /load_model/"
             )
         
-        # 获取模型
+        # Get the model
         model = loaded_models[request.model_name]
         
-        # 加载图像并预处理
-        # 如果是本地路径，直接打开文件
+        # Load and preprocess the image
+        # If it is a local path, open the file directly
         if request.image_url.startswith("/"):
             image = Image.open(request.image_url)
         else:
             raise HTTPException(status_code=400, detail="Invalid image URL. Please provide a valid local path.")
         
         transform = get_transform()
-        input_tensor = transform(image).unsqueeze(0)  # 增加批次维度
-        input_tensor = input_tensor.to("cuda:0")  # 将输入张量移动到GPU
+        input_tensor = transform(image).unsqueeze(0)  # Add batch dimension
+        input_tensor = input_tensor.to("cuda:0")  # Move the input tensor to the GPU
         
-        # 推理
+        # Run inference
         with torch.no_grad():
             output = model(input_tensor)
             _, predicted_class = torch.max(output, 1)
@@ -101,7 +101,7 @@ async def predict(request: PredictRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 获取已加载模型列表
+# List the loaded models
 @app.get("/loaded_models/")
 async def get_loaded_models():
     return {

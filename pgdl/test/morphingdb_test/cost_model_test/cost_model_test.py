@@ -23,53 +23,53 @@ from thop import profile
 from ptflops import get_model_complexity_info
 
 class HardwareMonitor:
-    """获取硬件带宽信息的工具类"""
+    """Utility class for querying hardware bandwidth"""
     
     @staticmethod
     def get_mem_bandwidth() -> float:
-        """获取系统内存带宽(GB/s)"""
+        """Get the system memory bandwidth (GB/s)"""
         try:
-            # 使用dmidecode获取内存信息
+            # Use dmidecode to get memory information
             cmd = "sudo dmidecode -t memory | grep Speed"
             output = subprocess.check_output(cmd, shell=True).decode()
             speeds = [int(line.split()[1]) for line in output.splitlines() if "MHz" in line]
-            avg_speed_mhz = np.mean(speeds) if speeds else 3200  # 默认DDR4-3200
+            avg_speed_mhz = np.mean(speeds) if speeds else 3200  # default DDR4-3200
             
-            # 假设双通道64位总线
+            # Assume a dual-channel 64-bit bus
             bandwidth_GBs = (avg_speed_mhz * 2 * 64 / 8) / 1000
-            return bandwidth_GBs * 1e9  # 转换为bytes/sec
+            return bandwidth_GBs * 1e9  # convert to bytes/sec
             
         except Exception as e:
             print(f"Warning: Could not get memory bandwidth, using default 25.6 GB/s. Error: {str(e)}")
-            return 25.6 * 1e9  # 默认DDR4-3200的理论带宽
+            return 25.6 * 1e9  # default theoretical bandwidth of DDR4-3200
 
     @staticmethod
     def get_gpu_bandwidth(device_id=0) -> float:
-        """获取GPU显存带宽(GB/s)"""
+        """Get the GPU memory bandwidth (GB/s)"""
         try:
-            # 使用nvidia-smi获取带宽信息
+            # Use nvidia-smi to get bandwidth information
             cmd = f"nvidia-smi --id={device_id} --query-gpu=memory_info.width --format=csv,noheader,nounits"
             bus_width = int(subprocess.check_output(cmd, shell=True).decode().strip())
             
             cmd = f"nvidia-smi --id={device_id} --query-gpu=clocks.mem --format=csv,noheader,nounits"
             mem_clock = int(subprocess.check_output(cmd, shell=True).decode().strip())
             
-            # 计算有效带宽 (GDDR5/GDDR6的倍增系数不同)
-            bandwidth = (bus_width * mem_clock * 2) / 8  # 转换为GB/s
-            return bandwidth * 1e9  # 转换为bytes/sec
+            # Compute effective bandwidth (the GDDR5/GDDR6 multiplier differs)
+            bandwidth = (bus_width * mem_clock * 2) / 8  # convert to GB/s
+            return bandwidth * 1e9  # convert to bytes/sec
             
         except Exception as e:
             print(f"Warning: Could not get GPU bandwidth, using default 900 GB/s. Error: {str(e)}")
-            return 900 * 1e9  # 默认A100的带宽
+            return 900 * 1e9  # default bandwidth of A100
         
 
 
 class ModelAnalyzer:
-    """PyTorch模型分析工具类"""
+    """Utility class for PyTorch model analysis"""
     
     @staticmethod
     def get_model_size(model: nn.Module) -> int:
-        """计算模型参数量(字节)"""
+        """Compute the model parameter size (bytes)"""
         param_size = 0
         for param in model.parameters():
             param_size += param.nelement() * param.element_size()
@@ -80,12 +80,12 @@ class ModelAnalyzer:
 
     @staticmethod
     def count_parameters(model: nn.Module) -> int:
-        """计算可训练参数量"""
+        """Compute the number of trainable parameters"""
         return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 class CostModel:
-    """增强版成本模型"""
+    """Enhanced cost model"""
     
     def __init__(self, device='cuda:0'):
         self.device = device
@@ -97,13 +97,13 @@ class CostModel:
         print(f"gpu_flops:{self.gpu_flops}")
         
     def _estimate_cpu_flops(self) -> float:
-        """估算CPU单核FLOPs"""
+        """Estimate single-core CPU FLOPs"""
         try:
-            # 通过/proc/cpuinfo获取CPU信息
+            # Get CPU information from /proc/cpuinfo
             with open('/proc/cpuinfo') as f:
                 info = f.read()
             
-            # 提取CPU型号和频率
+            # Extract the CPU model and frequency
             model_match = re.search(r"model name\s*:\s*(.+)", info)
             freq_match = re.search(r"cpu MHz\s*:\s*(\d+)", info)
             
@@ -111,29 +111,29 @@ class CostModel:
                 model = model_match.group(1).lower()
                 freq_ghz = float(freq_match.group(1)) / 1000
                 
-                # 常见CPU架构的每周期FLOPs
+                # FLOPs per cycle for common CPU architectures
                 if 'xeon' in model:
                     flops_per_cycle = 32  # AVX-512
                 elif 'core' in model or 'i3' in model or 'i5' in model or 'i7' in model or 'i9' in model:
                     flops_per_cycle = 16  # AVX2
                 else:
-                    flops_per_cycle = 8  # 保守估计
+                    flops_per_cycle = 8  # conservative estimate
                 
                 return flops_per_cycle * freq_ghz * 1e9
                 
         except Exception as e:
             print(f"Warning: Could not estimate CPU FLOPs, using default 50 GFLOPS. Error: {str(e)}")
-            return 50e9  # 默认值
+            return 50e9  # default value
         
-        return 50e9  # 默认值
+        return 50e9  # default value
 
     def _get_gpu_flops(self) -> float:
-        """获取GPU的理论FLOPs"""
+        """Get the theoretical GPU FLOPs"""
         try:
             if not torch.cuda.is_available():
                 return 0
                 
-            # 获取GPU计算能力
+            # Get the GPU compute capability
             capability = torch.cuda.get_device_capability(self.device)
             print(f"capability:{capability}")
             cuda_cores = {
@@ -141,21 +141,21 @@ class CostModel:
                 (7,5): 4608,   # T4
                 (7,0): 5120,    # V100
                 (8,6): 10496    # 3090
-            }.get(tuple(capability), 2048)  # 默认值
+            }.get(tuple(capability), 2048)  # default value
             
-            # 获取GPU频率
+            # Get the GPU frequency
             cmd = f"nvidia-smi --id={self.device.split(':')[-1]} --query-gpu=clocks.max.sm --format=csv,noheader,nounits"
             sm_clock = int(subprocess.check_output(cmd, shell=True).decode().strip())
             
-            # 计算理论FP32 FLOPs
+            # Compute theoretical FP32 FLOPs
             return cuda_cores * sm_clock * 2 * 1e6  # 2 FLOPS per core per cycle
             
         except Exception as e:
             print(f"Warning: Could not get GPU FLOPs, using default 10 TFLOPS. Error: {str(e)}")
-            return 10e12  # 默认值
+            return 10e12  # default value
 
     def calculate_cost(self, model, batch_size: int, ops_per_param: float = 2) -> Dict[str, Union[float, str]]:
-        """完整成本计算流程"""
+        """Full cost calculation flow"""
         input = torch.randn(4, 3, 10, 10) 
         input_shape = (3, 256, 256)
         # opnames = model._c._get_operator_export_type_name_list()
@@ -165,18 +165,18 @@ class CostModel:
         model_flops = model_macs * 2
         #model_flops, params = get_model_complexity_info(model, input_shape)
         print(f"model_flops, params:{model_flops},{params}")
-        # 获取模型参数
+        # Get the model parameters
         model_params = ModelAnalyzer.count_parameters(model[0])
         model_size = ModelAnalyzer.get_model_size(model[0])
         
-        # 获取硬件参数
+        # Get the hardware parameters
         cpu_bandwidth = self.hw_monitor.get_mem_bandwidth()
         gpu_bandwidth = self.hw_monitor.get_gpu_bandwidth()
         print(f"cpu_bandwidth, gpu_bandwidth:{cpu_bandwidth},{gpu_bandwidth}")
-        # 计算延迟 (经验值)
-        latency = 9  # 9s基础延迟
+        # Compute latency (empirical value)
+        latency = 9  # 9s base latency
         
-        # 计算成本
+        # Compute the cost
         gpu_cost = self._calculate_gpu_cost(
             model_flops=model_flops,
             flops=self.gpu_flops,
@@ -195,7 +195,7 @@ class CostModel:
             cpu_bandwidth=cpu_bandwidth
         )
         
-        # 决定平台
+        # Decide the platform
         platform = 'GPU' if gpu_cost < cpu_cost else 'CPU'
         
         return {
@@ -213,14 +213,14 @@ class CostModel:
     def _calculate_gpu_cost(self, model_flops: float, flops: float, 
                           num_rows: int, model_size_bytes: int, gpu_bandwidth: float, cpu_bandwidth: float, 
                           latency: float) -> float:
-        """GPU成本计算"""
+        """GPU cost calculation"""
         compute_time = model_flops / flops * num_rows
         transfer_cost = (model_size_bytes / cpu_bandwidth) + (model_size_bytes / gpu_bandwidth) + latency
         return compute_time + transfer_cost
 
     def _calculate_cpu_cost(self, model_flops: float, flops: float, 
                            num_rows: int, model_size_bytes: int, cpu_bandwidth: float) -> float:
-        """CPU成本计算"""
+        """CPU cost calculation"""
         compute_time = model_flops / flops * num_rows
         transfer_cost = (model_size_bytes / cpu_bandwidth)
         return compute_time + transfer_cost
@@ -254,7 +254,7 @@ class LogisticRegressionModel_year(torch.nn.Module):
                      
                     #   torch.nn.Linear(32,output_dim))
     def forward(self, x):
-        y_pred = self.linear(x)  #self.linear是callable的，是可调用的对象
+        y_pred = self.linear(x)  #self.linear is callable
         return y_pred
 
 class CTslicesModel(nn.Module):
@@ -294,19 +294,19 @@ def cost_model_test():
         # "financial_phrase": [RobertaModel.from_pretrained("roberta-base"), torch.randint(0, 1000, (1, 128))]
     }
     
-    # 2. 初始化成本模型
+    # 2. Initialize the cost model
     cost_model = CostModel(device='cuda:0')
     
-    # 3. 计算不同batch size的成本
+    # 3. Compute the cost for different batch sizes
     batch_sizes = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
     
     COST_MODEL_TEST_FILE = "result/cost_model_test.json"
     try:
         with open(COST_MODEL_TEST_FILE, 'r') as f_vector:
-            # 尝试加载现有数据
+            # Try to load existing data
             timing_data_vector = json.load(f_vector)
     except (FileNotFoundError, json.JSONDecodeError):
-        # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+        # If the file does not exist or is not valid JSON, initialize it as an empty list
         timing_data_vector = []
     
     for key, model in model_map.items():
@@ -322,11 +322,11 @@ def cost_model_test():
                                 "GPU Cost": result['gpu_cost'],
                                 "CPU Cost": result['cpu_cost'], 
                                 "Recommended Platform": result['platform']})
-        # 写回文件
+        # Write back to the file
         with open(COST_MODEL_TEST_FILE, 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)
 
-# 使用示例
+# Example usage
 if __name__ == "__main__":    
     model_map = {
         "slice": [CTslicesModel(384, 1), torch.randn(1,384)],
@@ -340,19 +340,19 @@ if __name__ == "__main__":
         "financial_phrase": [RobertaModel.from_pretrained("roberta-base"), torch.randint(0, 1000, (1, 128))]
     }
     
-    # 2. 初始化成本模型
+    # 2. Initialize the cost model
     cost_model = CostModel(device='cuda:0')
     
-    # 3. 计算不同batch size的成本
+    # 3. Compute the cost for different batch sizes
     batch_sizes = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
     
     COST_MODEL_TEST_FILE = "result/cost_model_test.json"
     try:
         with open(COST_MODEL_TEST_FILE, 'r') as f_vector:
-            # 尝试加载现有数据
+            # Try to load existing data
             timing_data_vector = json.load(f_vector)
     except (FileNotFoundError, json.JSONDecodeError):
-        # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+        # If the file does not exist or is not valid JSON, initialize it as an empty list
         timing_data_vector = []
     
     for key, model in model_map.items():
@@ -368,6 +368,6 @@ if __name__ == "__main__":
                                 "GPU Cost": result['gpu_cost'],
                                 "CPU Cost": result['cpu_cost'], 
                                 "Recommended Platform": result['platform']})
-        # 写回文件
+        # Write back to the file
         with open(COST_MODEL_TEST_FILE, 'w') as f_vector:
             json.dump(timing_data_vector, f_vector, indent=4)

@@ -47,7 +47,7 @@ from tools.test_result_paths import GENERAL_RESULTS_DIR
 # ============================================================
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
-PSQL = "/home/why/dbagent/pg_base/bin/psql"
+PSQL = "/opt/opweave/pg_base/bin/psql"
 DB_CONFIG = {"dbname": "postgres", "host": "localhost", "port": "5432", "user": "why", "password": "123456"}
 
 SERIES_DATASETS = {

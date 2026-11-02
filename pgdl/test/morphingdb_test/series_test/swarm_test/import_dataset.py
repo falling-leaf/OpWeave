@@ -24,7 +24,7 @@ from morphingdb_test.config import db_config, swarm_dataset_path
 dataframe = pd.read_csv(swarm_dataset_path)
 
 
-# 选择所有以'value'开头的列
+# Select all columns starting with 'value'
 value_columns = dataframe.columns[:-1]
 
 
@@ -34,7 +34,7 @@ def import_swarmm_mvec_table():
     cur = conn.cursor()
 
     cur.execute("drop table if exists swarm_test;")
-    # 遍历DataFrame的每一行，并将value列的值组装成列表形式的字符串
+    # Iterate over each row of the DataFrame and assemble the value columns into a list-style string
     create_mvec_sql = 'CREATE TABLE swarm_test ( \
                             data  mvec,\
                             flag  FLOAT4 \
@@ -42,11 +42,11 @@ def import_swarmm_mvec_table():
     cur.execute(create_mvec_sql)
     formatted_rows = []
     for index, row in dataframe.iterrows():
-        # 从当前行中提取value列的值
+        # Extract the value column value from the current row
         values = row[value_columns].tolist()
-        # 将值列表转换为字符串形式
+        # Convert the list of values to a string
         values_str = '[' + ', '.join(str(value) for value in values) + ']'
-        # 将结果添加到列表中
+        # Append the result to the list
         cur.execute("insert into swarm_test values('{}', {} );".format(values_str+'{1,2400}', row['Swarm_Behaviour']))
         if(index % 10 == 0):
             conn.commit()
@@ -63,11 +63,11 @@ def import_swarm_table():
                         );'
     cur.execute(create_table_sql)
     for index, row in dataframe.iterrows():
-        # 从当前行中提取value列的值
+        # Extract the value column value from the current row
         values = row[value_columns].tolist()
-        # 将值列表转换为字符串形式
+        # Convert the list of values to a string
         values_str = '{' + ', '.join(str(value) for value in values) + '}'
-        # 将结果添加到列表中
+        # Append the result to the list
         cur.execute("insert into swarm_origin_test values('{}', {} );".format(values_str, row['Swarm_Behaviour']))
         if(index % 10 == 0):
             conn.commit()

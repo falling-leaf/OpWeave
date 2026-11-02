@@ -257,7 +257,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
         ereport(ERROR, (errmsg("model not exist, can't get path!")));
     }
 
-    // 1. 加载模型
+    // 1. load the model
     {
         CLOCK_START();
 
@@ -276,7 +276,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
         }
     }   
 
-    // 2. 设置gpu模式
+    // 2. set gpu mode
     // CPU inference stays on CPU 0, where the spin workers are, so the
     // contention is visible. A GPU call drives the device from CPU 20: the
     // CUDA driver sync in Module::to() takes seconds when the calling thread
@@ -306,7 +306,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
     std::vector<torch::jit::IValue> input_batch_tensor; // batch of tensors
     torch::jit::IValue output;
     std::vector<torch::jit::IValue> outputs; // batch of tuples<tensor|list|tuple> or tensors
-    // 3. 输入预处理
+    // 3. input preprocessing
     {
         CLOCK_START();
         try{
@@ -325,7 +325,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
                  state->model, local_preprocess_us, prcsd_batch_n);
         }
     }
-    // 4. 预测
+    // 4. prediction
     {
         CLOCK_START();
         try{
@@ -339,7 +339,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
                 for (auto& vecs : input_tensors) {
                     one_dim_vecs.push_back(vecs[i].toTensor());
                 }
-                // 使用 torch::cat 替代 torch::concat
+                // use torch::cat instead of torch::concat
                 torch::Tensor cat_result = torch::cat(one_dim_vecs, 0);
                 // Pad odd batch sizes to even to avoid crash in cross_encoder JIT
                 // The TorchScript model has a bug that crashes with odd batch dimensions
@@ -376,7 +376,7 @@ infer_batch_internal(VecAggState *state, bool ret_float8)
     }
     
 
-    // 5. 结果处理
+    // 5. result processing
     {
         CLOCK_START();
         try{

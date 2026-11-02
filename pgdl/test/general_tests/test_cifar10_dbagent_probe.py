@@ -4,7 +4,7 @@ import time
 
 import psycopg2
 
-sys.path.insert(0, "/home/why/dbagent/pgdl/test")
+sys.path.insert(0, "/opt/opweave/pgdl/test")
 from morphingdb_test.config import db_config
 
 

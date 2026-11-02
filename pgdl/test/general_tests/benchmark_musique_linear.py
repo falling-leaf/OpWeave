@@ -7,7 +7,7 @@ All methods process ALL N samples through the full pipeline:
 1. cross_encoder scores all N vectors
 2. For EACH of the N samples: deberta_reader -> reader_decoder
 
-This ensures linear scaling: N越大时间越大。
+This ensures linear scaling: time grows with N.
 
 Same sample repeated N times (fair data).
 Models pre-warmed via persistent connection (fair model loading).
@@ -28,7 +28,7 @@ DEFAULT_MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath
 MODEL_DIR = os.environ.get("MUSIQUE_MODEL_DIR", DEFAULT_MODEL_DIR)
 TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools")
 DB_CONFIG = {"dbname": "postgres", "host": "localhost", "port": "5432", "user": "why", "password": "123456"}
-PSQL = "/home/why/dbagent/pg_base/bin/psql"
+PSQL = "/opt/opweave/pg_base/bin/psql"
 SAMPLE_SIZES = [1, 5, 10, 20]
 NUM_RUNS = 3
 

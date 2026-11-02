@@ -31,10 +31,10 @@ def gpu_test(symbol:str):
 
         try:
             with open(IMAGE_TEST_FILE.format(symbol), 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
         timing_data_image.append({
@@ -42,7 +42,7 @@ def gpu_test(symbol:str):
             "sql":sql,
             "total_time": end_time - start_time
         })
-        # 写回文件
+        # Write back to the file
         with open(IMAGE_TEST_FILE.format(symbol), 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 
@@ -58,10 +58,10 @@ def cpu_test(symbol:str):
 
         try:
             with open(IMAGE_TEST_FILE.format(symbol), 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
         timing_data_image.append({
@@ -69,7 +69,7 @@ def cpu_test(symbol:str):
             "sql":sql,
             "total_time": end_time - start_time
         })
-        # 写回文件
+        # Write back to the file
         with open(IMAGE_TEST_FILE.format(symbol), 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 

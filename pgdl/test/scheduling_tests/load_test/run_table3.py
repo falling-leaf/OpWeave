@@ -62,12 +62,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 EXEC_DIR = os.path.join(HERE, "baseline_exec")
 RESULTS_DIR = ensure_dir(SCHEDULING_RESULTS_DIR / "load_test")
 
-HERMES_CLI = "/home/why/.local/bin/hermes"
+HERMES_CLI = "/opt/hermes/bin/hermes"
 MODEL_DIR = os.path.join(HERE, "..", "..", "morphingdb_test", "models")
 TOOLS_DIR = os.path.join(HERE, "..", "..", "tools")
-YEAR_MODEL = "/home/why/baseline/models/year_predict.pt"
-YEAR_DATA = "/home/why/baseline/data/series/yead_predict/YearPredictionMSD.csv"
-CIFAR_MODEL = "/home/why/baseline/models/googlenet_cifar10.pt"
+YEAR_MODEL = "/opt/baselines/models/year_predict.pt"
+YEAR_DATA = "/opt/baselines/data/series/yead_predict/YearPredictionMSD.csv"
+CIFAR_MODEL = "/opt/baselines/models/googlenet_cifar10.pt"
 
 PUBLISHED_GENERATION_MS = {
     "year_predict": 24996.5,

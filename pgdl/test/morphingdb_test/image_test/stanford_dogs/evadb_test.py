@@ -34,23 +34,23 @@ def gpu_test():
 
         try:
             with open(IMAGE_TEST_FILE, 'r') as f_image:
-                # 加载现有数据
+                # Load existing data
                 timing_data_image = json.load(f_image)
 
-            # 遍历列表
+            # Iterate over the list
             for item in timing_data_image:
-                # 查找count为100且total_time与scan_time都为零的项
+                # Find the entry with count 100 and zero total_time and scan_time
                 print(item)
                 if item["count"] == count and item["total_time"] == 0 and item["scan_time"] == 0:
-                    # 修改total_time和scan_time
+                    # Update total_time and scan_time
                     item["total_time"] = end_time - start_time
                     item["scan_time"] = (end_time - start_time) - item['load_model_time'] - item['pre_time'] - item['infer_time'] - item['post_time']
                     item["sql"] = "gpu" + sql
-                    # 由于找到了需要的项，可以结束循环
+                    # The needed entry is found, so the loop can end
                     break
             
             print(timing_data_image)
-            # 将更新后的列表写回文件
+            # Write the updated list back to the file
             with open(IMAGE_TEST_FILE, 'w') as f_image:
                 json.dump(timing_data_image, f_image, indent=4)
 
@@ -72,23 +72,23 @@ def cpu_test():
 
         try:
             with open(IMAGE_TEST_FILE, 'r') as f_image:
-                # 加载现有数据
+                # Load existing data
                 timing_data_image = json.load(f_image)
 
-            # 遍历列表
+            # Iterate over the list
             for item in timing_data_image:
-                # 查找count为100且total_time与scan_time都为零的项
+                # Find the entry with count 100 and zero total_time and scan_time
                 print(item)
                 if item["count"] == count and item["total_time"] == 0 and item["scan_time"] == 0:
-                    # 修改total_time和scan_time
+                    # Update total_time and scan_time
                     item["total_time"] = end_time - start_time
                     item["scan_time"] = (end_time - start_time) - item['load_model_time'] - item['pre_time'] - item['infer_time'] - item['post_time']
-                    # 由于找到了需要的项，可以结束循环
+                    # The needed entry is found, so the loop can end
                     item["sql"] = "cpu" + sql
                     break
             
             print(timing_data_image)
-            # 将更新后的列表写回文件
+            # Write the updated list back to the file
             with open(IMAGE_TEST_FILE, 'w') as f_image:
                 json.dump(timing_data_image, f_image, indent=4)
 

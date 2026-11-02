@@ -23,11 +23,11 @@ Methodology:
 import os, sys, time, json, re, subprocess, gc
 from datetime import datetime
 
-HERMES_CLI = "/home/why/.local/bin/hermes"
-BASELINE_DIR = "/home/why/baseline"
+HERMES_CLI = "/opt/hermes/bin/hermes"
+BASELINE_DIR = "/opt/baselines"
 DATA_DIR = os.path.join(BASELINE_DIR, "data")
 MODELS_DIR = os.path.join(BASELINE_DIR, "models")
-TOOLS_DIR = "/home/why/dbagent/pgdl/test/tools"
+TOOLS_DIR = "/opt/opweave/pgdl/test/tools"
 from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 RESULTS_DIR = ensure_dir(GENERAL_RESULTS_DIR)
@@ -117,8 +117,8 @@ def make_prompt_hotpotqa(n):
         f"   Each row is a flat float array -> reshape to (4,128). Call this input_vecs.\n"
         f"4. Load {n*2} rows: SELECT get_mvec_data(text_vec) FROM reasoning_vector_step2 ORDER BY id LIMIT {n*2}\n"
         f"   Each row is a flat float array -> reshape to (4,128). Call this step2_vecs.\n"
-        f"5. Load cross_encoder: torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu'); eval()\n"
-        f"6. Load deberta_reader: torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu'); eval()\n"
+        f"5. Load cross_encoder: torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu'); eval()\n"
+        f"6. Load deberta_reader: torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu'); eval()\n"
         f"7. IMPORTANT: print the line: EXEC_START_MS=<t0> where t0 = time.perf_counter()*1000.0\n"
         f"8. Stage 1 (cross_encoder): for all {n} input_vecs, stack first 2 rows of each -> batch shape ({n},2,128) -> run cross_encoder -> scores\n"
         f"9. Stage 2 (deberta_reader): for each sample i in 0..{n-1}:\n"
@@ -142,8 +142,8 @@ def make_prompt_musique(n):
         f"   Each row is a flat float array -> reshape to (4,128). Call this input_vecs.\n"
         f"4. Load {n*2} rows: SELECT get_mvec_data(text_vec) FROM musique_vector_step2 ORDER BY id LIMIT {n*2}\n"
         f"   Each row is a flat float array -> reshape to (4,128). Call this step2_vecs.\n"
-        f"5. Load cross_encoder: torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu'); eval()\n"
-        f"6. Load deberta_reader: torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu'); eval()\n"
+        f"5. Load cross_encoder: torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu'); eval()\n"
+        f"6. Load deberta_reader: torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu'); eval()\n"
         f"7. IMPORTANT: print the line: EXEC_START_MS=<t0> where t0 = time.perf_counter()*1000.0\n"
         f"8. Stage 1 (cross_encoder): for all {n} input_vecs, stack first 2 rows of each -> batch shape ({n},2,128) -> run cross_encoder -> scores\n"
         f"9. Stage 2 (deberta_reader): for each sample i in 0..{n-1}:\n"

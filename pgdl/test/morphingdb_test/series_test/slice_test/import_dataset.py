@@ -31,11 +31,11 @@ def import_slice_mvec_table():
     
     formatted_rows = []
     for index, row in dataframe.iterrows():
-        # 从当前行中提取value列的值
+        # Extract the value column value from the current row
         values = row[value_columns].tolist()
-        # 将值列表转换为字符串形式
+        # Convert the list of values to a string
         values_str = '[' + ', '.join(str(value) for value in values) + ']'
-        # 将结果添加到列表中
+        # Append the result to the list
         cur.execute("insert into slice_test values('{}', {} );".format(values_str+'{1,384}', row['reference']))
         if(index % 10 == 0):
             conn.commit()

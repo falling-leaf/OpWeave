@@ -2,26 +2,26 @@ CREATE OR REPLACE FUNCTION load_base_model(OUT void)
     AS 'MODULE_PATHNAME', 'load_base_model' LANGUAGE C STRICT;
 
 CREATE TABLE IF NOT EXISTS ai_operator(operator text primary key, discription text);
-insert into ai_operator values('Add','两个张量逐元素相加');
-insert into ai_operator values('Subtract','两个张量逐元素相减');
-insert into ai_operator values('Multiply','逐元素相乘');
-insert into ai_operator values('Divide','逐元素相除');
-insert into ai_operator values('Pow','逐元素求幂');
-insert into ai_operator values('Exp','逐元素计算指数');
-insert into ai_operator values('Abs','逐元素计算绝对值');
-insert into ai_operator values('Sqrt','逐元素计算平方根');
+insert into ai_operator values('Add','element-wise addition of two tensors');
+insert into ai_operator values('Subtract','element-wise subtraction of two tensors');
+insert into ai_operator values('Multiply','element-wise multiplication');
+insert into ai_operator values('Divide','element-wise division');
+insert into ai_operator values('Pow','element-wise exponentiation');
+insert into ai_operator values('Exp','element-wise exponential');
+insert into ai_operator values('Abs','element-wise absolute value');
+insert into ai_operator values('Sqrt','element-wise square root');
 insert into ai_operator values('ReLU','f(x) = max(0, x)');
 insert into ai_operator values('Sigmoid','f(x) = 1 / (1 + exp(-x))');
-insert into ai_operator values('Softmax','将输入归一化为概率分布，常用于分类任务的输出层。');
+insert into ai_operator values('Softmax','normalizes the input into a probability distribution, commonly used in the output layer for classification tasks.');
 insert into ai_operator values('Softplus','f(x) = log(1 + exp(x))');
-insert into ai_operator values('MatMul','矩阵乘法');
+insert into ai_operator values('MatMul','matrix multiplication');
 insert into ai_operator values('Linear','y = Wx + b');
-insert into ai_operator values('Convolution','在输入数据上滑动卷积核，提取特征');
-insert into ai_operator values('Max Pooling','取局部区域的最大值');
-insert into ai_operator values('Average Pooling','取局部区域的平均值');
-insert into ai_operator values('Layer Normalization','对每一层的输入进行归一化');
+insert into ai_operator values('Convolution','slides the convolution kernel over the input data to extract features');
+insert into ai_operator values('Max Pooling','takes the maximum value in a local region');
+insert into ai_operator values('Average Pooling','takes the average value in a local region');
+insert into ai_operator values('Layer Normalization','normalizes the input of each layer');
 insert into ai_operator values('MSE','L = (y_pred - y_true)^2');
-insert into ai_operator values('Gradient Calculation','计算损失函数对参数的梯度');
+insert into ai_operator values('Gradient Calculation','computes the gradient of the loss function with respect to the parameters');
 insert into ai_operator values('L1 Loss','L = |y_pred - y_true|');
 insert into ai_operator values('L2 Loss','L = (y_pred - y_true)^2');
 
@@ -54,7 +54,7 @@ LANGUAGE C;
 
 CREATE OR REPLACE FUNCTION db_agent_sfunc(internal, cstring, VARIADIC "any")
 RETURNS internal
-AS 'MODULE_PATHNAME', 'db_agent_sfunc' -- 对应 C 代码中的新入口名
+AS 'MODULE_PATHNAME', 'db_agent_sfunc' -- corresponds to the new entry name in the C code
 LANGUAGE C;
 
 CREATE OR REPLACE FUNCTION db_agent_msfunc(IN aggstate internal, IN task_type cstring, VARIADIC vec "any" , OUT internal)

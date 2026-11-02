@@ -32,7 +32,7 @@ from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 # Configuration
 DEFAULT_MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "morphingdb_test", "models")
 MODEL_DIR = os.environ.get("MUSIQUE_MODEL_DIR", DEFAULT_MODEL_DIR)
-PSQL = "/home/why/dbagent/pg_base/bin/psql"
+PSQL = "/opt/opweave/pg_base/bin/psql"
 TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools")
 DB_CONFIG = {"dbname": "postgres", "host": "localhost", "port": "5432", "user": "why", "password": "123456"}
 SAMPLE_SIZES = [1, 5, 10, 20]

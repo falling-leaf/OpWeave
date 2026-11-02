@@ -24,17 +24,17 @@ std::string BuildModelMd5CacheKey(const std::string& model_path, const std::stri
 
 bool TryGetBuiltinModelPath(const std::string& model_name, std::string& model_path) {
     static const std::unordered_map<std::string, std::string> kBuiltinModelPaths = {
-        {"slice", "/home/why/dbagent/pgdl/test/morphingdb_test/models/slice.pt"},
-        {"swarm", "/home/why/dbagent/pgdl/test/morphingdb_test/models/swarm.pt"},
-        {"year_predict", "/home/why/dbagent/pgdl/test/morphingdb_test/models/year_predict.pt"},
-        {"googlenet_cifar10", "/home/why/dbagent/pgdl/test/morphingdb_test/models/googlenet_cifar10.pt"},
-        {"defect_vec", "/home/why/dbagent/pgdl/test/morphingdb_test/models/resnet18_imagenet.pt"},
-        {"alexnet_stanford_dogs", "/home/why/dbagent/pgdl/test/morphingdb_test/models/alexnet_stanford_dogs.pt"},
-        {"finance", "/home/why/dbagent/pgdl/test/morphingdb_test/models/sentiment_analysis_model.pt"},
-        {"sst2_vec", "/home/why/dbagent/pgdl/test/morphingdb_test/models/traced_albert_vec.pt"},
-        {"cross_encoder", "/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt"},
-        {"deberta_reader", "/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader_gpu.pt"},
-        {"flan_t5_reader", "/home/why/dbagent/pgdl/test/morphingdb_test/models/flan_t5_reader_gpu.pt"},
+        {"slice", "/opt/opweave/pgdl/test/morphingdb_test/models/slice.pt"},
+        {"swarm", "/opt/opweave/pgdl/test/morphingdb_test/models/swarm.pt"},
+        {"year_predict", "/opt/opweave/pgdl/test/morphingdb_test/models/year_predict.pt"},
+        {"googlenet_cifar10", "/opt/opweave/pgdl/test/morphingdb_test/models/googlenet_cifar10.pt"},
+        {"defect_vec", "/opt/opweave/pgdl/test/morphingdb_test/models/resnet18_imagenet.pt"},
+        {"alexnet_stanford_dogs", "/opt/opweave/pgdl/test/morphingdb_test/models/alexnet_stanford_dogs.pt"},
+        {"finance", "/opt/opweave/pgdl/test/morphingdb_test/models/sentiment_analysis_model.pt"},
+        {"sst2_vec", "/opt/opweave/pgdl/test/morphingdb_test/models/traced_albert_vec.pt"},
+        {"cross_encoder", "/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt"},
+        {"deberta_reader", "/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader_gpu.pt"},
+        {"flan_t5_reader", "/opt/opweave/pgdl/test/morphingdb_test/models/flan_t5_reader_gpu.pt"},
     };
 
     auto it = kBuiltinModelPaths.find(model_name);
@@ -46,7 +46,7 @@ bool TryGetBuiltinModelPath(const std::string& model_name, std::string& model_pa
 }
 }
 
-//内置的模型注册回调函数可以在构造函数中
+//built-in model registration callbacks can be set in the constructor
 ModelManager::ModelManager()
 {
     
@@ -371,7 +371,7 @@ bool ModelManager::GetModelMd5(const std::string model_path,
         }
     }
     
-    // 获取select 语句结果
+    // get the select statement result
     HeapTuple tuple = SPI_tuptable->vals[0];
     md5 = SPI_getvalue(tuple, SPI_tuptable->tupdesc, 1);
     model_md5_cache_[cache_key] = md5;
@@ -443,7 +443,7 @@ bool ModelManager::LoadModel(std::string model_name, std::string model_path)
     }else{
         GetBaseModelPathFromModel(model_name, base_model_path);
         
-        // base_module_handle_ 里面还没有预先加载，则加载base model
+        // if base_module_handle_ has not preloaded it, load the base model
         if (base_module_handle_.find(base_model_path) == base_module_handle_.end()){
             try {
 
@@ -453,7 +453,7 @@ bool ModelManager::LoadModel(std::string model_name, std::string model_path)
                 ereport(INFO, (errmsg("error message:%s.", e.what())));
                 return false;
             }
-        // base_module_handle_ 里面已经预先加载了，则直接使用base model
+        // if base_module_handle_ already preloaded it, use the base model directly
         }else{
             cur_module = base_module_handle_[base_model_path];
         }
@@ -491,7 +491,7 @@ bool ModelManager::LoadModel(std::string model_name, std::string model_path)
                     }   
                 }
                 base_model_layer_tensor.copy_(layer_tensor);
-            // model_layer_info 中不存在这一层的记录，则跳过
+            // if model_layer_info has no record for this layer, skip it
             }else{
                 //ereport(INFO, (errmsg("skip layer:%s", parm.name.c_str())));
                 continue;
@@ -528,7 +528,7 @@ bool ModelManager::SetCuda(const std::string& model_path, const std::string& cud
             if(torch::cuda::is_available()){
                 std::string valid_cuda_str = cuda;
                 if (cuda.find("gpu") == 0) {
-                    // 将gpu替换为cuda（比如gpu:0 → cuda:0）
+                    // replace gpu with cuda (e.g. gpu:0 -> cuda:0)
                     valid_cuda_str.replace(0, 3, "cuda");
                 }
                 elog(INFO, "valid_cuda_str: %s", valid_cuda_str.c_str());
@@ -686,7 +686,7 @@ bool ModelManager::GetBaseModelPathFromModel(const std::string model_name,
         }
     }
     
-    // 获取select 语句结果
+    // get the select statement result
     HeapTuple tuple = SPI_tuptable->vals[0];
     base_model_path = SPI_getvalue(tuple, SPI_tuptable->tupdesc, 1);
 
@@ -851,7 +851,7 @@ bool ModelManager::Predict(const std::string& model_path,
             // elog(INFO, "output is tuple");
             auto tuple = raw_output.toTuple();
             // elog(INFO, "tuple size: %d", tuple->elements().size());
-            // // 打印每个元素的类型
+            // // print the type of each element
             // elog(INFO, "element type: %s", tuple->elements()[0].type()->str().c_str());
             // auto tensor1 = tuple->elements()[0].toTensor();
             // elog(INFO, "element[0] shape: %s",
@@ -878,13 +878,13 @@ bool ModelManager::Predict(const std::string& model_path,
                     // // stack -> [batch, 2, seq_len]
                     // auto merged = torch::stack({tensor1, tensor2}, 1);
 
-                    // // 封装为 IValue 返回
+                    // // wrap as IValue and return
                     // output = torch::jit::IValue(merged);
                 }
-                // 只取第一个输出，封装回 IValue
+                // take only the first output and wrap it back into IValue
                 else output = torch::jit::IValue(tuple->elements()[0].toTensor());
             } else {
-                // tuple 为空，直接返回整个输出
+                // tuple is empty, return the whole output directly
                 // elog(INFO, "tuple is empty");
                 output = raw_output;
             }

@@ -14,7 +14,7 @@ Pipeline:
 4. Return 2n results
 
 Usage:
-    cd /home/why/dbagent/pgdl/test
+    cd /opt/opweave/pgdl/test
     uv run python test_reasoning_python_bench.py
 """
 import os

@@ -34,7 +34,7 @@ MODEL_DIR = os.path.join(ROOT, "morphingdb_test", "models")
 TOOLS_DIR = os.path.join(ROOT, "tools")
 DB = {"dbname": "postgres", "host": "localhost", "port": "5432",
       "user": "why", "password": "123456"}
-LOG = "/home/why/dbagent/pg_base/data/log/postgresql-%s.log" % datetime.now().strftime("%Y-%m-%d")
+LOG = "/opt/opweave/pg_base/data/log/postgresql-%s.log" % datetime.now().strftime("%Y-%m-%d")
 N = 20
 PAPER = {"DBAgent": 59.5697, "Hermes": 69.8286}
 

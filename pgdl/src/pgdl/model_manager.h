@@ -4,7 +4,7 @@
  * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2024-08-17 22:55:14
  * @FilePath: /postgres-DB4AI/src/udf/torch_wrapper.h
- * @Description: 多模型管理类，包括可变参数的传递
+ * @Description: Multi-model management class, including variable argument passing
  */
 #pragma once
 #ifndef _MODEL_MANAGER_H_
@@ -43,10 +43,10 @@ public:
     /**
      * @description: 
      * @event: 
-     * @param {string} model_type 模型类别，如分类
-     * @param {string} model_name 模型名
-     * @param {string} model_path 模型文件在本地文件系统的路径
-     * @param {string} discription 模型描述
+     * @param {string} model_type model category, e.g. classification
+     * @param {string} model_name model name
+     * @param {string} model_path path of the model file on the local filesystem
+     * @param {string} discription model description
      * @return {*}
      */    
     bool CreateModel(const std::string model_name, 
@@ -132,11 +132,11 @@ public:
     bool IsCuda(const std::string& model_path);
 
     /**
-     * @description: 输入预处理函数
+     * @description: input preprocessing function
      * @event: 
      * @param {string} model_path
-     * @param {Tensor&} img_tensor 处理后的tensor
-     * @param {Args*} args 可变参数
+     * @param {Tensor&} img_tensor processed tensor
+     * @param {Args*} args variable arguments
      * @return {*}
      */    
     bool PreProcess(const std::string model_path, 
@@ -144,11 +144,11 @@ public:
                     Args* args);
 
     /**
-     * @description: 输出处理函数，结果为float8，存放在result中
+     * @description: output processing function; the result is a float8 stored in result
      * @event: 
      * @param {string} model_path
      * @param {Tensor&} output_tensor
-     * @param {float8&} result 返回的处理的结果
+     * @param {float8&} result the returned processing result
      * @return {*}
      */    
     bool OutputProcessFloat(const std::string model_path, 
@@ -157,7 +157,7 @@ public:
                             float8& result);
 
     /**
-     * @description: 输出处理函数，结果为text，存放在result中
+     * @description: output processing function; the result is text stored in result
      * @event: 
      * @param {string} model_path
      * @param {Tensor&} output_tensor
@@ -170,7 +170,7 @@ public:
                            std::string& result);
     
     /**
-     * @description: 注册输入处理回调函数
+     * @description: register an input processing callback function
      * @event: 
      * @return {*}
      */
@@ -178,7 +178,7 @@ public:
                             PreProcessCallback func);
 
     /**
-     * @description: 注册输出处理回调函数，返回值为float
+     * @description: register an output processing callback function whose return value is float
      * @event: 
      * @param {string&} path
      * @param {OutputProcessFloatCallback} func
@@ -188,7 +188,7 @@ public:
                                     OutputProcessFloatCallback func);
 
     /**
-     * @description: 注册输出处理回调函数，返回值为text
+     * @description: register an output processing callback function whose return value is text
      * @event: 
      * @param {string&} path
      * @param {OutputProcessTextCallback} func
@@ -214,13 +214,13 @@ private:
     ModelManager(const ModelManager &other);  
     ModelManager & operator=(const ModelManager &other);
 private:
-    std::unordered_map<std::string, torch::jit::script::Module>                                      base_module_handle_;  //key为路径，value为module句柄
-    std::unordered_map<std::string, std::pair<torch::jit::script::Module, torch::DeviceType>>        module_handle_;  //key为路径，value为module句柄以及是否使用gpu
+    std::unordered_map<std::string, torch::jit::script::Module>                                      base_module_handle_;  //key is the path, value is the module handle
+    std::unordered_map<std::string, std::pair<torch::jit::script::Module, torch::DeviceType>>        module_handle_;  //key is the path, value is the module handle and whether to use gpu
     std::unordered_map<std::string, std::string>                                                      model_path_cache_; // key=model_name, value=model_path
     std::unordered_map<std::string, std::string>                                                      model_md5_cache_; // key=model_path + '\n' + model_name, value=md5
-    std::unordered_map<std::string, PreProcessCallback>                                              module_preprocess_functions_; //key为模型路径，value为注册的预处理回调函数
-    std::unordered_map<std::string, OutputProcessFloatCallback>                                      module_outputprocess_functions_float_; //key为模型路径，value为输出处理回调函数
-    std::unordered_map<std::string, OutputProcessTextCallback>                                       module_outputprocess_functions_text_; //key为模型路径，value为输出处理回调函数
+    std::unordered_map<std::string, PreProcessCallback>                                              module_preprocess_functions_; //key is the model path, value is the registered preprocessing callback function
+    std::unordered_map<std::string, OutputProcessFloatCallback>                                      module_outputprocess_functions_float_; //key is the model path, value is the output processing callback function
+    std::unordered_map<std::string, OutputProcessTextCallback>                                       module_outputprocess_functions_text_; //key is the model path, value is the output processing callback function
 };
 
 

@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from morphingdb_test.config import db_config
 
 
-LOG_PATH = Path("/home/why/dbagent/pg_base/data/log") / f"postgresql-{time.strftime('%Y-%m-%d')}.log"
+LOG_PATH = Path("/opt/opweave/pg_base/data/log") / f"postgresql-{time.strftime('%Y-%m-%d')}.log"
 
 
 def run_reasoning_query(n: int = 1) -> None:

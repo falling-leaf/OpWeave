@@ -1,4 +1,4 @@
-cd /home/why/dbagent
-/home/why/dbagent/pg_base/bin/pg_ctl -D /home/why/dbagent/pg_base/data stop -m immediate
-/home/why/dbagent/pg_base/bin/pg_ctl -D /home/why/dbagent/pg_base/data start
-/home/why/dbagent/pg_base/bin/psql -d postgres
+cd /opt/opweave
+/opt/opweave/pg_base/bin/pg_ctl -D /opt/opweave/pg_base/data stop -m immediate
+/opt/opweave/pg_base/bin/pg_ctl -D /opt/opweave/pg_base/data start
+/opt/opweave/pg_base/bin/psql -d postgres

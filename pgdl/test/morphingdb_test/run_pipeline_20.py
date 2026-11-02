@@ -46,14 +46,14 @@ print(f"Step2 vec shape: {vecs_step2[0].shape}")
 
 # Load models on CPU
 cross_encoder = torch.jit.load(
-    '/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt',
+    '/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt',
     map_location='cpu'
 )
 cross_encoder.eval()
 print("cross_encoder loaded")
 
 deberta_reader = torch.jit.load(
-    '/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader.pt',
+    '/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader.pt',
     map_location='cpu'
 )
 deberta_reader.eval()
@@ -113,8 +113,8 @@ for i, sample_outputs in enumerate(stage2_outputs):
 
             if ids_string:
                 result = subprocess.run(
-                    ["uv", "run", "/home/why/dbagent/pgdl/test/tools/reader_decoder.py", "--ids", ids_string],
-                    cwd="/home/why/dbagent/pgdl/test/tools",
+                    ["uv", "run", "/opt/opweave/pgdl/test/tools/reader_decoder.py", "--ids", ids_string],
+                    cwd="/opt/opweave/pgdl/test/tools",
                     capture_output=True,
                     text=True,
                     timeout=60

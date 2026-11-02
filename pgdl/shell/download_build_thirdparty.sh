@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 本地部署版第三方依赖下载与编译脚本
+# Download and build script for third-party dependencies (local deployment)
 
 LOG_FILE="$HOME/pgdl/log.txt"
 SCRIPT_PATH=$(cd "$(dirname "$0")" && pwd)
@@ -20,7 +20,7 @@ function logerror() { log "ERROR" "$*"; }
 
 mkdir -p "$THIRD_PARTY_DIR"
 
-# -------- 下载并编译 sentencepiece --------
+# -------- download and build sentencepiece --------
 loginfo "Cloning sentencepiece..."
 git clone https://gitee.com/mirrors/sentencepiece "$THIRD_PARTY_DIR/sentencepiece"
 if [[ $? -ne 0 ]]; then logerror "git clone sentencepiece error!"; exit 1; fi
@@ -45,7 +45,7 @@ loginfo "Install sentencepiece success."
 sudo mkdir -p /usr/local/share/SentencePiece
 sudo mv "$SCRIPT_PATH/config/SentencePieceConfig.cmake" /usr/local/share/SentencePiece/
 
-# -------- 下载并解压 libtorch --------
+# -------- download and unzip libtorch --------
 loginfo "Downloading libtorch..."
 wget -P "$THIRD_PARTY_DIR" https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.0.0%2Bcpu.zip --no-check-certificate
 if [[ $? -ne 0 ]]; then logerror "download libtorch error!"; exit 1; fi
@@ -56,7 +56,7 @@ if [[ $? -ne 0 ]]; then logerror "unzip libtorch error!"; exit 1; fi
 loginfo "Unzip libtorch success."
 rm -f "$THIRD_PARTY_DIR"/*.zip
 
-# -------- 下载并编译 OpenCV --------
+# -------- download and build OpenCV --------
 loginfo "Downloading OpenCV..."
 wget -P "$THIRD_PARTY_DIR" https://codeload.github.com/opencv/opencv/zip/refs/tags/3.4.16 --no-check-certificate
 if [[ $? -ne 0 ]]; then logerror "download opencv error!"; exit 1; fi
@@ -81,7 +81,7 @@ sudo make install
 if [[ $? -ne 0 ]]; then logerror "install opencv error!"; exit 1; fi
 loginfo "Install OpenCV success."
 
-# -------- 下载并解压 onnxruntime --------
+# -------- download and unzip onnxruntime --------
 loginfo "Downloading onnxruntime..."
 wget -P "$THIRD_PARTY_DIR" https://github.com/microsoft/onnxruntime/releases/download/v1.18.1/onnxruntime-linux-x64-1.18.1.tgz --no-check-certificate
 if [[ $? -ne 0 ]]; then logerror "download onnxruntime error!"; exit 1; fi

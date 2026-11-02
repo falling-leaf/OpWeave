@@ -19,12 +19,12 @@ Systems*.
 | `pgdl/sql/` | Extension SQL, versioned `0.1.0` through `1.3.0` |
 | `pgdl/shell/` | Deployment scripts (build dependencies, install PostgreSQL, compile the extension) |
 | `pgdl/test/` | Experiment harness (see [Test harness](#test-harness)) |
-| `pgdl/visualization/` | Plotting scripts and the shipped figures |
+| `pgdl/visualization/` | Plotting scripts for the latency figures |
 | `pgdl/CMakeLists.txt`, `pgdl/pgdl.control` | Build and extension-package metadata |
 
 Not tracked by git, and produced locally by the steps below: `pg_base/` (the PostgreSQL install),
-`pgdl/third_party/` (dependencies), `pgdl/test/morphingdb_test/{data,models}/`, and
-`pgdl/test/results/` (all run output).
+`pgdl/third_party/` (dependencies), `pgdl/pgdl.so` (the built extension), `pgdl/build/`,
+`pgdl/test/morphingdb_test/{data,models}/`, and `pgdl/test/results/` (all run output).
 
 ## Prerequisites
 
@@ -38,10 +38,10 @@ Not tracked by git, and produced locally by the steps below: `pg_base/` (the Pos
 * A PostgreSQL 13.22 source tree extracted at `pgdl/third_party/postgresql-13.22`. The scripts do
   not fetch it; download and unpack it there before step 2.
 
-**The scripts assume the checkout is at `/home/why/dbagent`.** Absolute paths appear throughout the
-shell scripts, the harness, and two places in the C++ engine
+**The scripts assume the repository is deployed at `/opt/opweave`.** Absolute paths appear
+throughout the shell scripts, the harness, and two places in the C++ engine
 (`pgdl/src/pgdl/model_agent.cpp`, which launches `pgdl/test/tools/reader_decoder.py` and
-`pgdl/test/tools/llm_generate.py`). Deploying elsewhere means editing those paths *and* rebuilding
+`pgdl/test/tools/llm_generate.py`). Deploying elsewhere means rewriting those paths *and* rebuilding
 `pgdl.so`.
 
 ## Deployment

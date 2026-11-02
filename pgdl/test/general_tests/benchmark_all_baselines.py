@@ -25,14 +25,14 @@ from datetime import datetime
 from pathlib import Path
 
 # ─── Paths ─────────────────────────────────────────────────────────────
-BASE_DIR = "/home/why/baseline"
+BASE_DIR = "/opt/baselines"
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 DATA_DIR = os.path.join(BASE_DIR, "data")
 GENDB_DIR = os.path.join(BASE_DIR, "GenDB/benchmarks")
 HERMES_DIR = os.path.join(BASE_DIR, "hermes")
 NEURDB_DIR = os.path.join(BASE_DIR, "neurdb")
 
-RESULTS_FILE = "/home/why/dbagent/pgdl/paper/figures/main_result_benchmark_all.json"
+RESULTS_FILE = "/opt/opweave/pgdl/paper/figures/main_result_benchmark_all.json"
 
 DB_CONFIG = {
     "host": "localhost", "port": 5432,

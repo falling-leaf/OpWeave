@@ -8,21 +8,21 @@ IMAGE_COUNT_LIST = [1000]
 IMAGE_TABLE = 'cifar_image_table'
 IMAGE_VECTOR_TABLE = 'cifar_image_vector_table'
 
-# 初始化一个空列表来存储所有文件的路径
+# Initialize an empty list to store all file paths
 image_names = []
 
-# 使用os.walk遍历IMAGE_PRE_PATH及其所有子目录
+# Walk IMAGE_PRE_PATH and all its subdirectories with os.walk
 for root, dirs, files in os.walk(cifar10_dataset_path):
     for file in files:
-        # 构建完整的文件路径
+        # Build the full file path
         full_path = os.path.join(root, file)
-        # 将文件路径添加到列表中
+        # Append the file path to the list
         image_names.append(full_path)
 
 
 
 def cifar10_import_mvec_dataset():
-    # 连接MorphingDB数据库
+    # Connect to the MorphingDB database
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
     cur.execute("create table if not exists " + IMAGE_VECTOR_TABLE  + " (id int, image_vector mvec);")
@@ -40,7 +40,7 @@ def cifar10_import_mvec_dataset():
 
 
 def cifar10_import_url_dataset():
-    # 连接MorphingDB数据库
+    # Connect to the MorphingDB database
     conn = psycopg2.connect(**db_config)
     cur = conn.cursor()
     cur.execute("create table if not exists " + IMAGE_TABLE  + " (id int, image_path text);")
@@ -58,7 +58,7 @@ def cifar10_import_url_dataset():
 
 
 # def cifar10_import_evadb_dataset():
-#     # 连接evadb -- DISABLED: creates hash-named cache dirs (e.g. 9bfebd13...)
+#     # Connect evadb -- DISABLED: creates hash-named cache dirs (e.g. 9bfebd13...)
 #     # cursor = evadb.connect().cursor()
 #     # cursor.query("DROP TABLE IF EXISTS CIFAR10").df()
 #     # for index in range(len(image_names)):

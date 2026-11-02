@@ -4,7 +4,7 @@ Date: 2024-08-15 21:31:09
 LastEditors: Anonymous anonymous@example.com
 LastEditTime: 2024-08-26 10:36:58
 FilePath: /morphingdb_test/text_test/imdb/evadb_test.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+Description: This is the default setting, set `customMade`; open koroFileHeader to view the configuration settings: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
 import evadb
 import time
@@ -55,10 +55,10 @@ def gpu_test():
 
         try:
             with open(TEXT_TEST_FILE, 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
         timing_data_image.append({
@@ -66,7 +66,7 @@ def gpu_test():
             "count": count,
             "total_time": end_time - start_time
         })
-        # 写回文件
+        # Write back to the file
         with open(TEXT_TEST_FILE, 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 
@@ -83,10 +83,10 @@ def cpu_test():
 
         try:
             with open(TEXT_TEST_FILE, 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
         timing_data_image.append({
@@ -94,7 +94,7 @@ def cpu_test():
             "count": count,
             "total_time": end_time - start_time
         })
-        # 写回文件
+        # Write back to the file
         with open(TEXT_TEST_FILE, 'w') as f_image:
             json.dump(timing_data_image, f_image, indent=4)
 

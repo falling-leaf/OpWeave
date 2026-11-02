@@ -25,11 +25,11 @@ cur.close()
 conn.close()
 
 # Load models on CPU
-cross_encoder = torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu')
+cross_encoder = torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/cross_encoder.pt', map_location='cpu')
 cross_encoder.eval()
 print(f"Loaded cross_encoder on CPU")
 
-deberta_reader = torch.jit.load('/home/why/dbagent/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu')
+deberta_reader = torch.jit.load('/opt/opweave/pgdl/test/morphingdb_test/models/deberta_reader.pt', map_location='cpu')
 deberta_reader.eval()
 print(f"Loaded deberta_reader on CPU")
 
@@ -104,8 +104,8 @@ for i, ids_for_sample in enumerate(reader_outputs):
     print(f"  Sample {i}: calling decoder with --ids '{ids_string[:80]}...'")
     
     result = subprocess.run(
-        ['uv', 'run', '/home/why/dbagent/pgdl/test/tools/reader_decoder.py', '--ids', ids_string],
-        cwd='/home/why/dbagent/pgdl/test/tools',
+        ['uv', 'run', '/opt/opweave/pgdl/test/tools/reader_decoder.py', '--ids', ids_string],
+        cwd='/opt/opweave/pgdl/test/tools',
         capture_output=True, text=True, timeout=60
     )
     

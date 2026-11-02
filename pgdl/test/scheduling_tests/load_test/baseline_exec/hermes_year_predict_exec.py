@@ -13,8 +13,8 @@ import time
 import json
 import sys
 
-MODEL_PATH = "/home/why/baseline/models/year_predict.pt"
-DATA_PATH = "/home/why/baseline/data/series/yead_predict/YearPredictionMSD.csv"
+MODEL_PATH = "/opt/baselines/models/year_predict.pt"
+DATA_PATH = "/opt/baselines/data/series/yead_predict/YearPredictionMSD.csv"
 
 row_count = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
 

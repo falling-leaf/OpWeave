@@ -50,8 +50,8 @@ CACHED_RUNS = 3
 # GPU polling interval during query execution
 GPU_POLL_INTERVAL = 0.05
 
-PG_CTL = "/home/why/dbagent/pg_base/bin/pg_ctl"
-PG_DATA = "/home/why/dbagent/pg_base/data"
+PG_CTL = "/opt/opweave/pg_base/bin/pg_ctl"
+PG_DATA = "/opt/opweave/pg_base/data"
 LOG_DIR = Path(GENERAL_RESULTS_DIR)
 LOG_DIR.mkdir(exist_ok=True)
 

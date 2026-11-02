@@ -2,11 +2,11 @@ import torch
 import pandas as pd
 
 # Load model on CPU
-model = torch.jit.load('/home/why/baseline/models/slice.pt')
+model = torch.jit.load('/opt/baselines/models/slice.pt')
 model.eval()
 
 # Read exactly 2000 rows with header=0
-df = pd.read_csv('/home/why/baseline/data/series/slice/slice_localization_data.csv', header=0, nrows=2000)
+df = pd.read_csv('/opt/baselines/data/series/slice/slice_localization_data.csv', header=0, nrows=2000)
 print(f"DataFrame shape: {df.shape}")
 
 # Use columns at positions 1 through -2 inclusive (exclude first and last)

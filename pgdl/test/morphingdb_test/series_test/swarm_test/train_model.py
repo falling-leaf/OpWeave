@@ -4,7 +4,7 @@ Date: 2024-08-13 15:30:13
 LastEditors: Anonymous anonymous@example.com
 LastEditTime: 2024-08-13 22:12:35
 FilePath: /morphingdb_test/swarm_test/train_model.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+Description: This is the default setting, set `customMade`; open koroFileHeader to view the configuration settings: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
 import torch
 import torch.nn as nn
@@ -58,29 +58,29 @@ print('train_y', train_y)
 
 model = LogisticRegressionModel(2400,1)
 
-#criterion = torch.nn.BCEWithLogitsLoss()  #损失函数，封装好的逻辑损失函数
-#criterion = torch.nn.BCELoss() #二分类
+#criterion = torch.nn.BCEWithLogitsLoss()  #loss function, the packaged logistic loss
+#criterion = torch.nn.BCELoss() #binary classification
 loss_cal = nn.BCELoss()
-#optimizer = torch.optim.SGD(model.parameters(), lr=0.01)   #进行优化梯度下降
+#optimizer = torch.optim.SGD(model.parameters(), lr=0.01)   #gradient descent optimization
 
 optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
 
 
 
-# 定义损失函数
+# Define the loss function
 epochs = 200
 for epoch in range(epochs):
 
-    optimizer.zero_grad() #梯度清零
-    y_pred = model(train_X)  #x_data输入数据进入模型中
+    optimizer.zero_grad() #zero the gradients
+    y_pred = model(train_X)  #x_data is fed into the model
     loss = loss_cal(y_pred, train_y)
     print(f'number of epoch {epoch}, loss {loss.item()}')
-    loss.backward() #反向传播
-    optimizer.step()  #优化迭代
+    loss.backward() #backpropagation
+    optimizer.step()  #optimization step
 
 
 
-# 进行预测
+# Run prediction
 predict_out = model(test_X)
 print(predict_out)
 predict_y = predict_out.detach().numpy().round()

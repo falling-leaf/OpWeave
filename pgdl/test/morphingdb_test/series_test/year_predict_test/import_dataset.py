@@ -14,10 +14,10 @@ from morphingdb_test.config import db_config, year_predict_dataset_path
 
 
 def import_year_predict_mvec_table():
-    # 连接数据库
+    # Connect to the database
     dataframe = pd.read_csv(year_predict_dataset_path)
 
-    # 选择所有以'value'开头的列
+    # Select all columns starting with 'value'
     value_columns = dataframe.columns[1:91]
 
     conn = psycopg2.connect(**db_config)
@@ -30,14 +30,14 @@ def import_year_predict_mvec_table():
                 );")
 
     
-    # 遍历DataFrame的每一行，并将value列的值组装成列表形式的字符串
+    # Iterate over each row of the DataFrame and assemble the value columns into a list-style string
     formatted_rows = []
     for index, row in dataframe.iterrows():
-        # 从当前行中提取value列的值
+        # Extract the value column value from the current row
         values = row[value_columns].tolist()
-        # 将值列表转换为字符串形式
+        # Convert the list of values to a string
         values_str = '[' + ', '.join(str(value) for value in values) + ']'
-        # 将结果添加到列表中
+        # Append the result to the list
         cur.execute("insert into year_predict_test values('{}', {} );".format(values_str+'{1,90}', row['value0']))
         if(index % 10 == 0):
             conn.commit()

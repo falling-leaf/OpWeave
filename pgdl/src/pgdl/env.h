@@ -4,7 +4,7 @@
  * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2023-07-06 17:22:23
  * @FilePath: /postgres-DB4AI/src/udf/env.h
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: This is the default setting. Please set `customMade`, open koroFileHeader to view the configuration: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 #pragma once
 #ifndef _ENV_H_
@@ -36,7 +36,7 @@ extern "C" {
 
 //#include <opencv/cv.h>
 
-// 为了使用 libintl.h 中的gettext dgettext等函数
+// to use gettext, dgettext and other functions from libintl.h
 //#define ENABLE_NLS
 
 

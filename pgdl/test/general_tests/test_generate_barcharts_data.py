@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 MODULE_PATH = Path(
-    "/home/why/dbagent/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/generate_barcharts.py"
+    "/opt/opweave/pgdl/paper_curated_20260622/anchored_generation/main_result_barcharts/generate_barcharts.py"
 )
 
 

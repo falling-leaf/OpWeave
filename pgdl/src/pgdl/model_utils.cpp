@@ -256,7 +256,7 @@ insert_model_layer_parameter(const char* model_name, const char* layer_name, int
     if(sql.Bind(1, TEXTOID, CStringGetTextDatum(model_name)) &&
        sql.Bind(2, TEXTOID, CStringGetTextDatum(layer_name)) &&
        sql.Bind(3, INT4OID, Int32GetDatum(layer_index)) && 
-       //TODO 这部分因为内核中没有MVec的OID，因此需要先将MVec 转成字符串，之后再转换成MVec进行保存
+       //TODO Since the kernel has no OID for MVec, MVec must first be converted to a string and then converted back to MVec for storage
        sql.Bind(4, oid, (Datum)vector) &&
        sql.Execute()){
         if(SPI_processed != 1){
@@ -317,7 +317,7 @@ model_parameter_extraction(const char* model_path,
     auto base_model_parms = base_model.named_parameters();
     auto base_model_buffers = base_model.named_buffers();
 
-    // 创建一个映射，用于快速查找 base_model 中的参数
+    // create a map for fast lookup of parameters in base_model
     std::unordered_map<std::string, torch::Tensor> base_model_map;
 
     for (const auto& pair : base_model_parms) {
@@ -332,7 +332,7 @@ model_parameter_extraction(const char* model_path,
         base_model_map[layer_name] = parameter;
     }
 
-    // 计算不同参数的数量
+    // count the number of differing parameters
     int diff_count = 0;
     for (const auto& pair : model_parms) {
         if (pair.value.sizes() != base_model_map[pair.name].sizes() ||

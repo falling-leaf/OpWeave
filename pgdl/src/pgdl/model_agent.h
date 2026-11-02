@@ -4,13 +4,13 @@
 
 /**
  * @file model_agent.h
- * @brief 模型代理系统的核心头文件，定义了内存管理、代理节点和任务管理等核心组件
+ * @brief Core header file of the model agent system, defining core components such as memory management, agent nodes, and task management
  * 
- * 该文件包含了模型代理系统的核心架构定义，包括：
- * 1. MemoryManager：内存管理类，负责数据缓存和加载
- * 2. 各种代理节点类：负责不同阶段的任务处理
- * 3. 任务相关的数据结构：定义了任务类型、任务信息等
- * 4. 模型分析和资源监控相关的数据结构和函数
+ * This file contains the core architecture definitions of the model agent system, including:
+ * 1. MemoryManager: memory management class responsible for data caching and loading
+ * 2. Various agent node classes: responsible for task processing at different stages
+ * 3. Task-related data structures: define task types, task information, etc.
+ * 4. Data structures and functions related to model analysis and resource monitoring
  */
 
 #include "env.h"
@@ -36,13 +36,13 @@ extern "C" {
 
 #include "postgres.h"
 #include "fmgr.h"
-#include "access/htup_details.h" // 提供 heap_getattr
-#include "utils/lsyscache.h"     // 提供 getTypeOutputInfo
+#include "access/htup_details.h" // provides heap_getattr
+#include "utils/lsyscache.h"     // provides getTypeOutputInfo
 #include "utils/syscache.h"
 }
 
 /**
- * @brief 最大缓存大小
+ * @brief Maximum cache size
  */
 #define MAX_CACHE_SIZE 100000
 
@@ -51,317 +51,317 @@ extern "C" {
 
 /**
  * @class MemoryManager
- * @brief 内存管理类，负责数据缓存、加载和管理
+ * @brief Memory management class, responsible for data caching, loading, and management
  * 
- * 该类提供了以下功能：
- * 1. 从数据库表中加载数据行
- * 2. 将元组转换为向量
- * 3. 管理输入和输出缓存
- * 4. 跟踪代理执行时间
+ * This class provides the following functions:
+ * 1. Load data rows from database tables
+ * 2. Convert tuples into vectors
+ * 3. Manage input and output caches
+ * 4. Track agent execution time
  */
 class MemoryManager {
 public:
     /**
-     * @brief 构造函数
+     * @brief Constructor
      */
     MemoryManager() {}
     
     /**
-     * @brief 析构函数
+     * @brief Destructor
      */
     ~MemoryManager() {}
     
     /**
-     * @brief 从指定表中加载一行数据
-     * @param table_name 表名
-     * @param row_index 行索引
-     * @return 加载的数据行
+     * @brief Load one row of data from the specified table
+     * @param table_name table name
+     * @param row_index row index
+     * @return the loaded data row
      */
     static Args* LoadOneRow(const std::string& table_name, size_t row_index);
 
     /**
-     * @brief 使用SPI从指定表中加载一行数据
-     * @param tuple 输出参数，存储加载的元组
-     * @param tupdesc 输出参数，存储元组描述符
-     * @param table_name 表名
-     * @param row_index 行索引
+     * @brief Load one row of data from the specified table using SPI
+     * @param tuple output parameter storing the loaded tuple
+     * @param tupdesc output parameter storing the tuple descriptor
+     * @param table_name table name
+     * @param row_index row index
      */
     static void SPILoadOneRow(HeapTuple& tuple, TupleDesc& tupdesc, const std::string& table_name, size_t row_index);
     
     /**
-     * @brief 将元组转换为向量
-     * @param tuple 输入元组
-     * @param tupdesc 元组描述符
-     * @param start 起始列索引
-     * @param dim 向量维度
-     * @return 转换后的向量
+     * @brief Convert a tuple into a vector
+     * @param tuple input tuple
+     * @param tupdesc tuple descriptor
+     * @param start starting column index
+     * @param dim vector dimension
+     * @return the converted vector
      */
     static Args* Tuple2Vec(HeapTuple tuple, TupleDesc tupdesc, int start, int dim);
     
     /**
-     * @brief 从指定表中加载文本数据（query和context）
-     * @param table_name 表名
-     * @param row_index 行索引
-     * @param query 输出参数，存储查询文本
-     * @param context 输出参数，存储上下文文本
-     * @return 是否加载成功
+     * @brief Load text data (query and context) from the specified table
+     * @param table_name table name
+     * @param row_index row index
+     * @param query output parameter storing the query text
+     * @param context output parameter storing the context text
+     * @return whether the load succeeded
      */
     static bool LoadTextData(const std::string& table_name, size_t row_index, std::string& query, std::string& context);
 
     /**
-     * @brief 当前函数调用计数
+     * @brief Current function call count
      */
     int current_func_call{-1};
     
     /**
-     * @brief 是否为最后一次调用
-     * 0: 不是最后一次调用
-     * 1: 是最后一次调用
-     * 2: 未设置
+     * @brief Whether this is the last call
+     * 0: not the last call
+     * 1: the last call
+     * 2: not set
      */
     int is_last_call{2};
 
     /**
-     * @brief 输入缓存数据
+     * @brief Input cache data
      */
     float** ins_cache_data;
     
     /**
-     * @brief 输入向量缓存
+     * @brief Input vector cache
      */
     MVec** ins_cache;
     
     /**
-     * @brief 输出缓存大小
+     * @brief Output cache size
      */
     int out_cache_size{0};
     
     /**
-     * @brief 输出缓存数据
+     * @brief Output cache data
      */
     float* out_cache_data;
     
     /**
-     * @brief 输出字符串缓存数据
+     * @brief Output string cache data
      */
     char** out_cache_string_data;
     
     /**
-     * @brief 输出索引
+     * @brief Output index
      */
     int output_index{0};
     
     /**
-     * @brief 输出类型
+     * @brief Output type
      * 0: float8
      * 1: string
      */
     int output_type{0};
     
     /**
-     * @brief 输入缓冲区
+     * @brief Input buffer
      */
     Args* ins_buffer{nullptr};
 
     /**
-     * @brief 第二个输入缓存数据
+     * @brief Second input cache data
      */
     float** ins2_cache_data;
     
     /**
-     * @brief 第二个输入向量缓存
+     * @brief Second input vector cache
      */
     MVec** ins2_cache;
 
     /**
-     * @brief 样本路径列表
+     * @brief Sample path list
      */
     std::vector<std::string> sample_path;
     
     /**
-     * @brief 执行时间跟踪
-     * 键: 代理名称
-     * 值: 累计执行时间（微秒）
+     * @brief Execution time tracking
+     * key: agent name
+     * value: cumulative execution time (microseconds)
      */
     std::unordered_map<std::string, long long> execution_time_map;
     
     /**
-     * @brief 执行次数跟踪
-     * 键: 代理名称
-     * 值: 执行次数
+     * @brief Execution count tracking
+     * key: agent name
+     * value: execution count
      */
     std::unordered_map<std::string, int> execution_count_map;
     
     /**
-     * @brief 打印时间统计信息
+     * @brief Print timing statistics
      */
     void PrintTimingStats();
 
     /**
-     * @brief 是否启用agent timing统计
+     * @brief Whether agent timing statistics are enabled
      */
     bool timing_enabled{true};
 };
 
 /**
  * @enum AgentAction
- * @brief 代理执行动作枚举
+ * @brief Agent execution action enumeration
  */
 enum class AgentAction {
-    START,     ///< 开始执行
-    SUCCESS,   ///< 执行成功
-    FAILURE,   ///< 执行失败
-    PERCEPTION, ///< 感知阶段
-    ORCHESTRATION, ///< 编排阶段
-    OPTIMIZATION, ///< 优化阶段
-    EXECUTION, ///< 执行阶段
-    EVALUATION, ///< 评估阶段
-    SCHEDULE   ///< 调度阶段
+    START,     ///< start execution
+    SUCCESS,   ///< execution succeeded
+    FAILURE,   ///< execution failed
+    PERCEPTION, ///< perception stage
+    ORCHESTRATION, ///< orchestration stage
+    OPTIMIZATION, ///< optimization stage
+    EXECUTION, ///< execution stage
+    EVALUATION, ///< evaluation stage
+    SCHEDULE   ///< scheduling stage
 };
 
 /**
  * @enum TaskType
- * @brief 任务类型枚举
+ * @brief Task type enumeration
  */
 enum class TaskType {
-    IMAGE_CLASSIFICATION, ///< 图像分类任务
-    SERIES, ///< 序列任务
-    NLP, ///< 自然语言处理任务
-    REASONING, ///< 推理任务
-    MUSIQUE, ///< 多跳问答任务 (musique 数据集)
-    REASONING_STEP2, ///< 推理第二步
-    REASONING_STEP3, ///< 推理第三步
-    STEP1, ///< 第一步任务
-    STEP2, ///< 第二步任务
-    STEP3 ///< 第三步任务
+    IMAGE_CLASSIFICATION, ///< image classification task
+    SERIES, ///< series task
+    NLP, ///< natural language processing task
+    REASONING, ///< reasoning task
+    MUSIQUE, ///< multi-hop question answering task (musique dataset)
+    REASONING_STEP2, ///< reasoning step 2
+    REASONING_STEP3, ///< reasoning step 3
+    STEP1, ///< step 1 task
+    STEP2, ///< step 2 task
+    STEP3 ///< step 3 task
 };
 
 /**
  * @struct Task
- * @brief 任务结构
+ * @brief Task structure
  * 
- * 定义了一个任务的详细信息，包括任务类型、模型、设备和数据范围等
+ * Defines the detailed information of a task, including task type, model, device, and data range
  */
 typedef struct Task {
-    TaskType task_type; ///< 任务类型
-    char* model; ///< 模型名称
-    char* cuda; ///< 设备名称（cpu或gpu）
-    char* table_name; ///< 表名
+    TaskType task_type; ///< task type
+    char* model; ///< model name
+    char* cuda; ///< device name (cpu or gpu)
+    char* table_name; ///< table name
 
-    int64_t input_start_index; ///< 输入起始索引
-    int64_t input_end_index; ///< 输入结束索引
-    int64_t output_start_index; ///< 输出起始索引
-    int64_t output_end_index; ///< 输出结束索引
+    int64_t input_start_index; ///< input start index
+    int64_t input_end_index; ///< input end index
+    int64_t output_start_index; ///< output start index
+    int64_t output_end_index; ///< output end index
 } Task;
 
 /**
  * @struct TaskInfo
- * @brief 任务信息结构
+ * @brief Task information structure
  * 
- * 定义了任务的基本信息，用于任务初始化和管理
+ * Defines the basic information of a task, used for task initialization and management
  */
 typedef struct TaskInfo {
-    TaskType task_type; ///< 任务类型
-    char* table_name; ///< 表名
-    char* model_name; ///< 模型名称
-    char* cuda_name; ///< 设备名称
+    TaskType task_type; ///< task type
+    char* table_name; ///< table name
+    char* model_name; ///< model name
+    char* cuda_name; ///< device name
 } TaskInfo;
 
 /**
  * @struct VecAggState
- * @brief 向量聚合状态结构
+ * @brief Vector aggregation state structure
  * 
- * 定义了向量聚合过程中的状态信息
+ * Defines the state information during vector aggregation
  */
 typedef struct VecAggState {
-    MemoryContext ctx; ///< 内存上下文
-    List* ins; ///< 输入列表
-    List* outs; ///< 输出列表
-    int batch_i; ///< 批处理索引
-    int prcsd_batch_n; ///< 已处理批次数
-    char* model; ///< 模型名称
-    char* cuda; ///< 设备名称
-    int nxt_csr; ///< 下一个CSR索引
-    int64_t pre_time; ///< 预处理时间（毫秒）
-    int64_t infer_time; ///< 推理时间（毫秒）
-    int64_t post_time; ///< 后处理时间（毫秒）
+    MemoryContext ctx; ///< memory context
+    List* ins; ///< input list
+    List* outs; ///< output list
+    int batch_i; ///< batch index
+    int prcsd_batch_n; ///< number of processed batches
+    char* model; ///< model name
+    char* cuda; ///< device name
+    int nxt_csr; ///< next CSR index
+    int64_t pre_time; ///< preprocessing time (milliseconds)
+    int64_t infer_time; ///< inference time (milliseconds)
+    int64_t post_time; ///< post-processing time (milliseconds)
 } VecAggState;
 
 /**
  * @struct AgentState
- * @brief 代理状态结构
+ * @brief Agent state structure
  * 
- * 定义了代理执行过程中的状态信息
+ * Defines the state information during agent execution
  */
 typedef struct AgentState {
-    FunctionCallInfo fcinfo; ///< 函数调用信息
-    VecAggState current_state; ///< 当前状态
-    AgentAction last_action; ///< 上一个动作
-    int current_start_index; ///< 当前起始索引
-    int current_end_index; ///< 当前结束索引
-    int current_task_id; ///< 当前任务ID（task_list的下标）
-    List* task_list; ///< 任务列表
-    std::vector<TaskInfo> task_info; ///< 任务信息列表
+    FunctionCallInfo fcinfo; ///< function call information
+    VecAggState current_state; ///< current state
+    AgentAction last_action; ///< last action
+    int current_start_index; ///< current start index
+    int current_end_index; ///< current end index
+    int current_task_id; ///< current task ID (index into task_list)
+    List* task_list; ///< task list
+    std::vector<TaskInfo> task_info; ///< task information list
 } AgentState;
 
 /**
  * @class BaseAgentNode
- * @brief 代理节点基类
+ * @brief Agent node base class
  * 
- * 所有代理节点的基类，定义了基本接口
+ * Base class for all agent nodes, defining the basic interface
  */
 class BaseAgentNode {
 public:
     /**
-     * @brief 虚析构函数
+     * @brief Virtual destructor
      */
     virtual ~BaseAgentNode() = default;
 
     /**
-     * @brief 核心执行接口
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Core execution interface
+     * @param state agent state
+     * @return execution action
      */
     virtual AgentAction Execute(std::shared_ptr<AgentState> state) = 0;
     
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     virtual std::string Name() const = 0;
     
     /**
-     * @brief 带时间统计的执行包装器
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execution wrapper with timing
+     * @param state agent state
+     * @return execution action
      */
     AgentAction ExecuteWithTiming(std::shared_ptr<AgentState> state);
 };
 
 /**
  * @class PerceptionAgent
- * @brief 感知代理
+ * @brief Perception agent
  * 
- * 负责将自然语言输入转换为嵌入向量
+ * Responsible for converting natural language input into embedding vectors
  */
 class PerceptionAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行感知任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the perception task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
     
     /**
-     * @brief 加载向量数据
-     * @param input 输入向量
+     * @brief Load vector data
+     * @param input input vector
      */
     void LoadMVecData(MVec* input);
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "PerceptionAgent";
@@ -370,51 +370,51 @@ public:
 
 /**
  * @class OrchestrationAgent
- * @brief 编排代理
+ * @brief Orchestration agent
  * 
- * 负责模型选择和资源管理
+ * Responsible for model selection and resource management
  */
 class OrchestrationAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行编排任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the orchestration task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
     
     /**
-     * @brief 注册SPI进程
+     * @brief Register the SPI process
      */
     void SPIRegisterProcess();
     
     /**
-     * @brief 初始化任务
-     * @param state 代理状态
-     * @param window_start_index 窗口起始索引
-     * @param window_end_index 窗口结束索引
+     * @brief Initialize the task
+     * @param state agent state
+     * @param window_start_index window start index
+     * @param window_end_index window end index
      */
     void TaskInit(std::shared_ptr<AgentState> state, int window_start_index = -1, int window_end_index = -1);
     
     /**
-     * @brief 选择模型
-     * @param state 代理状态
-     * @param task_type 任务类型
-     * @return 模型名称
+     * @brief Select the model
+     * @param state agent state
+     * @param task_type task type
+     * @return model name
      */
     std::string SelectModel(std::shared_ptr<AgentState> state, TaskType task_type);
     
     /**
-     * @brief 初始化模型
-     * @param model_name 模型名称
-     * @param from_select_model 是否来自模型选择
-     * @return 是否初始化成功
+     * @brief Initialize the model
+     * @param model_name model name
+     * @param from_select_model whether it comes from model selection
+     * @return whether initialization succeeded
      */
     bool InitModel(const char* model_name, bool from_select_model);
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "OrchestrationAgent";
@@ -423,22 +423,22 @@ public:
 
 /**
  * @class OptimizationAgent
- * @brief 优化代理
+ * @brief Optimization agent
  * 
- * 负责计划树优化和资源调度
+ * Responsible for plan tree optimization and resource scheduling
  */
 class OptimizationAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行优化任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the optimization task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "OptimizationAgent";
@@ -447,22 +447,22 @@ public:
 
 /**
  * @class ExecutionAgent
- * @brief 执行代理
+ * @brief Execution agent
  * 
- * 负责执行计划
+ * Responsible for executing the plan
  */
 class ExecutionAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "ExecutionAgent";
@@ -471,22 +471,22 @@ public:
 
 /**
  * @class EvaluationAgent
- * @brief 评估代理
+ * @brief Evaluation agent
  * 
- * 负责评估执行结果
+ * Responsible for evaluating execution results
  */
 class EvaluationAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行评估任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the evaluation task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "EvaluationAgent";
@@ -494,10 +494,10 @@ public:
 
 private:
     /**
-     * @brief 执行REASONING/MUSIQUE任务的STEP2后处理
+     * @brief Perform STEP2 post-processing for REASONING/MUSIQUE tasks
      *
-     * 整合了原temp_addition_function中的逻辑，使其在EvaluationAgent内部执行，
-     * 从而被ExecuteWithTiming计入Agent运行时间。
+     * Integrates the logic from the original temp_addition_function so that it runs inside EvaluationAgent,
+     * and is therefore counted in the Agent runtime by ExecuteWithTiming.
      */
     void RunReasoningPostProcess(std::shared_ptr<AgentState> state, TaskType task_type);
     void RunMusiquePostProcess(std::shared_ptr<AgentState> state);
@@ -505,22 +505,22 @@ private:
 
 /**
  * @class ScheduleAgent
- * @brief 调度代理
+ * @brief Schedule agent
  * 
- * 负责管理所有代理的执行顺序
+ * Responsible for managing the execution order of all agents
  */
 class ScheduleAgent : public BaseAgentNode {
 public:
     /**
-     * @brief 执行调度任务
-     * @param state 代理状态
-     * @return 执行动作
+     * @brief Execute the scheduling task
+     * @param state agent state
+     * @return execution action
      */
     AgentAction Execute(std::shared_ptr<AgentState> state) override;
 
     /**
-     * @brief 获取节点名称
-     * @return 节点名称
+     * @brief Get the node name
+     * @return node name
      */
     std::string Name() const override {
         return "ScheduleAgent";
@@ -529,150 +529,150 @@ public:
 
 /**
  * @struct ModelAnalysisResult
- * @brief 模型分析结果结构
+ * @brief Model analysis result structure
  * 
- * 存储模型的特征信息
+ * Stores the feature information of the model
  */
 struct ModelAnalysisResult {
-    long long mac_count;      ///< 乘加操作次数
-    long long param_count;    ///< 参数总数
-    size_t param_size_bytes;  ///< 参数总大小（字节）
+    long long mac_count;      ///< number of multiply-add operations
+    long long param_count;    ///< total number of parameters
+    size_t param_size_bytes;  ///< total parameter size (bytes)
 };
 
 /**
  * @struct CpuLoadData
- * @brief CPU负载数据结构
+ * @brief CPU load data structure
  * 
- * 存储CPU负载信息
+ * Stores CPU load information
  */
 struct CpuLoadData {
-    double cpu_load; ///< CPU负载
-    int cpu_cores; ///< CPU核心数
+    double cpu_load; ///< CPU load
+    int cpu_cores; ///< number of CPU cores
 };
 
 /**
  * @struct GpuLoadData
- * @brief GPU负载数据结构
+ * @brief GPU load data structure
  * 
- * 存储GPU负载信息
+ * Stores GPU load information
  */
 struct GpuLoadData {
-    double cuda_cores; ///< CUDA核心数
-    double gpu_freq; ///< GPU频率
-    double util; ///< GPU利用率
-    double mem_used; ///< 已用显存
-    double mem_total; ///< 总显存
+    double cuda_cores; ///< number of CUDA cores
+    double gpu_freq; ///< GPU frequency
+    double util; ///< GPU utilization
+    double mem_used; ///< used memory
+    double mem_total; ///< total memory
 };
 
 /**
  * @struct GpuStatus
- * @brief GPU状态结构
+ * @brief GPU status structure
  * 
- * 存储GPU状态信息
+ * Stores GPU status information
  */
 struct GpuStatus {
     int id; ///< GPU ID
-    double util; ///< GPU利用率（0-100）
-    double mem_used; ///< 已用显存（MiB）
-    double mem_total; ///< 总显存（MiB）
+    double util; ///< GPU utilization (0-100)
+    double mem_used; ///< used memory (MiB)
+    double mem_total; ///< total memory (MiB)
 };
 
 /**
- * @brief 分析模型特征
- * @param model_name 模型名称
- * @return 模型分析结果
+ * @brief Analyze model features
+ * @param model_name model name
+ * @return model analysis result
  */
 ModelAnalysisResult AnalyzeModelWithInference(const std::string& model_name);
 
 /**
- * @brief 估计CPU FLOPS
+ * @brief Estimate CPU FLOPS
  * @return CPU FLOPS
  */
 double estimate_cpu_flops();
 
 /**
- * @brief 获取GPU FLOPS
+ * @brief Get GPU FLOPS
  * @return GPU FLOPS
  */
 double get_gpu_flops();
 
 /**
- * @brief 获取CPU内存带宽
- * @return CPU内存带宽
+ * @brief Get CPU memory bandwidth
+ * @return CPU memory bandwidth
  */
 double get_cpu_mem_bandwidth();
 
 /**
- * @brief 获取GPU内存带宽
- * @return GPU内存带宽
+ * @brief Get GPU memory bandwidth
+ * @return GPU memory bandwidth
  */
 double get_gpu_mem_bandwidth();
 
 /**
- * @brief 获取CPU负载因子
- * @return CPU负载因子
+ * @brief Get CPU load factor
+ * @return CPU load factor
  */
 double get_cpu_load_factor();
 
 /**
- * @brief 执行命令并返回输出
- * @param cmd 命令
- * @return 命令输出
+ * @brief Execute a command and return the output
+ * @param cmd command
+ * @return command output
  */
 std::string exec_command(const char* cmd);
 
 /**
- * @brief 修剪字符串
- * @param s 输入字符串
- * @return 修剪后的字符串
+ * @brief Trim a string
+ * @param s input string
+ * @return the trimmed string
  */
 std::string trim(const std::string& s);
 
 /**
- * @brief 获取所有GPU状态
- * @return GPU状态列表
+ * @brief Get all GPU statuses
+ * @return GPU status list
  */
 std::vector<GpuStatus> get_all_gpu_status();
 
 /**
- * @brief 收集GPU负载数据
- * @return GPU负载数据
+ * @brief Collect GPU load data
+ * @return GPU load data
  */
 GpuLoadData CollectGPULoadData();
 
 /**
- * @brief 收集CPU负载数据
- * @return CPU负载数据
+ * @brief Collect CPU load data
+ * @return CPU load data
  */
 CpuLoadData CollectCPULoadData();
 
 /**
- * @brief 收集GPU负载和运行时数据
- * @param shape0 数据形状0
- * @param shape1 数据形状1
- * @param shape2 数据形状2
- * @param shape3 数据形状3
- * @param execution_runtime_us 执行运行时间（微秒）
- * @param analysis_result 模型分析结果
- * @param gpu_data GPU负载数据
+ * @brief Collect GPU load and runtime data
+ * @param shape0 data shape 0
+ * @param shape1 data shape 1
+ * @param shape2 data shape 2
+ * @param shape3 data shape 3
+ * @param execution_runtime_us execution runtime (microseconds)
+ * @param analysis_result model analysis result
+ * @param gpu_data GPU load data
  */
 void CollectGPULoadAndRuntimeData(int shape0, int shape1, int shape2, int shape3, long long execution_runtime_us, ModelAnalysisResult analysis_result, GpuLoadData gpu_data);
 
 /**
- * @brief 收集CPU负载和运行时数据
- * @param shape0 数据形状0
- * @param shape1 数据形状1
- * @param shape2 数据形状2
- * @param shape3 数据形状3
- * @param execution_runtime_us 执行运行时间（微秒）
- * @param analysis_result 模型分析结果
- * @param cpu_data CPU负载数据
+ * @brief Collect CPU load and runtime data
+ * @param shape0 data shape 0
+ * @param shape1 data shape 1
+ * @param shape2 data shape 2
+ * @param shape3 data shape 3
+ * @param execution_runtime_us execution runtime (microseconds)
+ * @param analysis_result model analysis result
+ * @param cpu_data CPU load data
  */
 void CollectCPULoadAndRuntimeData(int shape0, int shape1, int shape2, int shape3, long long execution_runtime_us, ModelAnalysisResult analysis_result, CpuLoadData cpu_data);
 
 /**
- * @brief 临时添加函数，用于处理推理任务的额外逻辑
- * @param state 代理状态
+ * @brief Temporarily added function for handling additional logic of inference tasks
+ * @param state agent state
  */
 void temp_addition_function(std::shared_ptr<AgentState> state);
 

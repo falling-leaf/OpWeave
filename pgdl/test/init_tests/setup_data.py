@@ -36,7 +36,7 @@ DB_CONFIG = {
 
 # TEST_DIR points to the test/ root (parent of init_tests/)
 TEST_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PSQL = "/home/why/dbagent/pg_base/bin/psql"
+PSQL = "/opt/opweave/pg_base/bin/psql"
 MODEL_DIR = os.path.join(TEST_DIR, "morphingdb_test/models")
 SPLICE_MODEL_PATH = os.path.join(MODEL_DIR, "spiece.model.old")
 MUSIQUE_DATA_PATH = os.path.join(

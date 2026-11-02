@@ -3,30 +3,30 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 
 # =========================
-# 模型路径
+# Model path
 # =========================
-MODEL_PATH = "/home/why/dbagent/pgdl/test/morphingdb_test/models/flan-t5-large"
+MODEL_PATH = "/opt/opweave/pgdl/test/morphingdb_test/models/flan-t5-large"
 
 # =========================
-# 命令行参数解析
+# Command-line argument parsing
 # =========================
 parser = argparse.ArgumentParser(description='Generate text using FLAN-T5 model')
 parser.add_argument('--input', type=str, required=True, help='Input text for the model')
 args = parser.parse_args()
 
 # =========================
-# 加载 tokenizer & model
+# Load tokenizer & model
 # =========================
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_PATH)
 
-# 强制使用 CPU
+# Force CPU usage
 device = torch.device("cpu")
 model = model.to(device)
 model.eval()
 
 # =========================
-# 构造输入
+# Build input
 # =========================
 input_text = args.input
 
@@ -42,14 +42,14 @@ input_ids = inputs["input_ids"].to(device)
 attention_mask = inputs["attention_mask"].to(device)
 
 # =========================
-# 推理（生成答案）
+# Inference (generate answer)
 # =========================
 with torch.no_grad():
     outputs = model.generate(
         input_ids=input_ids,
         attention_mask=attention_mask,
         max_length=32,
-        num_beams=4,          # beam search 提高质量
+        num_beams=4,          # beam search improves quality
         early_stopping=True
     )
 
@@ -57,6 +57,6 @@ with torch.no_grad():
 answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 # =========================
-# 仅输出大模型的输出
+# Output only the model output
 # =========================
 print(answer)

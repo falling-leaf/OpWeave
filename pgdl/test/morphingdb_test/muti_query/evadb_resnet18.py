@@ -40,16 +40,16 @@ class Resnet18Test(PytorchAbstractClassifierFunction):
     # def __del__(self):
     #     try:
     #         with open(IMAGE_TEST_FILE, 'r') as f_image:
-    #             # 尝试加载现有数据
+    #             # Try to load existing data
     #             timing_data_image = json.load(f_image)
     #     except (FileNotFoundError, json.JSONDecodeError):
-    #         # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+    #         # If the file does not exist or is not valid JSON, initialize it as an empty list
     #         timing_data_image = []
 
     #     self.total_time = self.load_model_time + self.pre_time + self.infer_time + self.post_time
     #     if(self.count == 0):
     #         return
-    #     # 将新的记录追加到列表中
+    #     # Append the new records to the list
     #     timing_data_image.append({"count": self.count, 
     #                             "total_time": 0, 
     #                             "scan_time": 0,
@@ -65,7 +65,7 @@ class Resnet18Test(PytorchAbstractClassifierFunction):
     #                             "pre_time": self.pre_time,
     #                             "infer_time": self.infer_time, 
     #                             "post_time": self.post_time})
-    #     # 写回文件
+    #     # Write back to the file
     #     with open(IMAGE_TEST_FILE, 'w') as f_image:
     #         json.dump(timing_data_image, f_image, indent=4)
         
@@ -120,8 +120,8 @@ class Resnet18Test(PytorchAbstractClassifierFunction):
         composed = Compose([
             Resize(256),
             CenterCrop(224),
-            ToTensor(),  # 将PIL图像或NumPy数组转换成FloatTensor
-            Normalize(mean=mean, std=std),  # 规范化处理
+            ToTensor(),  # convert PIL images or NumPy arrays to FloatTensor
+            Normalize(mean=mean, std=std),  # normalization
         ])
         frame = composed(img).unsqueeze(0)
         end = time.time()
@@ -134,48 +134,48 @@ class Resnet18Test(PytorchAbstractClassifierFunction):
         # img_rgb = img.convert('RGB')
         # img_resized = img_rgb.resize((500, 375))
 
-        # # 将PIL图像转换为NumPy数组
+        # # Convert PIL images to NumPy arrays
         # img_rgb_np = np.array(img_resized)
         # print("img_rgb_np.shape", img_rgb_np.shape)
 
-        # # resnet18 预训练模型使用的规范化参数
+        # # normalization params used by the pretrained resnet18 model
         # mean = [0.485, 0.456, 0.406]
         # std = [0.229, 0.224, 0.225]
         # start = time.time()
         # composed = Compose([
-        #     ToTensor(),  # 将PIL图像或NumPy数组转换成FloatTensor
-        #     Normalize(mean=mean, std=std),  # 规范化处理
+        #     ToTensor(),  # convert PIL images or NumPy arrays to FloatTensor
+        #     Normalize(mean=mean, std=std),  # normalization
         # ])
 
-        # # 确保输入images是RGB三通道
+        # # Ensure the input images are RGB (three channels)
         # if img_rgb_np.shape[2] == 3:
         #     #frame = composed(img_rgb[:, :, ::-1]).unsqueeze(0)
-        #     frame = composed(img_resized)  # 直接使用composed转换img_rgb
-        #     frame = frame.unsqueeze(0)  # 添加一个维度，以匹配模型的输入要求
+        #     frame = composed(img_resized)  # convert img_rgb directly with composed
+        #     frame = frame.unsqueeze(0)  # add a dimension to match the model input requirements
         #     end = time.time()
         #     self.pre_time += (end - start)
         #     return frame
         # else:
-        #     # 如果不是三通道，可能是灰度图，需要转换或抛出错误
+        #     # If not three channels, it may be grayscale and must be converted or rejected
         #     raise ValueError("Input image is not a RGB image")
-        # resnet18 预训练模型使用的规范化参数
+        # normalization params used by the pretrained resnet18 model
         mean = [0.485, 0.456, 0.406]
         std = [0.229, 0.224, 0.225]
         start = time.time()
         composed = Compose(
             [
-                ToTensor(),  # 将PIL图像或NumPy数组转换成FloatTensor
-                Normalize(mean=mean, std=std),  # 规范化处理
+                ToTensor(),  # convert PIL images or NumPy arrays to FloatTensor
+                Normalize(mean=mean, std=std),  # normalization
             ]
         )
-        # 确保输入images是RGB三通道
+        # Ensure the input images are RGB (three channels)
         if images.shape[2] == 3:
             frame = composed(Image.fromarray(images[:, :, ::-1])).unsqueeze(0)
             end = time.time()
             self.pre_time += (end - start)
             return frame
         else:
-            # 如果不是三通道，可能是灰度图，需要转换
+            # If not three channels, it may be grayscale and must be converted
             raise ValueError("Input image is not a RGB image")
 
     def forward(self, frames) -> pd.DataFrame:

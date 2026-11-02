@@ -23,7 +23,7 @@ import json
 import subprocess
 from datetime import datetime
 
-HERMES_CLI = "/home/why/.local/bin/hermes"
+HERMES_CLI = "/opt/hermes/bin/hermes"
 from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 OUTPUT_DIR = ensure_dir(GENERAL_RESULTS_DIR)
@@ -61,7 +61,7 @@ def run_hermes_query(prompt, timeout=TIMEOUT_PER_QUERY):
     try:
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=timeout,
-            cwd="/home/why/baseline",
+            cwd="/opt/baselines",
             env={**os.environ, "CUDA_VISIBLE_DEVICES": ""}
         )
         elapsed = time.perf_counter() - t0

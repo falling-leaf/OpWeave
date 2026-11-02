@@ -21,8 +21,8 @@ import time
 import subprocess
 from datetime import datetime
 
-HERMES_CLI = "/home/why/.local/bin/hermes"
-BASELINE_DIR = "/home/why/baseline"
+HERMES_CLI = "/opt/hermes/bin/hermes"
+BASELINE_DIR = "/opt/baselines"
 from tools.test_result_paths import GENERAL_RESULTS_DIR, ensure_dir
 
 OUTPUT_DIR = ensure_dir(GENERAL_RESULTS_DIR)
@@ -35,20 +35,20 @@ QUERY_COUNTS = [1, 5, 10, 50, 100]
 # Prompt templates — includes dataset-specific model/data paths
 PROMPTS = {
     "slice": (
-        "Load the model at /home/why/baseline/models/slice.pt using torch.jit.load on CPU. "
-        "Load 1000 rows from /home/why/baseline/data/series/slice/slice_localization_data.csv, "
+        "Load the model at /opt/baselines/models/slice.pt using torch.jit.load on CPU. "
+        "Load 1000 rows from /opt/baselines/data/series/slice/slice_localization_data.csv, "
         "take columns 1 to -1 as float32 features. Run batched inference with batch_size=32 "
         "and report output shape and precise inference time."
     ),
     "swarm": (
-        "Load the model at /home/why/baseline/models/swarm.pt using torch.jit.load on CPU. "
-        "Load 1000 rows from /home/why/baseline/data/series/swarm/Swarm_Behaviour.csv, "
+        "Load the model at /opt/baselines/models/swarm.pt using torch.jit.load on CPU. "
+        "Load 1000 rows from /opt/baselines/data/series/swarm/Swarm_Behaviour.csv, "
         "drop the 'Swarm_Behaviour' column, use remaining 2400 columns as float32 features. "
         "Run batched inference with batch_size=32 and report output shape and precise inference time."
     ),
     "year_predict": (
-        "Load the model at /home/why/baseline/models/year_predict.pt using torch.jit.load on CPU. "
-        "Load 1000 rows from /home/why/baseline/data/series/yead_predict/YearPredictionMSD.csv, "
+        "Load the model at /opt/baselines/models/year_predict.pt using torch.jit.load on CPU. "
+        "Load 1000 rows from /opt/baselines/data/series/yead_predict/YearPredictionMSD.csv, "
         "drop the 'value90' column, use remaining 90 columns as float32 features. "
         "Run batched inference with batch_size=32 and report output shape and precise inference time."
     ),

@@ -19,7 +19,7 @@ import torch
 import numpy as np
 import psycopg2
 
-MODEL_PATH = "/home/why/baseline/models/year_predict.pt"
+MODEL_PATH = "/opt/baselines/models/year_predict.pt"
 DB_CONFIG = {
     "host": "localhost", "port": "5432", "user": "why",
     "password": "123456", "dbname": "postgres",

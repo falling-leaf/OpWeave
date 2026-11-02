@@ -103,13 +103,13 @@ class YearPredictClassifier(AbstractFunction):
         self.total_time = self.load_model_time + self.pre_time + self.infer_time + self.post_time
         try:
             with open(YEAR_PREDICT_TEST_FILE, 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
-        # 将新的记录追加到列表中
+        # Append the new records to the list
         # timing_data_image.append({"count": len(input_data), 
         #                         "total_time": 0, 
         #                         "scan_time": 0,
@@ -118,7 +118,7 @@ class YearPredictClassifier(AbstractFunction):
         #                         "infer_time": self.infer_time, 
         #                         "post_time": self.post_time})
 
-        # # 写回文件
+        # # Write back to the file
         # with open(YEAR_PREDICT_TEST_FILE, 'w') as f_image:
         #     json.dump(timing_data_image, f_image, indent=4)
         return pd.DataFrame(outcome, columns=["labels"])

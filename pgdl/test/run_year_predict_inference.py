@@ -2,12 +2,12 @@ import torch
 import pandas as pd
 
 # Load TorchScript model on CPU
-model = torch.jit.load("/home/why/baseline/models/year_predict.pt", map_location="cpu")
+model = torch.jit.load("/opt/baselines/models/year_predict.pt", map_location="cpu")
 model.eval()
 
 # Read first 1000 rows of CSV
 df = pd.read_csv(
-    "/home/why/baseline/data/series/yead_predict/YearPredictionMSD.csv",
+    "/opt/baselines/data/series/yead_predict/YearPredictionMSD.csv",
     nrows=1000,
 )
 

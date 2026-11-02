@@ -6,7 +6,7 @@ Each query processes 1 HotpotQA sample through the full pipeline:
   cross_encoder (GPU) -> deberta_reader (CPU) -> decode -> LLM
 
 Usage:
-    cd /home/why/dbagent/pgdl/test
+    cd /opt/opweave/pgdl/test
     uv run python test_reasoning_sequential.py
 """
 

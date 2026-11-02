@@ -19,8 +19,8 @@ from glob import glob
 import cv2
 import torch
 
-MODEL_PATH = "/home/why/baseline/models/googlenet_cifar10.pt"
-DATA_DIR = "/home/why/baseline/data/image/cifar10"
+MODEL_PATH = "/opt/baselines/models/googlenet_cifar10.pt"
+DATA_DIR = "/opt/baselines/data/image/cifar10"
 BATCH_SIZE = 32
 IMAGE_SIZE = (224, 224)
 MEAN = (0.485, 0.456, 0.406)

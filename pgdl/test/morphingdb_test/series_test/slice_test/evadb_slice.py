@@ -115,10 +115,10 @@ class SliceClassifier(AbstractFunction):
         self.total_time = self.load_model_time + self.pre_time + self.infer_time + self.post_time
         try:
             with open(SLICETEST_FILE, 'r') as f_image:
-                # 尝试加载现有数据
+                # Try to load existing data
                 timing_data_image = json.load(f_image)
         except (FileNotFoundError, json.JSONDecodeError):
-            # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+            # If the file does not exist or is not valid JSON, initialize it as an empty list
             timing_data_image = []
 
         return pd.DataFrame(outcome, columns=["labels"])

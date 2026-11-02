@@ -22,7 +22,7 @@ class LogisticRegressionModel(torch.nn.Module):
                      
                     #   torch.nn.Linear(32,output_dim))
     def forward(self, x):
-        y_pred = self.linear(x)  #self.linear是callable的，是可调用的对象
+        y_pred = self.linear(x)  #self.linear is callable
         return y_pred
 
 
@@ -56,30 +56,30 @@ x_test = torch.tensor(x_test.values).float()
 y_test = torch.tensor(y_test.values).float()
 
 
-# # 读取CSV文件
+# # Read the CSV file
 # data = pd.read_csv(r"/data/yearpredict/YearPredictionMSD.csv")
 
-# # 分割数据为训练集和测试集
+# # Split the data into train and test sets
 # train_data = data.iloc[:40000, :]
 # test_data = data.iloc[40000:, :]
 
-# # 假设X为特征，Y为目标变量
+# # Assume X are features and Y is the target variable
 # X_train = train_data.iloc[:, 1:]
 # Y_train = train_data.iloc[:, 0]
 
 # X_test = test_data.iloc[:, 1:]
 # Y_test = test_data.iloc[:, 0]
 
-# # 对训练集特征进行标准化处理
+# # Standardize the training features
 # mean = X_train.mean()
 # std = X_train.std()
 
 # X_train = (X_train - mean) / std
 
-# # 测试集也使用训练集的均值和标准差进行标准化
+# # Standardize the test set with the mean and std of the training set
 # X_test = (X_test - mean) / std
 
-# # 转换数据为PyTorch张量
+# # Convert the data to PyTorch tensors
 # x_train = torch.tensor(X_train.values).float()
 # y_train = torch.tensor(Y_train.values).float()
 
@@ -103,16 +103,16 @@ for i in range(10000):
     if i%250 == 0:
         print(i, loss.item())
 
-# 预测测试集
+# Predict on the test set
 y_pred_test = model(x_test).squeeze()
 
-# 计算预测误差的平方
+# Compute the squared prediction error
 squared_errors = (y_pred_test - y_test) ** 2
 
-# 计算均方误差（MSE）
+# Compute the mean squared error (MSE)
 mse = squared_errors.mean()
 
-# 计算均方根误差（RMSE）
+# Compute the root mean squared error (RMSE)
 rmse = mse.sqrt()
 print("Test RMSE:", rmse.item())
 

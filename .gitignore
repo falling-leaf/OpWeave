@@ -18,6 +18,10 @@ pgdl/test/morphingdb_test/models/
 # Small load predictor models are tracked
 !pgdl/test/morphingdb_test/models/load_predictors/
 
+# === BUILD OUTPUT ===
+# pgdl.so is produced by pgdl/shell/compile.sh; it embeds build-time paths.
+pgdl/pgdl.so
+
 # === TEST OUTPUT / RUNTIME CACHE ===
 # Everything under pgdl/test/results/ is run output (json/csv/tex/jsonl).
 # No source lives there, so the whole tree stays out of git.

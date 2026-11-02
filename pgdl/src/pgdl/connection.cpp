@@ -202,7 +202,7 @@ SqlWrapper::SqlWrapper(PostgresConnector& conn, const std::string& sql):
     }
     param_types_.resize(n, 0);
     for (int i = 0; i < n; i++) {
-        param_types_[i] = 0; // 设置为 0，表示未知类型
+        param_types_[i] = 0; // set to 0, indicating an unknown type
     }
 }
 

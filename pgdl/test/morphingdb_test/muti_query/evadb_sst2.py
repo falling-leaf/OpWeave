@@ -25,14 +25,14 @@ class SST2Test(PytorchAbstractClassifierFunction):
     # def __del__(self):
     #     try:
     #         with open(TEXT_TEST_FILE, 'r') as f_image:
-    #             # 尝试加载现有数据
+    #             # Try to load existing data
     #             timing_data_image = json.load(f_image)
     #     except (FileNotFoundError, json.JSONDecodeError):
-    #         # 如果文件不存在或内容不是有效的JSON，初始化为一个空列表
+    #         # If the file does not exist or is not valid JSON, initialize it as an empty list
     #         timing_data_image = []
 
     #     self.total_time = self.load_model_time + self.pre_time + self.infer_time + self.post_time
-    #     # 将新的记录追加到列表中
+    #     # Append the new records to the list
     #     if(self.count == 0):
     #         return
     #     timing_data_image.append({"count": self.count, 
@@ -50,7 +50,7 @@ class SST2Test(PytorchAbstractClassifierFunction):
     #                             "pre_time": self.pre_time,
     #                             "infer_time": self.infer_time, 
     #                             "post_time": self.post_time})
-    #     # 写回文件
+    #     # Write back to the file
     #     with open(TEXT_TEST_FILE, 'w') as f_image:
     #         json.dump(timing_data_image, f_image, indent=4)
         
@@ -97,9 +97,9 @@ class SST2Test(PytorchAbstractClassifierFunction):
         # print("self.post_time", self.post_time)
         # print("self.total_time", self.total_time)
         if predict == 0:
-            return "消极态度"
+            return "negative"
         else:
-            return "积极态度"
+            return "positive"
 
     def transform(self, text):
         start = time.time()
@@ -108,17 +108,17 @@ class SST2Test(PytorchAbstractClassifierFunction):
         # sp_processor.Load(sp_model_path)
 
         sp_processor = self.sentencepiece_model
-        # 对文本进行编码
+        # Encode the text
         tis_int_a = sp_processor.Encode(text)
 
-        # 添加特殊标记
+        # Add special tokens
         cls_token_id = sp_processor.PieceToId("[CLS]")
         sep_token_id = sp_processor.PieceToId("[SEP]")
         # tis_int_a.insert(0, cls_token_id)
         # tis_int_a.append(sep_token_id)
         pad_token_id = sp_processor.PieceToId("<pad>")
 
-        # 插入特殊标记并截断到最大长度
+        # Insert special tokens and truncate to the maximum length
         max_length = 128
         tis_int_a = [cls_token_id] + tis_int_a + [sep_token_id]
 
@@ -126,27 +126,27 @@ class SST2Test(PytorchAbstractClassifierFunction):
         if len(tis) < max_length: 
             tis += [pad_token_id] * (max_length - len(tis))
 
-        # 创建attention_mask和token_type_ids
+        # Create attention_mask and token_type_ids
         am = [1] * len(tis_int_a)
         ttis = [0] * len(tis_int_a)
         am += [0] * (max_length - len(am))
         ttis += [1] * (max_length - len(ttis))
 
-        # 创建position_ids
+        # Create position_ids
         position_ids = torch.arange(0, max_length, dtype=torch.long)
 
-        # 创建PyTorch张量
+        # Create PyTorch tensors
         token_ids = torch.tensor(tis, dtype=torch.long)
         attention_mask = torch.tensor(am, dtype=torch.long)
         token_type_ids = torch.tensor(ttis, dtype=torch.long)
 
-        # 增加批次维度
+        # Add batch dimension
         token_ids = token_ids.unsqueeze(0)
         attention_mask = attention_mask.unsqueeze(0)
         token_type_ids = token_type_ids.unsqueeze(0)
         position_ids = position_ids.unsqueeze(0)
 
-        # 假设设备类型是CPU或CUDA，根据实际情况设置
+        # Assume the device is CPU or CUDA, set according to the actual setup
         device_type = torch.device("cpu")
         token_ids = token_ids.to(device_type)
         attention_mask = attention_mask.to(device_type)
@@ -178,7 +178,7 @@ class SST2Test(PytorchAbstractClassifierFunction):
 
         start = time.time()
         predict = torch.cat(outputs,0).argmax(1).item()
-        # 将预测结果转换为DataFrame
+        # Convert the predictions to a DataFrame
         outcome = {"labels": predict}
         end = time.time()
         self.post_time += (end-start)
