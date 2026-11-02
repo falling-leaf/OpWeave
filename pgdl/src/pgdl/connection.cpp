@@ -1,7 +1,7 @@
 /*
- * @Author: laihuihang laihuihang@foxmail.com
+ * @Author: Anonymous anonymous@example.com
  * @Date: 2023-04-24 18:15:57
- * @LastEditors: laihuihang laihuihang@foxmail.com
+ * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2023-05-08 09:52:02
  * @FilePath: /postgres-DB4AI/src/udf/connection.cpp
  * @Description: 

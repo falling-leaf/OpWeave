@@ -1,7 +1,7 @@
 /*
- * @Author: laihuihang laihuihang@foxmail.com
+ * @Author: Anonymous anonymous@example.com
  * @Date: 2023-04-23 23:46:27
- * @LastEditors: laihuihang laihuihang@foxmail.com
+ * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2024-08-17 22:55:14
  * @FilePath: /postgres-DB4AI/src/udf/torch_wrapper.h
  * @Description: 多模型管理类，包括可变参数的传递

@@ -42,6 +42,7 @@ venv/
 # === LOCAL NOTES (never published) ===
 notebook.txt
 project_overview.md
+ANONYMIZATION_INDEX.md
 
 # === OS / EDITOR FILES ===
 .DS_Store

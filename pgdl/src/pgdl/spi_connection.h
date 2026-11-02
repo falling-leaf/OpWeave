@@ -1,7 +1,7 @@
 /*
- * @Author: laihuihang laihuihang@foxmail.com
+ * @Author: Anonymous anonymous@example.com
  * @Date: 2023-05-04 18:20:29
- * @LastEditors: laihuihang laihuihang@foxmail.com
+ * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2023-06-30 11:41:56
  * @FilePath: /postgres-DB4AI/src/udf/spi_connection.h
  * @Description: 

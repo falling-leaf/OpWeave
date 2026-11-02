@@ -1,7 +1,7 @@
 /*
- * @Author: laihuihang laihuihang@foxmail.com
+ * @Author: Anonymous anonymous@example.com
  * @Date: 2023-05-07 14:10:23
- * @LastEditors: laihuihang laihuihang@foxmail.com
+ * @LastEditors: Anonymous anonymous@example.com
  * @LastEditTime: 2023-07-06 17:22:23
  * @FilePath: /postgres-DB4AI/src/udf/env.h
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE

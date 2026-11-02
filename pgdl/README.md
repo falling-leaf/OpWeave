@@ -8,7 +8,7 @@
 - MorphingDB supports model centric and task centric inference.
 
 ## Quick Start
-dowload [zip](https://drive.google.com/file/d/17EhgU-ujGzNP75ytClrivUT4tXblLqnV/view?usp=sharing) to morphingdb project path
+dowload [zip](https://anonymous.example/L01) to morphingdb project path
 
 unzip model
 ```shell
@@ -28,7 +28,7 @@ sudo docker build -t morphingdb .
 
 create docker contanier
 ```shell
-# abs_morphingdb_test_dir is the absolute path of the morphingdb project directory from https://github.com/MorphingDB/Morphingdb_test/
+# abs_morphingdb_test_dir is the absolute path of the morphingdb project directory from https://anonymous.example/L04
 sudo docker run -d 
 --name MorphingDB_test 
 -e POSTGRES_PASSWORD=123456 
@@ -134,13 +134,13 @@ select * from vec_test where vec=='[1,2.2,3.123,4.2]';
 
 ## Morphingdb Test
 
-1. download models from [here](https://drive.google.com/file/d/17EhgU-ujGzNP75ytClrivUT4tXblLqnV/view)
+1. download models from [here](https://anonymous.example/L02)
 
 ```shell
 unzip models.zip -d ./test/morphingdb_test/
 ```
 
-2. dowload data from [here](https://drive.google.com/file/d/1bAg66ifb54ge_J8CRjkSk_yRhyTRZYWe/view?usp=sharing)
+2. dowload data from [here](https://anonymous.example/L03)
 
 ```shell
 unzip data.zip -d ./test/morphingdb_test/
@@ -160,7 +160,7 @@ result will be saved in `result` dir.
 
 ## Reference
 
-[A Comparative Study of in-Database Inference Approaches](https://users.cs.utah.edu/~lifeifei/papers/icde22-indbinference.pdf)
+[A Comparative Study of in-Database Inference Approaches](https://anonymous.example/L05)
 
 [Learning a Data-Driven Policy Network for Pre-Training Automated Feature Engineering](https://openreview.net/pdf?id=688hNNMigVX)
 

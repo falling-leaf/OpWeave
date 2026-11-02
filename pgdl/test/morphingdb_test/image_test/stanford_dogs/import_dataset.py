@@ -1,7 +1,7 @@
 '''
-Author: laihuihang laihuihang@foxmail.com
+Author: Anonymous anonymous@example.com
 Date: 2024-08-08 13:52:21
-LastEditors: laihuihang laihuihang@foxmail.com
+LastEditors: Anonymous anonymous@example.com
 LastEditTime: 2024-08-09 13:46:49
 FilePath: /morphingdb_test/image_test/cifar10/import_dataset.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
