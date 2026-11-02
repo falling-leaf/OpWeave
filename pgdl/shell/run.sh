@@ -1,4 +1,7 @@
-cd /opt/opweave
-/opt/opweave/pg_base/bin/pg_ctl -D /opt/opweave/pg_base/data stop -m immediate
-/opt/opweave/pg_base/bin/pg_ctl -D /opt/opweave/pg_base/data start
-/opt/opweave/pg_base/bin/psql -d postgres
+ROOT=/opt/opweave
+PG=$ROOT/pg_base
+
+cd "$ROOT"
+"$PG/bin/pg_ctl" -D "$PG/data" stop -m immediate
+"$PG/bin/pg_ctl" -D "$PG/data" start
+"$PG/bin/psql" -d postgres

@@ -15,7 +15,8 @@ DB_USER="why"
 DB_PASS="123456"
 
 export PGPASSWORD="$DB_PASS"
-PSQL="/opt/opweave/pg_base/bin/psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
+PG_BASE="/opt/opweave/pg_base"
+PSQL="$PG_BASE/bin/psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
 
 # --- Path Configuration ---
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -65,7 +66,7 @@ echo ""
 echo "[Step 0] Checking database connectivity..."
 if ! $PSQL -t -c "SELECT 1;" > /dev/null 2>&1; then
     echo "  Database not reachable. Starting PostgreSQL..."
-    /opt/opweave/pg_base/bin/pg_ctl -D /opt/opweave/pg_base/data start
+    "$PG_BASE/bin/pg_ctl" -D "$PG_BASE/data" start
     sleep 3
     if ! $PSQL -t -c "SELECT 1;" > /dev/null 2>&1; then
         echo "  ERROR: Cannot connect to database after startup."

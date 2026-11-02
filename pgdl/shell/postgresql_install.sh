@@ -1,6 +1,9 @@
-cd /opt/opweave/pgdl/third_party/postgresql-13.22/
+ROOT=/opt/opweave
+PG=$ROOT/pg_base
+
+cd "$ROOT/pgdl/third_party/postgresql-13.22/"
 make distclean
-./configure --prefix=/opt/opweave/pg_base
-make -j$(nproc)
+./configure --prefix="$PG"
+make -j"$(nproc)"
 make install
-/opt/opweave/pg_base/bin/initdb -D /opt/opweave/pg_base/data
+"$PG/bin/initdb" -D "$PG/data"
