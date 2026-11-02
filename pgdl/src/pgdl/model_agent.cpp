@@ -1302,7 +1302,7 @@ double get_gpu_flops() {
 // Helper function to get CPU memory bandwidth
 double get_cpu_mem_bandwidth() {
     try {
-        std::string mem_bandwidth_str = exec_command("echo \"morphingdbwhy\" | sudo -S dmidecode -t memory | grep Speed | head -n 100");
+        std::string mem_bandwidth_str = exec_command("sudo -n dmidecode -t memory | grep Speed | head -n 100");
         std::vector<double> speeds;
         std::stringstream ss(mem_bandwidth_str);
         std::string line;
@@ -1316,6 +1316,9 @@ double get_cpu_mem_bandwidth() {
                 speed_str.erase(std::remove(speed_str.begin(), speed_str.end(), ' '), speed_str.end());
                 speeds.push_back(std::stod(speed_str));
             }
+        }
+        if (speeds.empty()) {
+            throw std::runtime_error("dmidecode returned no memory speed entries");
         }
         double avg_speed = std::accumulate(speeds.begin(), speeds.end(), 0.0) / speeds.size();
         // elog(INFO, "Average memory bandwidth: %.2f MT/s", avg_speed);
