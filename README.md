@@ -19,7 +19,7 @@ Systems*.
 | `pgdl/sql/` | Extension SQL, versioned `0.1.0` through `1.3.0` |
 | `pgdl/shell/` | Deployment scripts (build dependencies, install PostgreSQL, compile the extension) |
 | `pgdl/test/` | Experiment harness (see [Test harness](#test-harness)) |
-| `pgdl/visualization/` | Plotting scripts for the latency figures |
+| `pgdl/visualization/` (local only) | Figure code, paper data, and rendered images; git-ignored |
 | `pgdl/CMakeLists.txt`, `pgdl/pgdl.control` | Build and extension-package metadata |
 
 Not tracked by git, and produced locally by the steps below: `pg_base/` (the PostgreSQL install),

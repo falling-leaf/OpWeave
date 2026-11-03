@@ -4,6 +4,8 @@ pgdl/build/
 
 # === PAPER ===
 pgdl/paper/
+# Figure code, paper data, and rendered images stay local
+pgdl/visualization/
 
 # === THIRD-PARTY DEPENDENCIES (7+ GB) ===
 pgdl/third_party/
